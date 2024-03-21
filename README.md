@@ -7,3 +7,7 @@
 
   C) Run docker-compose stop will stop all the containers in compose.yaml.
      docker-compose down will stop and destroy the containers. -->
+
+<!-- vendor/bin/php-cs-fixer list-fixers -->
+
+<!-- vendor/bin/phpstan analyse -->

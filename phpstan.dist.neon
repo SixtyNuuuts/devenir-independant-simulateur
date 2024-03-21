@@ -1,0 +1,43 @@
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+
+parameters:
+    level: max
+    paths:
+        - src
+        - tests
+
+    # Permet à PHPStan de comprendre la configuration de Symfony et les services
+    symfony:
+        container_xml_path: '%rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml'
+
+    # Ignore les erreurs dans certains fichiers, si nécessaire
+    #ignoreErrors:
+    #    - '#Call to an undefined method Symfony\\Component\\HttpFoundation\\Session\\SessionInterface::getFlashBag\(\)#'
+
+    # Exclure certains dossiers de l'analyse
+    excludePaths:
+        - */var/cache/*
+        - */vendor/*
+
+    # Paramètres spécifiques pour Doctrine
+    # doctrine:
+    #     objectManagerLoader: tests/objectManagerLoader.php
+
+    # Analyse des templates Twig (nécessite l'extension phpstan/phpstan-twig)
+    #twig:
+    #    paths:
+    #        - templates
+    #    cacheDir: var/cache/twig
+
+    # Définition des types pour les services Symfony non typés
+    # dynamicReturnTypeExtensions:
+    #     - PHPStan\Type\Symfony\ServiceDynamicReturnTypeExtension
+    #     - PHPStan\Type\Symfony\SymfonyConsoleApplicationDynamicReturnTypeExtension
+
+    # Ajouter des règles personnalisées ou des extensions ici
+    #includes:
+    #    - path/to/your/custom/extension.neon
