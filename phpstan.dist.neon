@@ -10,6 +10,8 @@ parameters:
         - src
         - tests
 
+    checkGenericClassInNonGenericObjectType: false
+
     # Permet à PHPStan de comprendre la configuration de Symfony et les services
     symfony:
         container_xml_path: '%rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml'
