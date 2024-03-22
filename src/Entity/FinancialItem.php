@@ -16,7 +16,7 @@ class FinancialItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
-    private ?int $id = null;
+    private ?string $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -48,7 +48,7 @@ class FinancialItem
         $this->professionalMonthlySales = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

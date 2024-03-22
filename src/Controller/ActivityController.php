@@ -71,7 +71,7 @@ class ActivityController extends AbstractController
     #[Route('/{id}', name: 'app_activity_delete', methods: ['POST'])]
     public function delete(Request $request, Activity $activity, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$activity->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$activity->getId(), (string) $request->request->get('_token'))) {
             $entityManager->remove($activity);
             $entityManager->flush();
         }

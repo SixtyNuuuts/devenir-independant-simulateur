@@ -71,7 +71,7 @@ class SimulationController extends AbstractController
     #[Route('/{id}', name: 'app_simulation_delete', methods: ['POST'])]
     public function delete(Request $request, Simulation $simulation, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$simulation->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$simulation->getId(), (string) $request->request->get('_token'))) {
             $entityManager->remove($simulation);
             $entityManager->flush();
         }

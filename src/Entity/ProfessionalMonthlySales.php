@@ -12,7 +12,7 @@ class ProfessionalMonthlySales
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint')]
-    private ?int $id = null;
+    private ?string $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'professionalMonthlySales')]
     #[ORM\JoinColumn(nullable: false)]
@@ -24,7 +24,7 @@ class ProfessionalMonthlySales
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $month = null;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

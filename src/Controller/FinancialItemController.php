@@ -71,7 +71,7 @@ class FinancialItemController extends AbstractController
     #[Route('/{id}', name: 'app_financial_item_delete', methods: ['POST'])]
     public function delete(Request $request, FinancialItem $financialItem, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$financialItem->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$financialItem->getId(), (string) $request->request->get('_token'))) {
             $entityManager->remove($financialItem);
             $entityManager->flush();
         }

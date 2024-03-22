@@ -20,8 +20,8 @@ class FinancialItemType extends AbstractType
             ->add('type')
             ->add('attributes')
             ->add('simulation', EntityType::class, [
-                'class' => Simulation::class,
-'choice_label'          => 'id',
+                'class'        => Simulation::class,
+                'choice_label' => 'id',
             ])
         ;
     }

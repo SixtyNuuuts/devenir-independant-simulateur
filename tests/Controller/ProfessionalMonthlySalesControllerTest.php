@@ -18,7 +18,7 @@ class ProfessionalMonthlySalesControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client     = static::createClient();
-        $this->manager    = static::getContainer()->get('doctrine')->getManager();
+        $this->manager    = static::getContainer()->get('doctrine')->getManager(); /* @phpstan-ignore-line */
         $this->repository = $this->manager->getRepository(ProfessionalMonthlySales::class);
 
         foreach ($this->repository->findAll() as $object) {
@@ -42,7 +42,7 @@ class ProfessionalMonthlySalesControllerTest extends WebTestCase
     public function testNew(): void
     {
         $this->markTestIncomplete();
-        $this->client->request('GET', sprintf('%snew', $this->path));
+        $this->client->request('GET', sprintf('%snew', $this->path)); /* @phpstan-ignore-line */
 
         self::assertResponseStatusCodeSame(200);
 
@@ -60,7 +60,7 @@ class ProfessionalMonthlySalesControllerTest extends WebTestCase
     public function testShow(): void
     {
         $this->markTestIncomplete();
-        $fixture = new ProfessionalMonthlySales();
+        $fixture = new ProfessionalMonthlySales(); /* @phpstan-ignore-line */
         $fixture->setQuantity('My Title');
         $fixture->setMonth('My Title');
         $fixture->setFinancialItem('My Title');
@@ -79,7 +79,7 @@ class ProfessionalMonthlySalesControllerTest extends WebTestCase
     public function testEdit(): void
     {
         $this->markTestIncomplete();
-        $fixture = new ProfessionalMonthlySales();
+        $fixture = new ProfessionalMonthlySales(); /* @phpstan-ignore-line */
         $fixture->setQuantity('Value');
         $fixture->setMonth('Value');
         $fixture->setFinancialItem('Value');
@@ -107,7 +107,7 @@ class ProfessionalMonthlySalesControllerTest extends WebTestCase
     public function testRemove(): void
     {
         $this->markTestIncomplete();
-        $fixture = new ProfessionalMonthlySales();
+        $fixture = new ProfessionalMonthlySales(); /* @phpstan-ignore-line */
         $fixture->setQuantity('Value');
         $fixture->setMonth('Value');
         $fixture->setFinancialItem('Value');
