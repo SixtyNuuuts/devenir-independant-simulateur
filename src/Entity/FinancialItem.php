@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
+use App\Enum\FinancialItemNature;
+use App\Enum\FinancialItemType;
+use App\Repository\FinancialItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Enum\FinancialItemType;
-use App\Enum\FinancialItemNature;
-use App\Repository\FinancialItemRepository;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: FinancialItemRepository::class)]
 class FinancialItem
@@ -38,6 +38,10 @@ class FinancialItem
 
     #[ORM\OneToMany(targetEntity: ProfessionalMonthlySales::class, mappedBy: 'financialItem', orphanRemoval: true)]
     private Collection $professionalMonthlySales;
+
+    #[ORM\ManyToOne(inversedBy: 'financialItems')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Simulation $simulation = null;
 
     public function __construct()
     {
@@ -141,6 +145,18 @@ class FinancialItem
                 $professionalMonthlySale->setFinancialItem(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSimulation(): ?Simulation
+    {
+        return $this->simulation;
+    }
+
+    public function setSimulation(?Simulation $simulation): static
+    {
+        $this->simulation = $simulation;
 
         return $this;
     }

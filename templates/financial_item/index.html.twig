@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FinancialItem index{% endblock %}
+
+{% block body %}
+    <h1>FinancialItem index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Value</th>
+                <th>Nature</th>
+                <th>Type</th>
+                <th>Attributes</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for financial_item in financial_items %}
+            <tr>
+                <td>{{ financial_item.id }}</td>
+                <td>{{ financial_item.name }}</td>
+                <td>{{ financial_item.value }}</td>
+                <td>{{ financial_item.nature }}</td>
+                <td>{{ financial_item.type }}</td>
+                <td>{{ financial_item.attributes ? financial_item.attributes|json_encode : '' }}</td>
+                <td>
+                    <a href="{{ path('app_financial_item_show', {'id': financial_item.id}) }}">show</a>
+                    <a href="{{ path('app_financial_item_edit', {'id': financial_item.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_financial_item_new') }}">Create new</a>
+{% endblock %}

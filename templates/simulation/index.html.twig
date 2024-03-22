@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Simulation index{% endblock %}
+
+{% block body %}
+    <h1>Simulation index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Token</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for simulation in simulations %}
+            <tr>
+                <td>{{ simulation.id }}</td>
+                <td>{{ simulation.token }}</td>
+                <td>
+                    <a href="{{ path('app_simulation_show', {'id': simulation.id}) }}">show</a>
+                    <a href="{{ path('app_simulation_edit', {'id': simulation.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_simulation_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Simulation{% endblock %}
+
+{% block body %}
+    <h1>Edit Simulation</h1>
+
+    {{ include('simulation/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_simulation_index') }}">back to list</a>
+
+    {{ include('simulation/_delete_form.html.twig') }}
+{% endblock %}

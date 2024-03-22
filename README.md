@@ -8,6 +8,15 @@
   C) Run docker-compose stop will stop all the containers in compose.yaml.
      docker-compose down will stop and destroy the containers. -->
 
-<!-- vendor/bin/php-cs-fixer list-fixers -->
+symfony console doctrine:database:create
+symfony console doctrine:database:create --env=test
 
-<!-- vendor/bin/phpstan analyse -->
+symfony console make:migration | symfony console m:m
+symfony console doctrine:migrations:migrate | symfony console d:m:m
+symfony console doctrine:migrations:migrate --env=test
+
+vendor/bin/php-cs-fixer fix
+
+vendor/bin/phpstan analyse
+
+php bin/phpunit

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Simulation{% endblock %}
+
+{% block body %}
+    <h1>Simulation</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ simulation.id }}</td>
+            </tr>
+            <tr>
+                <th>Token</th>
+                <td>{{ simulation.token }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_simulation_index') }}">back to list</a>
+
+    <a href="{{ path('app_simulation_edit', {'id': simulation.id}) }}">edit</a>
+
+    {{ include('simulation/_delete_form.html.twig') }}
+{% endblock %}
