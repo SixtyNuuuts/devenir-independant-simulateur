@@ -1,12 +1,4 @@
-  <!-- A) Run docker-compose up -d database to start your database container
-     or docker-compose up -d to start all of them.
-
-  B) If you are using the Symfony Binary, it will detect the new service automatically.
-     Run symfony var:export --multiline to see the environment variables the binary is exposing.
-     These will override any values you have in your .env files.
-
-  C) Run docker-compose stop will stop all the containers in compose.yaml.
-     docker-compose down will stop and destroy the containers. -->
+docker-compose up -d
 
 symfony console doctrine:database:create
 symfony console doctrine:database:create --env=test
@@ -20,3 +12,22 @@ vendor/bin/php-cs-fixer fix
 vendor/bin/phpstan analyse
 
 php bin/phpunit
+
+TODO CHANGER contact@your-domain.com
+TODO CHANGER Contact // nom de l'adresse au dessus
+
+TODO
+
+make:auth Success!
+
+- Finish the redirect "TODO" in the App\Security\UserLoginAuthenticator::onAuthenticationSuccess() method.
+
+make:reset-password Success!
+
+- Create a "forgot your password link" to the app_forgot_password_request route on your login form.
+
+make:registration-form Success!
+
+- In RegistrationController::verifyUserEmail():
+  - Customize the last redirectToRoute() after a successful email verification.
+  - Make sure you're rendering success flash messages or change the $this->addFlash() line.
