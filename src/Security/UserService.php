@@ -2,8 +2,11 @@
 
 namespace App\Security;
 
-use App\Entity\User;
+use App\Entity\Activity;
 use App\Entity\AnonymousUser;
+use App\Entity\Simulation;
+use App\Entity\User;
+use App\Repository\SimulationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -49,4 +52,57 @@ class UserService
 
         return $anonymousUser;
     }
+
+    public function getCurrentUserType(): string
+    {
+        $user = $this->getCurrentUser();
+
+        return $user instanceof User ? 'user' : 'anonymous';
+    }
+
+    public function getActivitySimulationByCurrentUserOrDefault(Activity $activity, SimulationRepository $simulationRepository): ?Simulation
+    {
+        $user     = $this->getCurrentUser();
+        $userType = $this->getCurrentUserType();
+
+        $criteria = ['activity' => $activity];
+        if ('user' === $userType) {
+            $criteria['user'] = $user;
+        } else {
+            $criteria['anonymousUser'] = $user;
+        }
+
+        $simulation = $simulationRepository->findOneBy($criteria, ['createdAt' => 'DESC']);
+
+        if (!$simulation) {
+            $simulation = $simulationRepository->findOneBy(['activity' => $activity, 'token' => 'default']);
+        }
+
+        return $simulation;
+    }
+
+    // public function createNewSimulationForCurrentUser(Activity $activity, array $defaultSimulationFinancialItems): Simulation
+    // {
+    //     $user = $this->getCurrentUser();
+
+    //     $simulation = new Simulation();
+    //     $simulation->setActivity($activity);
+
+    //     if ($user instanceof User) {
+    //         $simulation->setUser($user);
+    //     } elseif ($user instanceof AnonymousUser) {
+    //         $simulation->setAnonymousUser($user);
+    //     }
+
+    //     foreach ($defaultSimulationFinancialItems as $financialItem) {
+    //         $newFinancialItem = clone $financialItem;
+    //         $this->entityManager->persist($newFinancialItem);
+    //         $simulation->addFinancialItem($newFinancialItem);
+    //     }
+
+    //     $this->entityManager->persist($simulation);
+    //     $this->entityManager->flush();
+
+    //     return $simulation;
+    // }
 }

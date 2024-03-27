@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SimulationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SimulationRepository::class)]
@@ -18,16 +19,36 @@ class Simulation
     #[ORM\Column(length: 255)]
     private ?string $token = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
     #[ORM\ManyToOne(inversedBy: 'simulations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Activity $activity = null;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $targetSalary = null;
+
     #[ORM\OneToMany(targetEntity: FinancialItem::class, mappedBy: 'simulation', orphanRemoval: true)]
     private Collection $financialItems;
+
+    #[ORM\ManyToOne(inversedBy: 'simulations')]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'simulations')]
+    private ?AnonymousUser $anonymousUser = null;
 
     public function __construct()
     {
         $this->financialItems = new ArrayCollection();
+        $this->createdAt      = new \DateTimeImmutable();
+        $this->token          = $this->generateShortUniqueId();
+        $this->targetSalary   = '2000.00';
+    }
+
+    public function __toString(): string
+    {
+        return $this->token ?? '---';
     }
 
     public function getId(): ?int
@@ -47,6 +68,18 @@ class Simulation
         return $this;
     }
 
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
     public function getActivity(): ?Activity
     {
         return $this->activity;
@@ -55,6 +88,18 @@ class Simulation
     public function setActivity(?Activity $activity): static
     {
         $this->activity = $activity;
+
+        return $this;
+    }
+
+    public function getTargetSalary(): ?string
+    {
+        return $this->targetSalary;
+    }
+
+    public function setTargetSalary(string $targetSalary): static
+    {
+        $this->targetSalary = $targetSalary;
 
         return $this;
     }
@@ -87,5 +132,41 @@ class Simulation
         }
 
         return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getAnonymousUser(): ?AnonymousUser
+    {
+        return $this->anonymousUser;
+    }
+
+    public function setAnonymousUser(?AnonymousUser $anonymousUser): static
+    {
+        $this->anonymousUser = $anonymousUser;
+
+        return $this;
+    }
+
+    private function generateShortUniqueId(int $length = 8): string
+    {
+        $characters       = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = \strlen($characters);
+        $uniqueId         = '';
+        for ($i = 0; $i < $length; ++$i) {
+            $uniqueId .= $characters[random_int(0, $charactersLength - 1)];
+        }
+
+        return $uniqueId;
     }
 }

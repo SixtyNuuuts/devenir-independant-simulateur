@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin\Crud;
 
 use App\Entity\FinancialItem;
 use App\Form\FinancialItemType;
@@ -11,18 +11,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/financial/item')]
+#[Route('/admin/crud/financial/item')]
 class FinancialItemController extends AbstractController
 {
-    #[Route('/', name: 'app_financial_item_index', methods: ['GET'])]
+    #[Route('/', name: 'app_admin_crud_financial_item_index', methods: ['GET'])]
     public function index(FinancialItemRepository $financialItemRepository): Response
     {
-        return $this->render('financial_item/index.html.twig', [
+        return $this->render('admin/crud/financial_item/index.html.twig', [
             'financial_items' => $financialItemRepository->findAll(),
         ]);
     }
 
-    #[Route('/new', name: 'app_financial_item_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_admin_crud_financial_item_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $financialItem = new FinancialItem();
@@ -33,24 +33,24 @@ class FinancialItemController extends AbstractController
             $entityManager->persist($financialItem);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_financial_item_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_admin_crud_financial_item_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('financial_item/new.html.twig', [
+        return $this->render('admin/crud/financial_item/new.html.twig', [
             'financial_item' => $financialItem,
             'form'           => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_financial_item_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_admin_crud_financial_item_show', methods: ['GET'])]
     public function show(FinancialItem $financialItem): Response
     {
-        return $this->render('financial_item/show.html.twig', [
+        return $this->render('admin/crud/financial_item/show.html.twig', [
             'financial_item' => $financialItem,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_financial_item_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_admin_crud_financial_item_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, FinancialItem $financialItem, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(FinancialItemType::class, $financialItem);
@@ -59,16 +59,16 @@ class FinancialItemController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_financial_item_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_admin_crud_financial_item_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('financial_item/edit.html.twig', [
+        return $this->render('admin/crud/financial_item/edit.html.twig', [
             'financial_item' => $financialItem,
             'form'           => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_financial_item_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_admin_crud_financial_item_delete', methods: ['POST'])]
     public function delete(Request $request, FinancialItem $financialItem, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$financialItem->getId(), (string) $request->request->get('_token'))) {
@@ -76,6 +76,6 @@ class FinancialItemController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_financial_item_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_admin_crud_financial_item_index', [], Response::HTTP_SEE_OTHER);
     }
 }

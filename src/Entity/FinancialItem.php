@@ -5,8 +5,6 @@ namespace App\Entity;
 use App\Enum\FinancialItemNature;
 use App\Enum\FinancialItemType;
 use App\Repository\FinancialItemRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,10 +23,10 @@ class FinancialItem
     private ?string $value = null;
 
     #[ORM\Column(type: 'string', enumType: FinancialItemNature::class, length: 12)]
-    private ?string $nature = null;
+    private ?FinancialItemNature $nature = null;
 
     #[ORM\Column(type: 'string', enumType: FinancialItemType::class, length: 8)]
-    private ?string $type = null;
+    private ?FinancialItemType $type = null;
 
     /**
      * @var array<mixed>|null
@@ -36,16 +34,13 @@ class FinancialItem
     #[ORM\Column(nullable: true)]
     private ?array $attributes = null;
 
-    #[ORM\OneToMany(targetEntity: ProfessionalMonthlySales::class, mappedBy: 'financialItem', orphanRemoval: true)]
-    private Collection $professionalMonthlySales;
-
     #[ORM\ManyToOne(inversedBy: 'financialItems')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Simulation $simulation = null;
 
-    public function __construct()
+    public function __toString(): string
     {
-        $this->professionalMonthlySales = new ArrayCollection();
+        return $this->name ?? '---';
     }
 
     public function getId(): ?string
@@ -77,24 +72,24 @@ class FinancialItem
         return $this;
     }
 
-    public function getNature(): ?string
+    public function getNature(): ?FinancialItemNature
     {
         return $this->nature;
     }
 
-    public function setNature(string $nature): static
+    public function setNature(FinancialItemNature $nature): static
     {
         $this->nature = $nature;
 
         return $this;
     }
 
-    public function getType(): ?string
+    public function getType(): ?FinancialItemType
     {
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(FinancialItemType $type): static
     {
         $this->type = $type;
 
@@ -115,36 +110,6 @@ class FinancialItem
     public function setAttributes(?array $attributes): static
     {
         $this->attributes = $attributes;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ProfessionalMonthlySales>
-     */
-    public function getProfessionalMonthlySales(): Collection
-    {
-        return $this->professionalMonthlySales;
-    }
-
-    public function addProfessionalMonthlySale(ProfessionalMonthlySales $professionalMonthlySale): static
-    {
-        if (!$this->professionalMonthlySales->contains($professionalMonthlySale)) {
-            $this->professionalMonthlySales->add($professionalMonthlySale);
-            $professionalMonthlySale->setFinancialItem($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProfessionalMonthlySale(ProfessionalMonthlySales $professionalMonthlySale): static
-    {
-        if ($this->professionalMonthlySales->removeElement($professionalMonthlySale)) {
-            // set the owning side to null (unless already changed)
-            if ($professionalMonthlySale->getFinancialItem() === $this) {
-                $professionalMonthlySale->setFinancialItem(null);
-            }
-        }
 
         return $this;
     }

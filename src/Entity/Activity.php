@@ -22,8 +22,14 @@ class Activity
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $summary = null;
+
     #[ORM\Column(type: Types::TEXT, nullable: false)]
     private ?string $description = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $bannerImage = null;
 
     #[ORM\OneToMany(targetEntity: Simulation::class, mappedBy: 'activity', orphanRemoval: true)]
     private Collection $simulations;
@@ -31,6 +37,11 @@ class Activity
     public function __construct()
     {
         $this->simulations = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->name ?? '---';
     }
 
     public function getId(): ?int
@@ -62,6 +73,18 @@ class Activity
         return $this;
     }
 
+    public function getSummary(): ?string
+    {
+        return $this->summary;
+    }
+
+    public function setSummary(string $summary): static
+    {
+        $this->summary = $summary;
+
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -70,6 +93,18 @@ class Activity
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getBannerImage(): ?string
+    {
+        return $this->bannerImage;
+    }
+
+    public function setBannerImage(string $bannerImage): static
+    {
+        $this->bannerImage = $bannerImage;
 
         return $this;
     }
