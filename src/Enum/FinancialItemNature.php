@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enum;
 
 enum FinancialItemNature: string
 {
-    case PROFESSIONAL = 'professional';
-    case PERSONAL     = 'personal';
+	case PROFESSIONAL = 'professional';
+	case PERSONAL = 'personal';
 }

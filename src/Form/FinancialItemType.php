@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\FinancialItem;
@@ -11,25 +13,25 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FinancialItemType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('name')
-            ->add('value')
-            ->add('nature')
-            ->add('type')
-            ->add('attributes')
-            ->add('simulation', EntityType::class, [
-                'class'        => Simulation::class,
-                'choice_label' => 'id',
-            ])
-        ;
-    }
+	public function buildForm(FormBuilderInterface $builder, array $options): void
+	{
+		$builder
+			->add('name')
+			->add('value')
+			->add('nature')
+			->add('type')
+			->add('attributes')
+			->add('simulation', EntityType::class, [
+				'class' => Simulation::class,
+				'choice_label' => 'id',
+			])
+		;
+	}
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => FinancialItem::class,
-        ]);
-    }
+	public function configureOptions(OptionsResolver $resolver): void
+	{
+		$resolver->setDefaults([
+			'data_class' => FinancialItem::class,
+		]);
+	}
 }

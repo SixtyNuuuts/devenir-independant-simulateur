@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -15,156 +17,161 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+	#[ORM\Id]
+	#[ORM\GeneratedValue]
+	#[ORM\Column]
+	private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
-    private ?string $email = null;
+	#[ORM\Column(length: 180)]
+	private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
+	/**
+	 * @var list<string> The user roles
+	 */
+	#[ORM\Column]
+	private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
-    private ?string $password = null;
+	/**
+	 * @var string The hashed password
+	 */
+	#[ORM\Column]
+	private ?string $password = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $isVerified = false;
+	#[ORM\Column(type: 'boolean')]
+	private bool $isVerified = false;
 
-    #[ORM\OneToMany(targetEntity: Simulation::class, mappedBy: 'user')]
-    private Collection $simulations;
+	#[ORM\OneToMany(targetEntity: Simulation::class, mappedBy: 'user')]
+	private Collection $simulations;
 
-    public function __construct()
-    {
-        $this->simulations = new ArrayCollection();
-    }
+	public function __construct()
+	{
+		$this->simulations = new ArrayCollection();
+	}
 
-    public function __toString(): string
-    {
-        return $this->email ?? '---';
-    }
+	public function __toString(): string
+	{
+		return $this->email ?? '---';
+	}
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+	public function getType(): string
+	{
+		return 'user';
+	}
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
+	public function getId(): ?int
+	{
+		return $this->id;
+	}
 
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
+	public function getEmail(): ?string
+	{
+		return $this->email;
+	}
 
-        return $this;
-    }
+	public function setEmail(string $email): static
+	{
+		$this->email = $email;
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
-    }
+		return $this;
+	}
 
-    /**
-     * @see UserInterface
-     *
-     * @return list<string>
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+	/**
+	 * A visual identifier that represents this user.
+	 *
+	 * @see UserInterface
+	 */
+	public function getUserIdentifier(): string
+	{
+		return (string) $this->email;
+	}
 
-        return array_unique($roles); /* @phpstan-ignore-line */
-    }
+	/**
+	 * @see UserInterface
+	 *
+	 * @return list<string>
+	 */
+	public function getRoles(): array
+	{
+		$roles = $this->roles;
+		// guarantee every user at least has ROLE_USER
+		$roles[] = 'ROLE_USER';
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
-    {
-        $this->roles = $roles;
+		return array_unique($roles); /* @phpstan-ignore-line */
+	}
 
-        return $this;
-    }
+	/**
+	 * @param list<string> $roles
+	 */
+	public function setRoles(array $roles): static
+	{
+		$this->roles = $roles;
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
+		return $this;
+	}
 
-    public function setPassword(string $password): static
-    {
-        $this->password = $password;
+	/**
+	 * @see PasswordAuthenticatedUserInterface
+	 */
+	public function getPassword(): ?string
+	{
+		return $this->password;
+	}
 
-        return $this;
-    }
+	public function setPassword(string $password): static
+	{
+		$this->password = $password;
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
+		return $this;
+	}
 
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
+	/**
+	 * @see UserInterface
+	 */
+	public function eraseCredentials(): void
+	{
+		// If you store any temporary, sensitive data on the user, clear it here
+		// $this->plainPassword = null;
+	}
 
-    public function setIsVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
+	public function isVerified(): bool
+	{
+		return $this->isVerified;
+	}
 
-        return $this;
-    }
+	public function setIsVerified(bool $isVerified): static
+	{
+		$this->isVerified = $isVerified;
 
-    /**
-     * @return Collection<int, Simulation>
-     */
-    public function getSimulations(): Collection
-    {
-        return $this->simulations;
-    }
+		return $this;
+	}
 
-    public function addSimulation(Simulation $simulation): static
-    {
-        if (!$this->simulations->contains($simulation)) {
-            $this->simulations->add($simulation);
-            $simulation->setUser($this);
-        }
+	/**
+	 * @return Collection<int, Simulation>
+	 */
+	public function getSimulations(): Collection
+	{
+		return $this->simulations;
+	}
 
-        return $this;
-    }
+	public function addSimulation(Simulation $simulation): static
+	{
+		if (!$this->simulations->contains($simulation)) {
+			$this->simulations->add($simulation);
+			$simulation->setUser($this);
+		}
 
-    public function removeSimulation(Simulation $simulation): static
-    {
-        if ($this->simulations->removeElement($simulation)) {
-            // set the owning side to null (unless already changed)
-            if ($simulation->getUser() === $this) {
-                $simulation->setUser(null);
-            }
-        }
+		return $this;
+	}
 
-        return $this;
-    }
+	public function removeSimulation(Simulation $simulation): static
+	{
+		if ($this->simulations->removeElement($simulation)) {
+			// set the owning side to null (unless already changed)
+			if ($simulation->getUser() === $this) {
+				$simulation->setUser(null);
+			}
+		}
+
+		return $this;
+	}
 }

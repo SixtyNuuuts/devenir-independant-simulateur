@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,55 +21,55 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class UserLoginAuthenticator extends AbstractLoginFormAuthenticator
 {
-    use TargetPathTrait;
+	use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+	public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
-    {
-    }
+	public function __construct(private UrlGeneratorInterface $urlGenerator)
+	{
+	}
 
-    public function authenticate(Request $request): Passport
-    {
-        $email     = $request->request->get('email', '');
-        $password  = $request->request->get('password', '');
-        $csrfToken = $request->request->get('_csrf_token', '');
+	public function authenticate(Request $request): Passport
+	{
+		$email = $request->request->get('email', '');
+		$password = $request->request->get('password', '');
+		$csrfToken = $request->request->get('_csrf_token', '');
 
-        if (!\is_string($email)) {
-            throw new BadRequestHttpException('L\'identifiant de l\'utilisateur doit être une chaîne de caractères.');
-        }
+		if (!\is_string($email)) {
+			throw new BadRequestHttpException('L\'identifiant de l\'utilisateur doit être une chaîne de caractères.');
+		}
 
-        if (!\is_string($password)) {
-            throw new BadRequestHttpException('Le mot de passe doit être une chaîne de caractères.');
-        }
+		if (!\is_string($password)) {
+			throw new BadRequestHttpException('Le mot de passe doit être une chaîne de caractères.');
+		}
 
-        if (!\is_string($csrfToken)) {
-            throw new BadRequestHttpException('Le mot de passe doit être une chaîne de caractères.');
-        }
+		if (!\is_string($csrfToken)) {
+			throw new BadRequestHttpException('Le mot de passe doit être une chaîne de caractères.');
+		}
 
-        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
+		$request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
-        return new Passport(
-            new UserBadge($email),
-            new PasswordCredentials($password),
-            [
-                new CsrfTokenBadge('authenticate', $csrfToken),
-                new RememberMeBadge(),
-            ],
-        );
-    }
+		return new Passport(
+			new UserBadge($email),
+			new PasswordCredentials($password),
+			[
+				new CsrfTokenBadge('authenticate', $csrfToken),
+				new RememberMeBadge(),
+			],
+		);
+	}
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
-    {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
+	public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+	{
+		if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+			return new RedirectResponse($targetPath);
+		}
 
-        return new RedirectResponse($this->urlGenerator->generate('app_home'));
-    }
+		return new RedirectResponse($this->urlGenerator->generate('app_home'));
+	}
 
-    protected function getLoginUrl(Request $request): string
-    {
-        return $this->urlGenerator->generate(self::LOGIN_ROUTE);
-    }
+	protected function getLoginUrl(Request $request): string
+	{
+		return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+	}
 }
