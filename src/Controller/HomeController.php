@@ -32,7 +32,7 @@ class HomeController extends AbstractController
 		$currentUser = $this->userService->getCurrentUser();
 		$simulationData = $this->simulationRepository->findSimulationDataByCriteria($activitySlug, $simulationToken, $currentUser);
 
-		if (!$simulationToken && $simulationData) {
+		if (!$simulationToken && $simulationData && \is_array($simulationData)) {
 			return $this->redirectToRoute('app_profitability', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
@@ -54,7 +54,7 @@ class HomeController extends AbstractController
 		$currentUser = $this->userService->getCurrentUser();
 		$simulationData = $this->simulationRepository->findSimulationDataByCriteria($activitySlug, $simulationToken, $currentUser);
 
-		if (!$simulationToken && $simulationData) {
+		if (!$simulationToken && $simulationData && \is_array($simulationData)) {
 			return $this->redirectToRoute('app_professional_incomes', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
@@ -74,7 +74,7 @@ class HomeController extends AbstractController
 		$currentUser = $this->userService->getCurrentUser();
 		$simulationData = $this->simulationRepository->findSimulationDataByCriteria($activitySlug, $simulationToken, $currentUser);
 
-		if (!$simulationToken && $simulationData) {
+		if (!$simulationToken && $simulationData && \is_array($simulationData)) {
 			return $this->redirectToRoute('app_professional_expenses', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
@@ -94,7 +94,7 @@ class HomeController extends AbstractController
 		$currentUser = $this->userService->getCurrentUser();
 		$simulationData = $this->simulationRepository->findSimulationDataByCriteria($activitySlug, $simulationToken, $currentUser);
 
-		if (!$simulationToken && $simulationData) {
+		if (!$simulationToken && $simulationData && \is_array($simulationData)) {
 			return $this->redirectToRoute('app_personal_incomes_expenses', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],

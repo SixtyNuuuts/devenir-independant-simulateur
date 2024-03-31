@@ -79,7 +79,7 @@ class FinancialItem
 		return $this->nature;
 	}
 
-	public function setNature(FinancialItemNature $nature): static
+	public function setNature(?FinancialItemNature $nature): static
 	{
 		$this->nature = $nature;
 
@@ -91,7 +91,7 @@ class FinancialItem
 		return $this->type;
 	}
 
-	public function setType(FinancialItemType $type): static
+	public function setType(?FinancialItemType $type): static
 	{
 		$this->type = $type;
 

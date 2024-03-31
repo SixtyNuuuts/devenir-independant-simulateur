@@ -27,13 +27,12 @@ class SimulationRepository extends ServiceEntityRepository
 
 	/**
 	 * @param string[]|null $fields
-	 *
-	 * @return array<mixed>
 	 */
-	public function findSimulationDataByCriteria(string $activitySlug, ?string $simulationToken = null, User|AnonymousUser|null $user = null, array $fields = ['id', 'token']): array
+	public function findSimulationDataByCriteria(string $activitySlug, ?string $simulationToken = null, User|AnonymousUser|null $user = null, ?array $fields = null): mixed
 	{
 		$qb = $this->createQueryBuilder('s');
 
+		$fields ??= ['id', 'token'];
 		$selectFields = [];
 		foreach ($fields as $field) {
 			$selectFields[] = 's.'.$field;
@@ -53,7 +52,7 @@ class SimulationRepository extends ServiceEntityRepository
 		} elseif (null !== $user) {
 			$userField = $user->getType();
 
-			$qb->andWhere('s.'.$userField.' = :user')
+			$qb->andWhere('s.'.$userField.' = :user') /* @phpstan-ignore-line */
 				->setParameter('user', $user)
 			;
 		}
