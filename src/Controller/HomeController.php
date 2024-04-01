@@ -30,9 +30,9 @@ class HomeController extends AbstractController
 	public function profitability(string $activitySlug, ?string $simulationToken = null): Response
 	{
 		$currentUser = $this->userService->getCurrentUser();
-		$simulationData = $this->simulationRepository->findSimulationDataByCriteria($activitySlug, $simulationToken, $currentUser);
+		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
 
-		if (!$simulationToken && $simulationData && \is_array($simulationData)) {
+		if (!$simulationToken && $simulationData && \is_array($simulationData) && $simulationData['token'] !== 'default') {
 			return $this->redirectToRoute('app_profitability', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
@@ -52,9 +52,9 @@ class HomeController extends AbstractController
 	public function professionalIncomes(string $activitySlug, ?string $simulationToken = null): Response
 	{
 		$currentUser = $this->userService->getCurrentUser();
-		$simulationData = $this->simulationRepository->findSimulationDataByCriteria($activitySlug, $simulationToken, $currentUser);
+		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
 
-		if (!$simulationToken && $simulationData && \is_array($simulationData)) {
+		if (!$simulationToken && $simulationData && \is_array($simulationData) && $simulationData['token'] !== 'default') {
 			return $this->redirectToRoute('app_professional_incomes', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
@@ -72,9 +72,9 @@ class HomeController extends AbstractController
 	public function professionalExpenses(string $activitySlug, ?string $simulationToken = null): Response
 	{
 		$currentUser = $this->userService->getCurrentUser();
-		$simulationData = $this->simulationRepository->findSimulationDataByCriteria($activitySlug, $simulationToken, $currentUser);
+		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
 
-		if (!$simulationToken && $simulationData && \is_array($simulationData)) {
+		if (!$simulationToken && $simulationData && \is_array($simulationData) && $simulationData['token'] !== 'default') {
 			return $this->redirectToRoute('app_professional_expenses', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
@@ -92,9 +92,9 @@ class HomeController extends AbstractController
 	public function personalIncomesExpenses(string $activitySlug, ?string $simulationToken = null): Response
 	{
 		$currentUser = $this->userService->getCurrentUser();
-		$simulationData = $this->simulationRepository->findSimulationDataByCriteria($activitySlug, $simulationToken, $currentUser);
+		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
 
-		if (!$simulationToken && $simulationData && \is_array($simulationData)) {
+		if (!$simulationToken && $simulationData && \is_array($simulationData) && $simulationData['token'] !== 'default') {
 			return $this->redirectToRoute('app_personal_incomes_expenses', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],

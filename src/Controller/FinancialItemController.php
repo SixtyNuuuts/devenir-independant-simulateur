@@ -13,7 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/financial-item')]
@@ -27,36 +26,32 @@ class FinancialItemController extends AbstractController
 	}
 
 	#[Route('/get/{id}', name: 'app_financial-item_get', methods: ['GET'])]
-	public function get(FinancialItem $financialItem): JsonResponse
+	public function get(int $id): JsonResponse
 	{
 		try {
-			return $this->json($financialItem, JsonResponse::HTTP_OK);
+			$financialItemData = $this->financialItemRepository->findFinancialItemByIdAsArray($id);
+			if (!$financialItemData) {
+				return $this->json(['error' => 'le FinancialItem n\'existe pas !'], JsonResponse::HTTP_BAD_REQUEST);
+			}
+
+			return $this->json($financialItemData, JsonResponse::HTTP_OK);
 		} catch (\Exception $exception) {
 			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
 		}
 	}
 
-	#[Route('/list', name: 'app_financial-item_list', methods: ['GET'])]
-	public function list(): JsonResponse
-	{
-		$financialItems = $this->financialItemRepository->findAll();
-
-		return $this->json($financialItems);
-	}
-
-	#[Route('/get/{financialItemNature}/{financialItemType}/{simulationId}', name: 'app_financial-item_get_with_filters', methods: ['GET'])]
-	public function professionalIncomes(string $financialItemNature, string $financialItemType, int $simulationId): JsonResponse
+	#[Route('/list/{simulationId}/{financialItemNature}/{financialItemType}', name: 'app_financial-item_list', methods: ['GET'])]
+	public function list(?string $financialItemNature = null, ?string $financialItemType = null, ?int $simulationId = null): JsonResponse
 	{
 		try {
-			$financialItemNatureEnum = FinancialItemNature::tryFrom($financialItemNature);
-			$financialItemTypeEnum = FinancialItemType::tryFrom($financialItemType);
-
-			if (!$financialItemNatureEnum || !$financialItemTypeEnum) {
-				throw new BadRequestHttpException('Valeur de paramètre non valide pour financialItemNature ou financialItemType');
-			}
+			$financialItemNatureEnum = $financialItemNature !== null ? FinancialItemNature::tryFrom($financialItemNature) : null;
+			$financialItemTypeEnum = $financialItemType !== null ? FinancialItemType::tryFrom($financialItemType) : null;
 
 			$simulation = $this->simulationRepository->findOneBy(['id' => $simulationId]);
-			$financialItemsData = $this->financialItemRepository->findFinancialItemsDataByCriteria($financialItemNatureEnum, $financialItemTypeEnum, $simulation);
+			if (!$simulation) {
+				return $this->json(['error' => 'la Simulation n\'existe pas !'], JsonResponse::HTTP_BAD_REQUEST);
+			}
+			$financialItemsData = $this->financialItemRepository->findFinancialItemsDataByCriteria($simulation, $financialItemNatureEnum, $financialItemTypeEnum);
 
 			return $this->json($financialItemsData, JsonResponse::HTTP_OK);
 		} catch (\Exception $exception) {

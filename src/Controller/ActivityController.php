@@ -22,21 +22,30 @@ class ActivityController extends AbstractController
 	}
 
 	#[Route('/get/{id}', name: 'app_activity_get', methods: ['GET'])]
-	public function get(Activity $activity): JsonResponse
+	public function get(int $id): JsonResponse
 	{
 		try {
-			return $this->json($activity, JsonResponse::HTTP_OK);
+			$activityData = $this->activityRepository->findActivityByIdAsArray($id);
+			if (!$activityData) {
+				return $this->json(['error' => 'l\'Activité n\'existe pas !'], JsonResponse::HTTP_BAD_REQUEST);
+			}
+
+			return $this->json($activityData, JsonResponse::HTTP_OK);
 		} catch (\Exception $exception) {
 			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
 		}
 	}
 
-	#[Route('/list', name: 'activity_list', methods: ['GET'])]
+	#[Route('/list', name: 'app_activity_list', methods: ['GET'])]
 	public function list(): JsonResponse
 	{
-		$activitys = $this->activityRepository->findAll();
+		try {
+			$activitiesData = $this->activityRepository->findAllActivitiesAsArray();
 
-		return $this->json($activitys);
+			return $this->json($activitiesData, JsonResponse::HTTP_OK);
+		} catch (\Exception $exception) {
+			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
+		}
 	}
 
 	#[Route('/create', name: 'app_activity_create', methods: ['POST'])]
@@ -64,7 +73,7 @@ class ActivityController extends AbstractController
 			$this->em->persist($activity);
 			$this->em->flush();
 
-			return $this->json(['success' => 'Activitée créée !'], JsonResponse::HTTP_CREATED);
+			return $this->json(['success' => 'Activité créée !'], JsonResponse::HTTP_CREATED);
 		} catch (\Exception $exception) {
 			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
 		}
@@ -93,7 +102,7 @@ class ActivityController extends AbstractController
 
 			$this->em->flush();
 
-			return $this->json(['success' => 'Activitée mise à jour !'], JsonResponse::HTTP_OK);
+			return $this->json(['success' => 'Activité mise à jour !'], JsonResponse::HTTP_OK);
 		} catch (\Exception $exception) {
 			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
 		}
@@ -106,7 +115,7 @@ class ActivityController extends AbstractController
 			$this->em->remove($activity);
 			$this->em->flush();
 
-			return $this->json(['success' => 'Activitée supprimée !'], JsonResponse::HTTP_OK);
+			return $this->json(['success' => 'Activité supprimée !'], JsonResponse::HTTP_OK);
 		} catch (\Exception $exception) {
 			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
 		}

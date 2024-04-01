@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\AnonymousUser;
 use App\Entity\Simulation;
+use App\Entity\User;
 use App\Repository\SimulationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,21 +24,44 @@ class SimulationController extends AbstractController
 	}
 
 	#[Route('/get/{id}', name: 'app_simulation_get', methods: ['GET'])]
-	public function get(Simulation $simulation): JsonResponse
+	public function get(int $id): JsonResponse
 	{
 		try {
-			return $this->json($simulation, JsonResponse::HTTP_OK);
+			$simulationData = $this->simulationRepository->findSimulationByIdAsArray($id);
+			if (!$simulationData) {
+				return $this->json(['error' => 'la Simulation n\'existe pas !'], JsonResponse::HTTP_BAD_REQUEST);
+			}
+
+			return $this->json($simulationData, JsonResponse::HTTP_OK);
 		} catch (\Exception $exception) {
 			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
 		}
 	}
 
-	#[Route('/list', name: 'simulation_list', methods: ['GET'])]
-	public function list(): JsonResponse
+	#[Route('/list', name: 'app_simulation_list', methods: ['GET'])]
+	public function list(Request $request): JsonResponse
 	{
-		$simulations = $this->simulationRepository->findAll();
+		try {
+			$activitySlug = $request->query->get('activitySlug');
+			$userType = $request->query->get('userType');
+			$userId = $request->query->getInt('userId', 0);
+			$page = $request->query->getInt('page', 1);
+			$pageSize = $request->query->getInt('pageSize', 30);
 
-		return $this->json($simulations);
+			$user = null;
+			if ($userType && $userId) {
+				$repositoryClass = $userType === 'User' ? User::class : ($userType === 'AnonymousUser' ? AnonymousUser::class : null);
+				if ($repositoryClass) {
+					$user = $this->em->getRepository($repositoryClass)->find($userId) ?? '---';
+				}
+			}
+
+			$simulationsData = $this->simulationRepository->findSimulationsDataByCriteriaWithPagination($activitySlug, $user, $page, $pageSize);
+
+			return $this->json($simulationsData, JsonResponse::HTTP_OK);
+		} catch (\Exception $exception) {
+			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
+		}
 	}
 
 	#[Route('/create', name: 'app_simulation_create', methods: ['POST'])]

@@ -23,6 +23,51 @@ class ActivityRepository extends ServiceEntityRepository
 		parent::__construct($registry, Activity::class);
 	}
 
+	public function findActivityByIdAsArray(int $id): mixed
+	{
+		$qb = $this->createQueryBuilder('a');
+
+		$query = $qb->select([
+			'a.id',
+			'a.name',
+			'a.slug',
+			'a.summary',
+			'a.description',
+			'a.bannerImage',
+		])
+			->where('a.id = :id')
+			->setParameter('id', $id)
+			->getQuery()
+		;
+
+		try {
+			return $query->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+		} catch (\Doctrine\ORM\NonUniqueResultException $e) {
+			return null;
+		}
+	}
+
+	/**
+	 * @return mixed[]
+	 */
+	public function findAllActivitiesAsArray(): array
+	{
+		$qb = $this->createQueryBuilder('a');
+
+		$query = $qb->select([
+			'a.id',
+			'a.name',
+			'a.slug',
+			'a.summary',
+			'a.description',
+			'a.bannerImage',
+		])
+			->getQuery()
+		;
+
+		return $query->getArrayResult();
+	}
+
 	/**
 	 * @param string[]|null $fields
 	 */

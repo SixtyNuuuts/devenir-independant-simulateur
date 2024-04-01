@@ -8,6 +8,7 @@ use App\Entity\AnonymousUser;
 use App\Entity\Simulation;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -25,10 +26,30 @@ class SimulationRepository extends ServiceEntityRepository
 		parent::__construct($registry, Simulation::class);
 	}
 
+	public function findSimulationByIdAsArray(int $id): mixed
+	{
+		$qb = $this->createQueryBuilder('s');
+
+		$query = $qb->select([
+			's.id',
+			's.token',
+		])
+			->where('s.id = :id')
+			->setParameter('id', $id)
+			->getQuery()
+		;
+
+		try {
+			return $query->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+		} catch (\Doctrine\ORM\NonUniqueResultException $e) {
+			return null;
+		}
+	}
+
 	/**
 	 * @param string[]|null $fields
 	 */
-	public function findSimulationDataByCriteria(string $activitySlug, ?string $simulationToken = null, User|AnonymousUser|null $user = null, ?array $fields = null): mixed
+	public function findSimulationsDataByActivity(string $activitySlug, ?string $simulationToken = null, User|AnonymousUser|null $user = null, ?array $fields = null): mixed
 	{
 		$qb = $this->createQueryBuilder('s');
 
@@ -57,15 +78,86 @@ class SimulationRepository extends ServiceEntityRepository
 			;
 		}
 
-		$result = $qb->setMaxResults(1)
-			->getQuery()
-			->getScalarResult()
-		;
+		$result = $qb->getQuery()->getScalarResult();
 
 		if (!$result && !$simulationToken) {
-			$result = [$this->findSimulationDataByCriteria($activitySlug, 'default', null, ['id', 'token'])];
+			$result = $this->findSimulationsDataByActivity($activitySlug, 'default', null, ['id', 'token']);
 		}
 
-		return $result ? $result[0] : [];
+		if (\is_array($result) && \count($result) === 1) {
+			return $result[0];
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @return array{
+	 *   data: list<array{
+	 *     id: mixed,
+	 *     token: mixed,
+	 *     activityName: mixed,
+	 *     userType: mixed
+	 *   }>,
+	 *   total: int,
+	 *   pages: int,
+	 *   page: int,
+	 *   pageSize: int
+	 * }
+	 */
+	public function findSimulationsDataByCriteriaWithPagination(?string $activitySlug = null, User|AnonymousUser|string|null $user = null, int $page = 1, int $pageSize = 10): array
+	{
+		$qb = $this->createQueryBuilder('s')
+			->select('s.id', 's.token', 'a.name as activityName')
+			->leftJoin('s.activity', 'a')
+			->where('s.token != :defaultToken')
+			->setParameter('defaultToken', 'default')
+			->orderBy('s.createdAt', 'DESC')
+		;
+
+		if ($activitySlug) {
+			$qb->andWhere('a.slug = :activitySlug')
+				->setParameter('activitySlug', $activitySlug)
+			;
+		}
+
+		if ($user) {
+			$userField = \is_object($user) && is_a($user, User::class) ? 'user' : 'anonymousUser';
+			$qb->addSelect("'".$userField."' as userType")
+				->andWhere('s.'.$userField.' = :user')
+				->setParameter('user', $user)
+			;
+		}
+
+		$paginator = new Paginator($qb);
+		$paginator
+			->setUseOutputWalkers(false)
+			->getQuery()
+			->setFirstResult($pageSize * ($page - 1))
+			->setMaxResults($pageSize)
+		;
+
+		$totalItems = \count($paginator);
+		$pagesCount = (int) ceil($totalItems / $pageSize);
+		$results = [];
+
+		foreach ($paginator as $item) {
+			if (\is_array($item)) {
+				$results[] = [
+					'id' => $item['id'],
+					'token' => $item['token'],
+					'activityName' => $item['activityName'],
+					'userType' => $item['userType'] ?? null,
+				];
+			}
+		}
+
+		return [
+			'data' => $results,
+			'total' => $totalItems,
+			'pages' => $pagesCount,
+			'page' => $page,
+			'pageSize' => $pageSize,
+		];
 	}
 }
