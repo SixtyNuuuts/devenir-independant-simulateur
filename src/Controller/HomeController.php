@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Security\UserService;
 use App\Repository\ActivityRepository;
 use App\Repository\SimulationRepository;
-use App\Security\UserService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\FinancialItemRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
@@ -17,6 +18,7 @@ class HomeController extends AbstractController
 		private UserService $userService,
 		private ActivityRepository $activityRepository,
 		private SimulationRepository $simulationRepository,
+		private FinancialItemRepository $fidancialItemRepository,
 	) {
 	}
 
@@ -65,7 +67,11 @@ class HomeController extends AbstractController
 			return $this->redirectToRoute('app_home');
 		}
 
-		return $this->render('home/professional_incomes.html.twig', ['simulationData' => $simulationData]);
+		// $simulation = $this->simulationRepository->findOneBy(['token' => $simulationData['token']]);
+		// $financialItems = $this->fidancialItemRepository->findBy(['simulation' => $simulation, 'nature' => 'professional', 'type' => 'income']);
+		// return $this->render('home/professional_incomes.html.twig', ['simulationData' => $simulationData, 'financialItems' => $financialItems]);
+
+		return $this->render('home/professional_incomes.html.twig', ['simulationId' => $simulationData['id']]);
 	}
 
 	#[Route('/{activitySlug}/frais/{simulationToken}', name: 'app_professional_expenses', methods: ['GET'])]

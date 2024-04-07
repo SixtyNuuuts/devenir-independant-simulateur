@@ -1,12 +1,146 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Accueil | Simulateur - Comment devenir indépendant ?{% endblock %}
+    {# <main {{ react_component('ProfitPage', { {'simulationId': simulationId} }) }}> #}
 
 {% block body %}
-    <div {{ react_component('Hello', { 'fullName': 'Damien' }) }}>
-        Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
-    </div>
-
-    {# Component living in a subdirectory: "assets/react/controllers/Admin/OtherComponent" #}
-    <div {{ react_component('Admin/OtherComponent') }}></div>
+    <main {{ react_component('ProfitPage', { 'simulationId': simulationId }) }}>
+        <h1>Profits</h1>
+        <section aria-labelledby="profits-details">
+            <h2 id="profits-details">Profits par mois</h1>
+            <table>
+                <caption>Combien je vais vendre de produits ou services par mois</caption>
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Janv</th>
+                        <th>Fév</th>
+                        <th>Mars</th>
+                        <th>Avril</th>
+                        <th>Mai</th>
+                        <th>Juin</th>
+                        <th>Juillet</th>
+                        <th>Août</th>
+                        <th>Sept</th>
+                        <th>Octobre</th>
+                        <th>Nov.</th>
+                        <th>Déc.</th>
+                        <th>Total ANNUEL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div><span>CA HT total pour l'<span>Année 1</span></span><span></span></div>
+        </section>
+        <section aria-labelledby="product-pricing">
+            <h2 id="product-pricing">Prix de mes produits</h2>
+            <table>
+                <caption>A quel prix vais-je vendre chacun de ces produits ou services ?</caption>
+                <thead>
+                    <tr>
+                        <th>Intitulé</th>
+                        <th>Coût unitaire*</th>
+                        <th>Prix de vente HT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    {# <header>
+        <nav>
+            <ul>
+                <li><a href="#">Rentabilité</a></li>
+                <li><a href="#" class="active">Profits</a></li>
+                <li><a href="#">Frais</a></li>
+                <li><a href="#">Niveau de vie</a></li>
+            </ul>
+        </nav>
+    </header> #}
+    {# <main>
+        <h1>Profits</h1>
+        <section aria-labelledby="profits-details">
+            <h2 id="profits-details">Profits par mois</h2>
+            <table>
+                <caption>Combien je vais vendre de produits ou services par mois</caption>
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Janv</th>
+                        <th>Fév</th>
+                        <th>Mars</th>
+                        <th>Avril</th>
+                        <th>Mai</th>
+                        <th>Juin</th>
+                        <th>Juillet</th>
+                        <th>Août</th>
+                        <th>Sept</th>
+                        <th>Octobre</th>
+                        <th>Nov.</th>
+                        <th>Déc.</th>
+                        <th>Total ANNUEL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set total_annuel_ca_ht = 0 %}
+                    {% for item in financialItems %}
+                        {% set total_annuel = 0 %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            {% for month in 1..12 %}
+                                {% set quantity = item.attributes['sale_per_month'] | filter(v => v.month == month) | first.quantity | default(0) %}
+                                <td>{{ quantity }}</td>
+                                {% set total_annuel = total_annuel + quantity %}
+                                {% set total_annuel_ca_ht = total_annuel_ca_ht + (quantity * item.value) %}
+                            {% endfor %}
+                            <td>{{ total_annuel }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>CA HT</td>
+                        {% for month in 1..12 %}
+                            {% set ca_ht = 0 %}
+                            {% for item in financialItems %}
+                                {% set quantity = item.attributes['sale_per_month'] | filter(v => v.month == month) | first.quantity | default(0) %}
+                                {% set ca_ht = ca_ht + (quantity * item.value) %}
+                            {% endfor %}
+                            <td>{{ ca_ht }}</td>
+                        {% endfor %}
+                        <td>{{ total_annuel_ca_ht }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div>
+                <span>CA HT total pour l'<span>Année 1</span></span>
+                <span>{{ total_annuel_ca_ht }}</span>
+            </div>
+        </section>
+        <section aria-labelledby="product-pricing">
+            <h2 id="product-pricing">Prix de mes produits</h2>
+            <table>
+                <caption>A quel prix vais-je vendre chacun de ces produits ou services ?</caption>
+                <thead>
+                    <tr>
+                        <th>Intitulé</th>
+                        <th>Coût unitaire*</th>
+                        <th>Prix de vente HT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in financialItems %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.attributes['manufacturing_cost'] }}</td>
+                            <td>{{ item.value }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main> #}
+    {# <footer>
+        <!-- Pied de page -->
+    </footer> #}
 {% endblock %}
