@@ -1,27 +1,49 @@
 import React, { useState } from "react";
 
-const EditableCell = ({ initialValue, onSave, itemId, fieldKey }) => {
+const EditableCell = ({ initialValue, cellInputType, onSave }) => {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(initialValue);
 
-  const handleBlur = () => {
-    setEditing(false);
+  const saveAndExitEditing = () => {
     if (value !== initialValue) {
-      onSave(value, itemId, fieldKey);
+      onSave(value);
+    }
+    setEditing(false);
+  };
+
+  const handleBlur = () => {
+    saveAndExitEditing();
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      saveAndExitEditing();
     }
   };
 
-  return editing ? (
-    <input
-      type={fieldKey.includes("quantity") ? "number" : "text"}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      onBlur={handleBlur}
-      autoFocus
-    />
-  ) : (
-    <span onClick={() => setEditing(true)}>{initialValue}</span>
+  return (
+    <div>
+      {editing ? (
+        <input
+          type={cellInputType}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          autoFocus
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+        />
+      ) : (
+        <span
+          onClick={() => setEditing(true)} // onDoubleClick?
+          tabIndex={0}
+          role="button"
+          aria-label="Edit"
+        >
+          {value}
+        </span>
+      )}
+    </div>
   );
 };
 
-export default EditableCell;
+export default React.memo(EditableCell);

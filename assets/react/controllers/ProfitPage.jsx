@@ -1,75 +1,70 @@
 import React, { useState, useEffect } from "react";
 import FinancialItemsTable from "./component/FinancialItemsTable";
+import useGetFinancialItems from "./hook/useGetFinancialItems";
+import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
 
 function ProfitPage({ simulationId }) {
+  const {
+    financialItems,
+    isLoading: loadingGetFinancialItems,
+    error,
+  } = useGetFinancialItems("/professional/income", simulationId);
+
+  const {
+    updateFinancialItem,
+    isLoading: loadingUpdateFinancialItem,
+    error: updateError,
+  } = useUpdateFinancialItem();
+
   const [professionalIncomes, setProfessionalIncomes] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const getProfessionalIncomes = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          `/financial-item/list/${simulationId}/professional/income`
-        );
-        const result = await response.json();
-        setProfessionalIncomes(result);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des données :", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    setProfessionalIncomes(financialItems);
+  }, [financialItems]);
 
-    getProfessionalIncomes();
-  }, [simulationId]);
-
-  // const handleQuantityChange = async (itemId, month, newQuantity) => {
-  // const handleCellValueChange = async (value, itemId, fieldId) => {
-  // Logique pour envoyer la mise à jour à l'API et mettre à jour l'état parent
-  // Exemple: updateProductAPI(itemId, {[fieldId]: value});
-  // Assurez-vous de mettre à jour l'état dans ProfitPage pour refléter les changements
-  // setProfessionalIncomes((currentIncomes) =>
-  //     currentIncomes.map((item) =>
-  //       item.id === itemId
-  //         ? {
-  //             ...item,
-  //             attributes: {
-  //               ...item.attributes,
-  //               sale_per_month: item.attributes.sale_per_month.map((sale) =>
-  //                 sale.month === month
-  //                   ? { ...sale, quantity: parseInt(newQuantity, 10) }
-  //                   : sale
-  //               ),
-  //             },
-  //           }
-  //         : item
-  //     )
-  //   );
-  // };
-
-  // const handleAddFinancialItem = async (newItem) => {
-  //   // Ajout sur l'API
-  //   // Exemple: await addFinancialItemAPI(newItem);
-  //   setProfessionalIncomes((currentIncomes) => [...currentIncomes, newItem]);
-  // };
-
-  const onUpdateFinancialItem = (itemId, updatedFields) => {
-    // Logique pour mettre à jour l'item via API puis mettre à jour l'état local
+  // Handlers pour ajouter, mettre à jour et supprimer les éléments financiers
+  const onAddFinancialItem = (item) => {
+    // Logique pour ajouter un élément financier
   };
 
-  const onAddFinancialItem = (newItem) => {
-    // Logique pour ajouter un nouvel item via API puis mettre à jour l'état local
+  const onUpdateFinancialItem = async (item, fieldKey, newValue) => {
+    const updatedItem = updateItem(item, fieldKey, newValue);
+    const result = await updateFinancialItem(updatedItem);
+    if (result) {
+      setProfessionalIncomes((currentItems) => {
+        return currentItems.map((fi) =>
+          fi.id === item.id ? { ...fi, ...updatedItem } : fi
+        );
+      });
+    }
   };
 
   const onDeleteFinancialItem = (itemId) => {
-    // Logique pour supprimer l'item via API puis mettre à jour l'état local
+    // Logique pour supprimer un élément financier
   };
 
+  function updateItem(item, valuePath, value) {
+    const updatedItem = { ...item };
+    if (valuePath.includes(".")) {
+      const keys = valuePath.split(".");
+      const lastKey = keys.pop();
+      const lastObj = keys.reduce(
+        (o, key) => (o[key] = o[key] || {}),
+        updatedItem
+      );
+      lastObj[lastKey] = value;
+    } else {
+      updatedItem[valuePath] = value;
+    }
+    return updatedItem;
+  }
+
   return (
-    <div className={loading ? "loading" : ""}>
-      {loading ? (
+    <div className={loadingGetFinancialItems ? "loading" : ""}>
+      {loadingGetFinancialItems ? (
         <div>Chargement...</div>
+      ) : error ? (
+        <div>Une erreur est survenue lors du chargement des données.</div>
       ) : (
         <main>
           <h1>Profits</h1>

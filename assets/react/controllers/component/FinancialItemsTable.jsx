@@ -1,80 +1,12 @@
 import React, { useState, useMemo, useCallback } from "react";
-import EditableCell from "./EditableCell";
-
-const tableSpecifications = {
-  profits: {
-    caption: "Combien je vais vendre de produits ou services par mois",
-    headers: [
-      { label: "Produit", key: "name" },
-      ...Array.from({ length: 12 }, (_, i) => {
-        return {
-          label: new Date(0, i).toLocaleString("fr", { month: "short" }),
-          key: "attributes.sale_per_month." + i + ".quantity",
-        };
-      }),
-      { label: "Total ANNUEL" }, // columnTotal
-    ],
-    rows: (item) => [
-      { value: item.name || "" },
-      ...(item.attributes.sale_per_month || []),
-    ],
-    finalRow: (financialItems) => {
-      const monthlyTotals = Array.from({ length: 12 }, () => 0);
-      let annualTotal = 0;
-
-      financialItems.forEach((item) => {
-        for (let i = 0; i < 12; i++) {
-          const monthSale =
-            item.attributes.sale_per_month && item.attributes.sale_per_month[i]
-              ? item.attributes.sale_per_month[i].quantity
-              : 0;
-          const price = item.value || 0;
-          const monthlyRevenue = monthSale * price;
-          monthlyTotals[i] += monthlyRevenue;
-          annualTotal += monthlyRevenue;
-        }
-      });
-
-      // Création de la ligne finale avec les totaux mensuels et le total annuel
-      const finalRowCells = [
-        { value: "CA HT" },
-        ...monthlyTotals.map((total) => ({ value: total })),
-        { value: annualTotal },
-      ];
-
-      return (
-        <tr>
-          {finalRowCells.map((cell, index) => (
-            <td key={index}>{cell.value}</td>
-          ))}
-        </tr>
-      );
-    },
-    columnTotalKey: "quantity",
-  },
-  products: {
-    caption: "À quel prix vais-je vendre chacun de ces produits ou services ?",
-    headers: [
-      { label: "Intitulé", key: "name" },
-      { label: "Coût unitaire*", key: "attributes.manufacturing_cost" },
-      { label: "Prix de vente HT", key: "value" },
-    ],
-    rows: (item) => [
-      { value: item.name || "---" },
-      { value: item.attributes.manufacturing_cost || "---" },
-      { value: item.value || "---" },
-    ],
-    finalRow: null,
-    columnTotalKey: null,
-  },
-  // Plus de spécifications pour d'autres types peuvent être ajoutées ici...
-};
+import { tableSpecifications } from "./config/tableSpecifications";
+import TableRow from "./TableRow";
 
 const FinancialItemsTable = ({
   financialItems = [],
   type,
   onAddFinancialItem,
-  onEditFinancialItem,
+  onUpdateFinancialItem,
   onDeleteFinancialItem,
 }) => {
   const specification = tableSpecifications[type];
@@ -82,101 +14,130 @@ const FinancialItemsTable = ({
     console.error(`Type de table non reconnu: ${type}`);
     return null;
   }
-  const { caption, headers, rows, columnTotalKey, finalRow } = specification;
+  const { caption, headers } = specification;
+  // const [editableNewItem, setEditableNewItem] = useState({});
+  // const [isAddingNewItem, setIsAddingNewItem] = useState(false);
 
-  const [isAddingNewItem, setIsAddingNewItem] = useState(false);
-  const [editableNewItem, setEditableNewItem] = useState({});
+  // const handleEditCell = (value, itemId, fieldKey) => {
+  //   onEditFinancialItem(value, itemId, fieldKey);
+  // };
 
-  const annualTotal = useMemo(() => {
-    return financialItems.reduce((acc, item) => {
-      let itemTotal = 0;
-      for (let i = 0; i < 12; i++) {
-        const sale = item.attributes.sale_per_month?.[i]?.quantity || 0;
-        itemTotal += sale * (item.value || 0);
-      }
-      return acc + itemTotal;
-    }, 0);
-  }, [financialItems]);
+  // const handleSaveNewItem = () => {
+  //   onAddFinancialItem(editableNewItem);
+  //   setEditableNewItem({});
+  //   setIsAddingNewItem(false);
+  // };
 
-  const handleEditCell = (value, itemId, fieldKey) => {
-    // Logique pour gérer l'édition des cellules et mise à jour des items
-    onEditFinancialItem(itemId, { [fieldKey]: value });
-  };
+  // const renderRows = useCallback(
+  //   (item) => (
+  //     <tr key={item.id}>
+  //       {rows(item)?.map((rowItem, index) => (
+  //         <td key={index}>
+  //           {(type === "profits" && index >= 1 && index <= 12) ||
+  //           (type === "products" && index >= 0 && index <= 2) ? (
+  //             <EditableCell
+  //               initialValue={rowItem.value ?? rowItem.quantity ?? ""}
+  //               onSave={(newVal) =>
+  //                 handleEditCell(newVal, item.id, headers[index].key)
+  //               }
+  //               itemId={item.id}
+  //               fieldKey={headers[index].key}
+  //             />
+  //           ) : (
+  //             <span>{rowItem.value ?? rowItem.quantity ?? ""}</span>
+  //           )}
+  //         </td>
+  //       ))}
+  //       {columnTotalKey && (
+  //         <td>
+  //           {rows(item)
+  //             ?.slice(1)
+  //             .reduce(
+  //               (sum, rowItem) =>
+  //                 sum + (parseInt(rowItem[columnTotalKey], 10) || 0),
+  //               0
+  //             )}
+  //         </td>
+  //       )}
+  //     </tr>
+  //   ),
+  //   [type, rows, columnTotalKey]
+  // );
 
-  const handleSaveNewItem = () => {
-    // Validation et envoi du nouvel item
-    onAddFinancialItem(editableNewItem);
-    setEditableNewItem({});
-    setIsAddingNewItem(false);
-  };
+  // const { annualTotal, monthlyTotals } = useMemo(() => {
+  //   if (type !== "profits") return { monthlyTotals: [], annualTotal: 0 };
 
-  const renderEditableRow = () => {
-    return (
-      <tr key="new-item">
-        {headers.map((header, index) => (
-          <td key={index}>
-            <input
-              type="text"
-              value={editableNewItem[header.toLowerCase().replace(/\s/g, "_")]}
-              onChange={(e) =>
-                setEditableNewItem({
-                  ...editableNewItem,
-                  [header.toLowerCase().replace(/\s/g, "_")]: e.target.value,
-                })
-              }
-              placeholder={header}
-            />
-          </td>
-        ))}
-        <td>
-          <button onClick={handleSaveNewItem}>Sauvegarder</button>
-        </td>
-      </tr>
-    );
-  };
+  //   const monthlyTotals = Array.from({ length: 12 }, () => 0);
+  //   let annualTotal = 0;
 
-  const renderRows = useCallback(
-    (item) => (
-      <tr key={item.id}>
-        {rows(item)?.map((rowItem, index) => (
-          <td key={index}>
-            {(type === "profits" && index >= 1 && index <= 12) ||
-            (type === "products" && index >= 0 && index <= 2) ? (
-              <EditableCell
-                initialValue={rowItem.value ?? rowItem.quantity ?? ""}
-                onSave={(newVal) =>
-                  handleEditCell(newVal, item.id, headers[index].key)
-                }
-                itemId={item.id}
-                fieldKey={headers[index].key}
-              />
-            ) : (
-              <span>{rowItem.value ?? rowItem.quantity ?? ""}</span>
-            )}
-          </td>
-        ))}
-        {columnTotalKey && (
-          <td>
-            {rows(item)
-              ?.slice(1)
-              .reduce(
-                (sum, rowItem) =>
-                  sum + (parseInt(rowItem[columnTotalKey], 10) || 0),
-                0
-              )}
-          </td>
-        )}
-      </tr>
-    ),
-    [rows, columnTotalKey, type, onEditFinancialItem]
-  );
+  //   financialItems.forEach((item) => {
+  //     for (let i = 0; i < 12; i++) {
+  //       const monthSale =
+  //         item.attributes.sale_per_month && item.attributes.sale_per_month[i]
+  //           ? item.attributes.sale_per_month[i].quantity
+  //           : 0;
+  //       const price = item.value || 0;
+  //       const monthlyRevenue = monthSale * price;
+  //       monthlyTotals[i] += monthlyRevenue;
+  //       annualTotal += monthlyRevenue;
+  //     }
+  //   });
 
-  const renderFinalRow = useCallback(() => {
-    if (finalRow && typeof finalRow === "function") {
-      return finalRow(financialItems);
-    }
-    return null;
-  }, [financialItems, finalRow]);
+  //   return { monthlyTotals, annualTotal };
+  // }, [type, financialItems]);
+
+  // const finalRowRender = useMemo(() => {
+  //   if (type !== "profits") return null;
+
+  //   const finalRowCells = [
+  //     { value: "CA HT" },
+  //     ...monthlyTotals.map((total) => ({ value: total })),
+  //     { value: annualTotal },
+  //   ];
+
+  //   return (
+  //     <tr>
+  //       {finalRowCells.map((cell, index) => (
+  //         <td key={index}>{cell.value}</td>
+  //       ))}
+  //     </tr>
+  //   );
+  // }, [monthlyTotals, annualTotal]);
+
+  // const renderRowsMemoized = useMemo(
+  //   () =>
+  //     financialItems.map((item) =>
+  //       renderRows(item, type, rows, columnTotalKey, headers, handleEditCell)
+  //     ),
+  //   [financialItems, type, rows, columnTotalKey, headers, handleEditCell]
+  // );
+
+  // // Fonction pour rendre la ligne éditable pour "products"
+  // const renderEditableRow = useMemo(() => {
+  //   if (type !== "products" || !isAddingNewItem) return null;
+  //   return (
+  //     <tr key="new-item">
+  //       {headers.map((header, index) => (
+  //         <td key={index}>
+  //           <input
+  //             type="text"
+  //             value={editableNewItem[header.key] || ""}
+  //             onChange={(e) =>
+  //               setEditableNewItem({
+  //                 ...editableNewItem,
+  //                 [header.key]: e.target.value,
+  //               })
+  //             }
+  //             placeholder={header.label}
+  //           />
+  //         </td>
+  //       ))}
+  //       <td>
+  //         <button onClick={handleSaveNewItem}>Sauvegarder</button>
+  //       </td>
+  //     </tr>
+  //   );
+  // }, [isAddingNewItem, headers, editableNewItem, handleSaveNewItem, type]);
 
   return (
     <>
@@ -190,12 +151,20 @@ const FinancialItemsTable = ({
           </tr>
         </thead>
         <tbody>
-          {financialItems.map(renderRows)}
-          {type === "profits" && renderFinalRow()}
-          {type === "products" && isAddingNewItem && renderEditableRow()}
+          {financialItems.map((item) => (
+            <TableRow
+              key={item.id}
+              item={item}
+              specification={specification}
+              onEditCell={onUpdateFinancialItem}
+            />
+          ))}
+          {/* {renderRowsMemoized}
+          {type === "profits" && finalRowRender}
+          {type === "products" && isAddingNewItem && renderEditableRow()} */}
         </tbody>
       </table>
-      {type === "profits" && (
+      {/* {type === "profits" && (
         <div style={{ marginTop: "20px" }}>
           <span>CA HT total Année 1: </span>
           <span>
@@ -209,8 +178,7 @@ const FinancialItemsTable = ({
         <button onClick={() => setIsAddingNewItem(true)}>
           Ajouter un produit
         </button>
-      )}
-      {/* Le reste du composant reste inchangé */}
+      )} */}
     </>
   );
 };
