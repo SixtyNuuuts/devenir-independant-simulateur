@@ -1,28 +1,41 @@
 import React from "react";
 import EditableCell from "./EditableCell";
+import "./TableRow.scss";
 
-const TableRow = ({ item, specification, onEditCell }) => {
-  const { headers, rows, columnTotalKey } = specification;
+const TableRow = ({ item, specification, onEditCell, onDelete }) => {
+  const { headers, rows, type, columnTotalKey } = specification;
 
   return (
     <tr key={item.id}>
       {rows(item)?.map((rowItem, index) => (
-        <td key={index}>
-          <EditableCell
-            initialValue={rowItem.value ?? rowItem.quantity ?? ""}
-            cellInputType={
-              headers[index].key.includes("quantity") ? "number" : "text"
-            }
-            onSave={(newVal) =>
-              onEditCell(
-                item,
-                headers[index].key,
-                headers[index].key.includes("quantity")
-                  ? parseInt(newVal)
-                  : newVal
-              )
-            }
-          />
+        <td key={index} className={item.isLoading ? "loading" : ""}>
+          {index === 0 && type === "products" ? (
+            <div className="cell-with-delete">
+              {rowItem.value}
+              <button
+                type="button"
+                aria-label="Supprimer Produit"
+                className="delete-icon"
+                onClick={() => onDelete(item.id)}
+              />
+            </div>
+          ) : (
+            <EditableCell
+              initialValue={rowItem.value ?? rowItem.quantity ?? ""}
+              cellInputType={
+                headers[index].key.includes("quantity") ? "number" : "text"
+              }
+              onSave={(newVal) =>
+                onEditCell(
+                  item.id,
+                  headers[index].key,
+                  headers[index].key.includes("quantity")
+                    ? parseInt(newVal)
+                    : newVal
+                )
+              }
+            />
+          )}
         </td>
       ))}
       {columnTotalKey && (

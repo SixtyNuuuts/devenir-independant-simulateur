@@ -1,0 +1,18 @@
+.loading {
+    background-color: #eee;
+    animation: pulse 1.5s infinite ease-in-out;
+
+    @keyframes pulse {
+        0% {
+            background-color: #fff;
+        }
+
+        50% {
+            background-color: #eee;
+        }
+
+        100% {
+            background-color: #fff;
+        }
+    }
+}

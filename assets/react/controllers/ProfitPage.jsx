@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import FinancialItemsTable from "./component/FinancialItemsTable";
 import useGetFinancialItems from "./hook/useGetFinancialItems";
 import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
+import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
 
 function ProfitPage({ simulationId }) {
   const {
@@ -9,12 +10,9 @@ function ProfitPage({ simulationId }) {
     isLoading: loadingGetFinancialItems,
     error,
   } = useGetFinancialItems("/professional/income", simulationId);
-
-  const {
-    updateFinancialItem,
-    isLoading: loadingUpdateFinancialItem,
-    error: updateError,
-  } = useUpdateFinancialItem();
+  const { updateNestedItemValue, updateFinancialItem } =
+    useUpdateFinancialItem();
+  const { deleteFinancialItem } = useDeleteFinancialItem();
 
   const [professionalIncomes, setProfessionalIncomes] = useState([]);
 
@@ -27,37 +25,48 @@ function ProfitPage({ simulationId }) {
     // Logique pour ajouter un élément financier
   };
 
-  const onUpdateFinancialItem = async (item, fieldKey, newValue) => {
-    const updatedItem = updateItem(item, fieldKey, newValue);
-    const result = await updateFinancialItem(updatedItem);
-    if (result) {
-      setProfessionalIncomes((currentItems) => {
-        return currentItems.map((fi) =>
-          fi.id === item.id ? { ...fi, ...updatedItem } : fi
-        );
-      });
-    }
-  };
-
-  const onDeleteFinancialItem = (itemId) => {
-    // Logique pour supprimer un élément financier
-  };
-
-  function updateItem(item, valuePath, value) {
-    const updatedItem = { ...item };
-    if (valuePath.includes(".")) {
-      const keys = valuePath.split(".");
-      const lastKey = keys.pop();
-      const lastObj = keys.reduce(
-        (o, key) => (o[key] = o[key] || {}),
-        updatedItem
+  const onUpdateFinancialItem = async (itemId, fieldKey, newValue) => {
+    setProfessionalIncomes((currentItems) =>
+      currentItems.map((item) =>
+        item.id === itemId ? { ...item, isLoading: true } : item
+      )
+    );
+    const originalItem = professionalIncomes.find((item) => item.id === itemId);
+    const newItem = updateNestedItemValue(originalItem, fieldKey, newValue);
+    const result = await updateFinancialItem(newItem);
+    if (result && result.success) {
+      setProfessionalIncomes((currentItems) =>
+        currentItems.map((item) =>
+          item.id === itemId ? { ...item, ...newItem, isLoading: false } : item
+        )
       );
-      lastObj[lastKey] = value;
     } else {
-      updatedItem[valuePath] = value;
+      setProfessionalIncomes((currentItems) =>
+        currentItems.map((item) =>
+          item.id === itemId ? { ...item, isLoading: false } : item
+        )
+      );
     }
-    return updatedItem;
-  }
+  };
+
+  const onDeleteFinancialItem = async (itemId) => {
+    setProfessionalIncomes((currentItems) =>
+      currentItems.map((item) =>
+        item.id === itemId ? { ...item, isLoading: true } : item
+      )
+    );
+    const result = await deleteFinancialItem(itemId);
+    if (result && result.success) {
+      setProfessionalIncomes((currentItems) =>
+        currentItems.filter((item) => item.id !== itemId)
+      );
+    }
+    setProfessionalIncomes((currentItems) =>
+      currentItems.map((item) =>
+        item.id === itemId ? { ...item, isLoading: false } : item
+      )
+    );
+  };
 
   return (
     <div className={loadingGetFinancialItems ? "loading" : ""}>

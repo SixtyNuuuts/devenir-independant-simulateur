@@ -155,8 +155,9 @@ const FinancialItemsTable = ({
             <TableRow
               key={item.id}
               item={item}
-              specification={specification}
+              specification={{ ...specification, type }}
               onEditCell={onUpdateFinancialItem}
+              onDelete={onDeleteFinancialItem}
             />
           ))}
           {/* {renderRowsMemoized}

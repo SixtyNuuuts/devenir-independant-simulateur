@@ -16,7 +16,7 @@ const useGetFinancialItems = (financialItemsPath, simulationId) => {
         const data = await response.json();
         setFinancialItems(data);
       } catch (err) {
-        setError('Erreur lors de la récupération des données : ' + err.message);
+        setError(`Erreur lors de la récupération des données : ${err.message}`);
       } finally {
         setIsLoading(false);
       }
