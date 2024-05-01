@@ -1,6 +1,5 @@
 const useUpdateFinancialItem = () => {
   const updateFinancialItem = async (item) => {
-    // item.isLoading = true;
     try {
       const response = await fetch(`/financial-item/update/${item.id}`, {
         method: 'PUT',
@@ -12,9 +11,7 @@ const useUpdateFinancialItem = () => {
       }
       return await response.json();
     } catch (err) {
-      return `Erreur lors de l\'update des données : ${err.message}`;
-    } finally {
-      // item.isLoading = false;
+      return `Erreur lors de l\'update du financial item : ${err.message}`;
     }
   };
 

@@ -10,7 +10,7 @@ const useDeleteFinancialItem = () => {
       }
       return await response.json();
     } catch (err) {
-      return `Erreur lors de la suppression: ${err.message}`;
+      return `Erreur lors de la suppression du financial item: ${err.message}`;
     }
   };
 

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
-import { tableSpecifications } from "./config/tableSpecifications";
+import { tableSpecifications } from "./specification/tableSpecifications";
 import TableRow from "./TableRow";
 
 const FinancialItemsTable = ({
@@ -165,7 +165,8 @@ const FinancialItemsTable = ({
           {type === "products" && isAddingNewItem && renderEditableRow()} */}
         </tbody>
       </table>
-      {/* {type === "profits" && (
+      {
+        /* {type === "profits" && (
         <div style={{ marginTop: "20px" }}>
           <span>CA HT total Année 1: </span>
           <span>
@@ -174,12 +175,13 @@ const FinancialItemsTable = ({
               : annualTotal.toLocaleString("fr-FR")}
           </span>
         </div>
-      )}
-      {type === "products" && (
-        <button onClick={() => setIsAddingNewItem(true)}>
-          Ajouter un produit
-        </button>
-      )} */}
+      )} */
+        type === "products" && (
+          <button onClick={() => handleAddFinancialItem()}>
+            Ajouter un {type === "products" ? "produit" : "item"}
+          </button>
+        )
+      }
     </>
   );
 };
