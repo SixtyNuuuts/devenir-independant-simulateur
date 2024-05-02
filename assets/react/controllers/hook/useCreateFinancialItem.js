@@ -15,7 +15,24 @@ const useCreateFinancialItem = () => {
     }
   };
 
-  return { createFinancialItem };
+  const formatFinancialItem = (item, simulationId, itemNature = "default", itemType = "default", quantityDefault = 50) => {
+    return {
+      simulation_id: simulationId,
+      name: item.name,
+      value: item.value,
+      nature: itemNature,
+      type: itemType,
+      attributes: {
+        sale_per_month: Array.from({ length: 12 }, (_, index) => ({
+          month: index + 1,
+          quantity: quantityDefault
+        })),
+        manufacturing_cost: item.manufacturing_cost
+      }
+    };
+  };
+
+  return { createFinancialItem, formatFinancialItem };
 };
 
 export default useCreateFinancialItem;

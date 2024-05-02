@@ -69,9 +69,10 @@ class FinancialItemController extends AbstractController
 
 		$financialItemName = \is_string($data['name'] ?? null) ? $data['name'] : '---';
 		$financialItemValue = is_numeric($data['value'] ?? null) ? (string) $data['value'] : '0.00';
-		$financialItemNature = \is_string($data['nature'] ?? null) ? FinancialItemNature::from($data['nature']) : null;
-		$financialItemType = \is_string($data['type'] ?? null) ? FinancialItemType::from($data['type']) : null;
+		$financialItemNature = \is_string($data['nature'] ?? null) ? FinancialItemNature::from($data['nature']) : FinancialItemNature::DEFAULT;
+		$financialItemType = \is_string($data['type'] ?? null) ? FinancialItemType::from($data['type']) : FinancialItemType::DEFAULT;
 		$financialItemAttributes = \is_array($data['attributes'] ?? null) ? $data['attributes'] : [];
+		$financialItemSimulation = \is_numeric($data['simulation_id'] ?? null) ? $this->simulationRepository->findOneBy(['id' => $data['simulation_id']]) : null;
 
 		try {
 			$financialItem = new FinancialItem();
@@ -80,11 +81,12 @@ class FinancialItemController extends AbstractController
 			$financialItem->setNature($financialItemNature);
 			$financialItem->setType($financialItemType);
 			$financialItem->setAttributes($financialItemAttributes);
+			$financialItem->setSimulation($financialItemSimulation);
 
 			$this->em->persist($financialItem);
 			$this->em->flush();
 
-			return $this->json(['success' => 'FinancialItem créé !'], JsonResponse::HTTP_CREATED);
+			return $this->json(['success' => $financialItem->getId()], JsonResponse::HTTP_CREATED);
 		} catch (\Exception $exception) {
 			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
 		}

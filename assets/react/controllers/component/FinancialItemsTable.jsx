@@ -177,7 +177,7 @@ const FinancialItemsTable = ({
         </div>
       )} */
         type === "products" && (
-          <button onClick={() => handleAddFinancialItem()}>
+          <button onClick={() => onAddFinancialItem()}>
             Ajouter un {type === "products" ? "produit" : "item"}
           </button>
         )

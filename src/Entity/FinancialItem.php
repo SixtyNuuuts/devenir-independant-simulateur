@@ -74,24 +74,24 @@ class FinancialItem
 		return $this;
 	}
 
-	public function getNature(): ?FinancialItemNature
+	public function getNature(): FinancialItemNature
 	{
 		return $this->nature;
 	}
 
-	public function setNature(?FinancialItemNature $nature): static
+	public function setNature(FinancialItemNature $nature): static
 	{
 		$this->nature = $nature;
 
 		return $this;
 	}
 
-	public function getType(): ?FinancialItemType
+	public function getType(): FinancialItemType
 	{
 		return $this->type;
 	}
 
-	public function setType(?FinancialItemType $type): static
+	public function setType(FinancialItemType $type): static
 	{
 		$this->type = $type;
 

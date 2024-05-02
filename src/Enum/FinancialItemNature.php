@@ -6,6 +6,7 @@ namespace App\Enum;
 
 enum FinancialItemNature: string
 {
+	case DEFAULT = 'default';
 	case PROFESSIONAL = 'professional';
 	case PERSONAL = 'personal';
 }

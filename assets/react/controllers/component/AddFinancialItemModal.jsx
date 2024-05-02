@@ -20,9 +20,8 @@ const AddProfessionalIncome = ({ type, isOpen, onClose, onSave }) => {
   );
 
   const handleChange = (e) => {
-    const { name, value, manufacturing_cost } = e.target;
-    console.log(name, value, manufacturing_cost);
-    // setItem((prev) => ({ ...prev, [name]: value }));
+    const { name: fieldName, value: fieldValue } = e.target;
+    setItem((prev) => ({ ...prev, [fieldName]: fieldValue }));
   };
 
   const handleSubmit = (e) => {

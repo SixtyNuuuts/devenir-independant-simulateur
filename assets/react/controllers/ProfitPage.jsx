@@ -13,9 +13,9 @@ function ProfitPage({ simulationId }) {
     error,
   } = useGetFinancialItems("/professional/income", simulationId);
 
-  const { createFinancialItem } = useCreateFinancialItem();
+  const { createFinancialItem, formatFinancialItem } = useCreateFinancialItem();
 
-  const { updateNestedItemValue, updateFinancialItem } =
+  const { updateFinancialItem, updateNestedItemValue } =
     useUpdateFinancialItem();
 
   const { deleteFinancialItem } = useDeleteFinancialItem();
@@ -33,11 +33,20 @@ function ProfitPage({ simulationId }) {
     setModalAddProfessionalIncomeOpen(true);
   };
 
-  // Handlers pour ajouter, mettre à jour et supprimer les éléments financiers
   const onAddFinancialItemProcess = async (item) => {
-    const result = await createFinancialItem(item);
+    const newItem = formatFinancialItem(
+      item,
+      simulationId,
+      "professional",
+      "income"
+    );
+    const result = await createFinancialItem(newItem);
     if (result && result.success) {
-      setProfessionalIncomes((currentItems) => [...currentItems, newItem]);
+      // result est l'id de l'item créé
+      setProfessionalIncomes((currentItems) => [
+        ...currentItems,
+        { ...newItem, id: result },
+      ]);
     } else {
       // Gérer l'erreur
     }

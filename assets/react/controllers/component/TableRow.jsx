@@ -17,7 +17,9 @@ const TableRow = ({ item, specification, onEditCell, onDelete }) => {
                 aria-label="Supprimer Produit"
                 className="delete-icon"
                 onClick={() => onDelete(item.id)}
-              />
+              >
+                X
+              </button>
             </div>
           ) : (
             <EditableCell
