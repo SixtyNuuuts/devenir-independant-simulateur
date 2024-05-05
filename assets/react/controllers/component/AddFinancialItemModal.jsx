@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AddFinancialItemModalSpecifications } from "./specification/AddFinancialItemModalSpecifications";
 
 const AddProfessionalIncome = ({ type, isOpen, onClose, onSave }) => {
@@ -18,6 +18,20 @@ const AddProfessionalIncome = ({ type, isOpen, onClose, onSave }) => {
       {}
     )
   );
+
+  const resetForm = () => {
+    const resetItem = {};
+    fields.forEach((field) => {
+      resetItem[field.name] = "";
+    });
+    setItem(resetItem);
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      resetForm();
+    }
+  }, [isOpen]);
 
   const handleChange = (e) => {
     const { name: fieldName, value: fieldValue } = e.target;

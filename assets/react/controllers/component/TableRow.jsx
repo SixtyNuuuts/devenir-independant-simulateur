@@ -3,13 +3,13 @@ import EditableCell from "./EditableCell";
 import "./TableRow.scss";
 
 const TableRow = ({ item, specification, onEditCell, onDelete }) => {
-  const { headers, rows, type, columnTotalKey } = specification;
+  const { headers, rows, isDeletableItems, columnTotalKey } = specification;
 
   return (
     <tr key={item.id}>
       {rows(item)?.map((rowItem, index) => (
         <td key={index} className={item.isLoading ? "loading" : ""}>
-          {index === 0 && type === "products" ? (
+          {index === 0 && isDeletableItems ? (
             <div className="cell-with-delete">
               {rowItem.value}
               <button

@@ -15,7 +15,7 @@ const useCreateFinancialItem = () => {
     }
   };
 
-  const formatFinancialItem = (item, simulationId, itemNature = "default", itemType = "default", quantityDefault = 50) => {
+  const formatFinancialItemForCreate = (item, simulationId, itemNature = "default", itemType = "default", quantityDefault = 50) => {
     return {
       simulation_id: simulationId,
       name: item.name,
@@ -32,7 +32,7 @@ const useCreateFinancialItem = () => {
     };
   };
 
-  return { createFinancialItem, formatFinancialItem };
+  return { createFinancialItem, formatFinancialItemForCreate };
 };
 
 export default useCreateFinancialItem;

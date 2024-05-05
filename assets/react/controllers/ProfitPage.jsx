@@ -13,9 +13,10 @@ function ProfitPage({ simulationId }) {
     error,
   } = useGetFinancialItems("/professional/income", simulationId);
 
-  const { createFinancialItem, formatFinancialItem } = useCreateFinancialItem();
+  const { createFinancialItem, formatFinancialItemForCreate } =
+    useCreateFinancialItem();
 
-  const { updateFinancialItem, updateNestedItemValue } =
+  const { updateFinancialItem, formatFinancialItemForUpdate } =
     useUpdateFinancialItem();
 
   const { deleteFinancialItem } = useDeleteFinancialItem();
@@ -34,22 +35,22 @@ function ProfitPage({ simulationId }) {
   };
 
   const onAddFinancialItemProcess = async (item) => {
-    const newItem = formatFinancialItem(
+    const newItem = formatFinancialItemForCreate(
       item,
       simulationId,
       "professional",
       "income"
     );
     const result = await createFinancialItem(newItem);
-    if (result && result.success) {
-      // result est l'id de l'item créé
+    if (result && result.success && result.id) {
       setProfessionalIncomes((currentItems) => [
         ...currentItems,
-        { ...newItem, id: result },
+        { ...newItem, id: result.id },
       ]);
     } else {
       // Gérer l'erreur
     }
+    console.log(professionalIncomes);
     setModalAddProfessionalIncomeOpen(false);
   };
 
@@ -60,7 +61,11 @@ function ProfitPage({ simulationId }) {
       )
     );
     const originalItem = professionalIncomes.find((item) => item.id === itemId);
-    const newItem = updateNestedItemValue(originalItem, fieldKey, newValue);
+    const newItem = formatFinancialItemForUpdate(
+      originalItem,
+      fieldKey,
+      newValue
+    );
     const result = await updateFinancialItem(newItem);
     if (result && result.success) {
       setProfessionalIncomes((currentItems) =>

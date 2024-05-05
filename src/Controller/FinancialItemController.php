@@ -86,7 +86,7 @@ class FinancialItemController extends AbstractController
 			$this->em->persist($financialItem);
 			$this->em->flush();
 
-			return $this->json(['success' => $financialItem->getId()], JsonResponse::HTTP_CREATED);
+			return $this->json(['success' => 'FinancialItem créé !', 'id' => $financialItem->getId()], JsonResponse::HTTP_CREATED);
 		} catch (\Exception $exception) {
 			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
 		}

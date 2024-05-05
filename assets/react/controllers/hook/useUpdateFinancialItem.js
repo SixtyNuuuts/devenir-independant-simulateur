@@ -15,7 +15,7 @@ const useUpdateFinancialItem = () => {
     }
   };
 
-  const updateNestedItemValue = (item, valuePath, value) => {
+  const formatFinancialItemForUpdate = (item, valuePath, value) => {
     const newItem = { ...item };
     if (valuePath.includes(".")) {
       const keys = valuePath.split(".");
@@ -31,7 +31,7 @@ const useUpdateFinancialItem = () => {
     return newItem;
   }
 
-  return { updateFinancialItem, updateNestedItemValue };
+  return { updateFinancialItem, formatFinancialItemForUpdate };
 };
 
 export default useUpdateFinancialItem;
