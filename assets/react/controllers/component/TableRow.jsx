@@ -23,18 +23,10 @@ const TableRow = ({ item, specification, onEditCell, onDelete }) => {
             </div>
           ) : (
             <EditableCell
-              initialValue={rowItem.value ?? rowItem.quantity ?? ""}
-              cellInputType={
-                headers[index].key.includes("quantity") ? "number" : "text"
-              }
+              itemValue={rowItem.value}
+              itemType={rowItem.type}
               onSave={(newVal) =>
-                onEditCell(
-                  item.id,
-                  headers[index].key,
-                  headers[index].key.includes("quantity")
-                    ? parseInt(newVal)
-                    : newVal
-                )
+                onEditCell(item.id, headers[index].key, newVal)
               }
             />
           )}

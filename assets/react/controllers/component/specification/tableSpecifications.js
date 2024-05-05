@@ -10,8 +10,8 @@ export const tableSpecifications = {
       { label: "Total ANNUEL" },
     ],
     rows: (item) => [
-      { value: item.name || "" },
-      ...(item.attributes.sale_per_month || []),
+      { value: item.name || "", type: "text" },
+      ...(item.attributes.sale_per_month || []).map(sale => ({ value: sale.quantity, type: "number" })),
     ],
     columnTotalKey: "quantity",
     lineTotalData: (financialItems) => {
@@ -30,7 +30,7 @@ export const tableSpecifications = {
           annualTotal += monthlyRevenue;
         }
       });
-      console.log(monthlyTotals, annualTotal);
+
       return { lineTotalLabel: "CA HT", monthlyTotals, annualTotal };
     },
   },
@@ -42,9 +42,9 @@ export const tableSpecifications = {
       { label: "Prix de vente HT", key: "value" },
     ],
     rows: (item) => [
-      { value: item.name || "" },
-      { value: item.attributes.manufacturing_cost || "" },
-      { value: item.value || "" },
+      { value: item.name || "", type: "text" },
+      { value: item.attributes.manufacturing_cost || "", type: "financial-value" },
+      { value: item.value || "", type: "financial-value" },
     ],
     columnTotalKey: null,
     isDeletableItems: true,

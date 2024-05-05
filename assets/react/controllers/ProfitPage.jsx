@@ -50,7 +50,7 @@ function ProfitPage({ simulationId }) {
     } else {
       // Gérer l'erreur
     }
-    console.log(professionalIncomes);
+
     setModalAddProfessionalIncomeOpen(false);
   };
 
