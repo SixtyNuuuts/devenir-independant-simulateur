@@ -3,49 +3,63 @@ import React, { useState } from "react";
 const EditableCell = ({ itemValue: initialValue, itemType, onSave }) => {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(initialValue);
+  const minValNum = 0;
+  const maxValNum = 9999999;
 
-  const handleChange = (e) => {
-    let newValue = e.target.value;
-    const isDeleteContentBackward =
-      e.nativeEvent.inputType === "deleteContentBackward";
-
-    if (!newValue && !isDeleteContentBackward) return;
+  const formatValue = (value, itemType) => {
+    let formatedValue = value;
 
     switch (itemType) {
       case "number":
-        newValue = parseFloat(newValue);
-        const minValNum = 0;
-        const maxValNum = 9999999;
+        formatedValue = parseFloat(formatedValue);
 
-        if (newValue < minValNum) {
-          newValue = minValNum;
+        if (formatedValue < minValNum) {
+          formatedValue = minValNum;
         }
 
-        if (newValue > maxValNum) {
-          newValue = maxValNum;
+        if (formatedValue > maxValNum) {
+          formatedValue = maxValNum;
         }
         break;
 
       case "financial-value":
-        let numericRegex = /^\d+(\.\d{1,2})?$/;
+        // Étape 1 : Nettoyer l'entrée pour ne garder que les chiffres, les points et les virgules
+        let cleanValue = value.replace(/[^0-9,.]/g, "");
 
-        if (numericRegex.test(newValue)) {
-          newValue = newValue.replace(/\./g, ",");
-        } else {
-          newValue = newValue.replace(/[^\d.,]/g, "");
+        // Étape 2 : Remplacer toutes les virgules par des points pour uniformiser les séparateurs décimaux
+        cleanValue = cleanValue.replace(/,/g, ".");
 
-          newValue = newValue.replace(/([,.]\d{2})\d+/g, (match) =>
-            match.substring(0, match.length - 1)
-          );
+        // Étape 3 : Gérer les multiples points, ne garder que le dernier comme séparateur décimal
+        let parts = cleanValue.split(".").reverse();
+        let decimalPart = "00"; // Présumer qu'il n'y a pas de décimales si aucun point n'est présent
+        let integerPart = cleanValue; // Par défaut, toute la chaîne est la partie entière
 
-          newValue = newValue.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
+        if (parts.length > 1) {
+          // Plusieurs parties indiquent la présence de points
+          decimalPart = parts[0]; // La première partie dans le tableau inversé est la partie décimale
+          integerPart = parts.slice(1).reverse().join(""); // Le reste est la partie entière
         }
 
+        // Ajouter "0" si la partie décimale est incomplète
+        decimalPart = decimalPart.padEnd(2, "0").substring(0, 2);
+
+        // Étape 4 : Réassembler le nombre complet
+        formatedValue = `${integerPart}.${decimalPart}`;
+
+        // Convertir en nombre pour appliquer les limites
+        let numericValue = parseFloat(formatedValue);
+        console.log(formatedValue, numericValue);
+        if (numericValue < minValNum) {
+          formatedValue = `${minValNum.toFixed(2)}`;
+        }
+        if (numericValue > maxValNum) {
+          formatedValue = `${maxValNum.toFixed(2)}`;
+        }
         break;
 
       case "text":
-        if (newValue.length > 255) {
-          newValue = newValue.slice(0, 255);
+        if (formatedValue.length > 255) {
+          formatedValue = formatedValue.slice(0, 255);
         }
         break;
 
@@ -53,16 +67,28 @@ const EditableCell = ({ itemValue: initialValue, itemType, onSave }) => {
         break;
     }
 
-    setValue(newValue);
+    return formatedValue;
+  };
+
+  const displayValue = (value, itemType) => {
+    let displayedValue = value;
+
+    switch (itemType) {
+      case "financial-value":
+        displayedValue =
+          value.replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " €";
+        break;
+    }
+
+    return displayedValue;
   };
 
   const saveAndExitEditing = () => {
-    if (!value && itemType === "number") {
-      setValue(0);
+    const formattedValue = formatValue(value, itemType);
+    if (formattedValue !== initialValue) {
+      onSave(formattedValue);
     }
-    if (value !== initialValue) {
-      onSave(value);
-    }
+    setValue(formattedValue);
     setEditing(false);
   };
 
@@ -82,7 +108,7 @@ const EditableCell = ({ itemValue: initialValue, itemType, onSave }) => {
         <input
           type={itemType === "financial-value" ? "text" : itemType}
           value={value}
-          onChange={handleChange}
+          onChange={(e) => setValue(e.target.value)}
           autoFocus
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
@@ -94,7 +120,7 @@ const EditableCell = ({ itemValue: initialValue, itemType, onSave }) => {
           role="button"
           aria-label="Edit"
         >
-          {value}
+          {displayValue(value, itemType)}
         </span>
       )}
     </div>

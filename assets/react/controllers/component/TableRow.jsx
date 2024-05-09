@@ -3,7 +3,7 @@ import EditableCell from "./EditableCell";
 import "./TableRow.scss";
 
 const TableRow = ({ item, specification, onEditCell, onDelete }) => {
-  const { headers, rows, isDeletableItems, columnTotalKey } = specification;
+  const { headers, rows, isDeletableItems, columnTotalSum } = specification;
 
   return (
     <tr key={item.id}>
@@ -32,13 +32,12 @@ const TableRow = ({ item, specification, onEditCell, onDelete }) => {
           )}
         </td>
       ))}
-      {columnTotalKey && (
+      {columnTotalSum && (
         <td>
           {rows(item)
             ?.slice(1)
             .reduce(
-              (sum, rowItem) =>
-                sum + (parseInt(rowItem[columnTotalKey], 10) || 0),
+              (sum, rowItem) => sum + (parseFloat(rowItem.value, 10) || 0),
               0
             )}
         </td>

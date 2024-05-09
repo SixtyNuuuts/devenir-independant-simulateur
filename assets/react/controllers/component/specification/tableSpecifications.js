@@ -13,25 +13,34 @@ export const tableSpecifications = {
       { value: item.name || "", type: "text" },
       ...(item.attributes.sale_per_month || []).map(sale => ({ value: sale.quantity, type: "number" })),
     ],
-    columnTotalKey: "quantity",
-    lineTotalData: (financialItems) => {
+    columnTotalSum: true,
+    lineTotalData: (financialItems, lineTotalDataType) => {
+      let lineTotalLabel = '';
       const monthlyTotals = Array.from({ length: 12 }, () => 0);
       let annualTotal = 0;
 
-      financialItems.forEach((item) => {
-        for (let i = 0; i < 12; i++) {
-          const monthSale =
-            item.attributes.sale_per_month && item.attributes.sale_per_month[i]
-              ? item.attributes.sale_per_month[i].quantity
-              : 0;
-          const price = item.value || 0;
-          const monthlyRevenue = Math.round(monthSale * price);
-          monthlyTotals[i] += monthlyRevenue;
-          annualTotal += monthlyRevenue;
-        }
-      });
+      switch (lineTotalDataType) {
+        case 'profits':
+          lineTotalLabel = "CA HT";
+          financialItems.forEach((item) => {
+            for (let i = 0; i < 12; i++) {
+              const monthSale =
+                item.attributes.sale_per_month && item.attributes.sale_per_month[i]
+                  ? item.attributes.sale_per_month[i].quantity
+                  : 0;
+              const price = item.value || 0;
+              const monthlyRevenue = Math.round(parseFloat(monthSale) * parseFloat(price));
+              monthlyTotals[i] += monthlyRevenue;
+              annualTotal += monthlyRevenue;
+            }
+          });
+          break;
 
-      return { lineTotalLabel: "CA HT", monthlyTotals, annualTotal };
+        default:
+          break;
+      }
+
+      return { lineTotalLabel, monthlyTotals, annualTotal };
     },
   },
   products: {
@@ -46,7 +55,7 @@ export const tableSpecifications = {
       { value: item.attributes.manufacturing_cost || "", type: "financial-value" },
       { value: item.value || "", type: "financial-value" },
     ],
-    columnTotalKey: null,
+    columnTotalSum: false,
     isDeletableItems: true,
     addBtn: { text: "Ajouter un produit" },
   },

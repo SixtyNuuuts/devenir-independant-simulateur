@@ -1,6 +1,7 @@
 const useUpdateFinancialItem = () => {
   const updateFinancialItem = async (item) => {
     try {
+      console.log('item', item);
       const response = await fetch(`/financial-item/update/${item.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

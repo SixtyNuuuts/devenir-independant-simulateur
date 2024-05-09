@@ -17,7 +17,7 @@ const FinancialItemsTable = ({
   const { caption, headers, lineTotalData, addBtn } = specification;
 
   const { lineTotalLabel, monthlyTotals, annualTotal } = useMemo(
-    () => (lineTotalData ? lineTotalData(financialItems) : {}),
+    () => (lineTotalData ? lineTotalData(financialItems, "profits") : {}),
     [financialItems]
   );
 
