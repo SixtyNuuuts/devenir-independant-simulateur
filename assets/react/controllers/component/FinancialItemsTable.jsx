@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { tableSpecifications } from "./specification/tableSpecifications";
 import TableRow from "./TableRow";
+import f from "../utils/function";
 
 const FinancialItemsTable = ({
   financialItems = [],
@@ -14,33 +15,48 @@ const FinancialItemsTable = ({
     console.error(`Type de table non reconnu: ${type}`);
     return null;
   }
-  const { caption, headers, lineTotalData, addBtn } = specification;
+  const {
+    title,
+    caption,
+    headers,
+    finalRowFinancialData,
+    asteriskLegendText,
+    addBtn,
+  } = specification;
 
-  const { lineTotalLabel, monthlyTotals, annualTotal } = useMemo(
-    () => (lineTotalData ? lineTotalData(financialItems, "profits") : {}),
+  const { finalRowFinancialLabel, monthlyTotals, annualTotal } = useMemo(
+    () => (finalRowFinancialData ? finalRowFinancialData(financialItems) : {}),
     [financialItems]
   );
 
-  const totalRowRender = useMemo(() => {
+  const finalRowFinancialRender = useMemo(() => {
     if (!monthlyTotals && !annualTotal) return null;
 
-    const finalRowCells = [
-      { value: lineTotalLabel },
+    const finalRowFinancialCells = [
+      { value: finalRowFinancialLabel },
       ...monthlyTotals.map((total) => ({ value: total })),
       { value: annualTotal },
     ];
 
     return (
       <tr>
-        {finalRowCells.map((cell, index) => (
-          <td key={index}>{cell.value}</td>
+        {finalRowFinancialCells.map((cell, index) => (
+          <th key={index}>
+            {index === 0
+              ? cell.value
+              : f.displayValue(
+                  cell.value.toFixed(2).toString(),
+                  "financial-value"
+                )}
+          </th>
         ))}
       </tr>
     );
   }, [monthlyTotals, monthlyTotals]);
 
   return (
-    <>
+    <section>
+      {title && <h2>{title}</h2>}
       <table>
         <caption>{caption}</caption>
         <thead>
@@ -60,21 +76,40 @@ const FinancialItemsTable = ({
               onDelete={onDeleteFinancialItem}
             />
           ))}
-          {totalRowRender}
         </tbody>
+        {finalRowFinancialRender && <tfoot>{finalRowFinancialRender}</tfoot>}
       </table>
       {annualTotal && (
-        <div style={{ marginTop: "20px" }}>
-          <span>CA HT total Année 1: </span>
-          <span>{annualTotal >= 0 ? `+${annualTotal}` : annualTotal}</span>
+        <figure>
+          <figcaption id="annualLabel">CA HT total Année 1:</figcaption>
+          <span aria-labelledby="annualLabel">
+            {annualTotal === 0
+              ? 0
+              : annualTotal > 0
+              ? `+ ${f.displayValue(
+                  annualTotal.toFixed(2).toString(),
+                  "financial-value"
+                )}`
+              : `- ${f.displayValue(
+                  Math.abs(annualTotal).toFixed(2).toString(),
+                  "financial-value"
+                )}`}
+          </span>
+        </figure>
+      )}
+      {(addBtn || asteriskLegendText) && (
+        <div role="complementary">
+          {asteriskLegendText && (
+            <p aria-label="Explication de l'astérisque">{asteriskLegendText}</p>
+          )}
+          {addBtn && (
+            <button onClick={() => onAddFinancialItem()}>
+              {addBtn.text ?? "Ajouter un élément"}
+            </button>
+          )}
         </div>
       )}
-      {addBtn && (
-        <button onClick={() => onAddFinancialItem()}>
-          {addBtn.text ?? "Ajouter un élément"}
-        </button>
-      )}
-    </>
+    </section>
   );
 };
 
