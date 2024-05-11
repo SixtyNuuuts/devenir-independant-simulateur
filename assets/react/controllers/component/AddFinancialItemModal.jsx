@@ -60,9 +60,9 @@ const AddProfessionalIncome = ({ type, isOpen, onClose, onSave }) => {
             </label>
           ))}
           <div>
-            <button type="submit">Add</button>
+            <button type="submit">Valider</button>
             <button type="button" onClick={onClose}>
-              Cancel
+              Annuler
             </button>
           </div>
         </form>

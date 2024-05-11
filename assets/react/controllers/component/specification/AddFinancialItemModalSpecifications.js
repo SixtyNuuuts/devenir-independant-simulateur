@@ -1,10 +1,17 @@
 export const AddFinancialItemModalSpecifications = {
     product: {
-        title: "Add Product",
+        title: "Ajouter un produit / service",
         fields: [
-            { label: "Name", name: "name", type: "text" },
-            { label: "Manufacturing Cost", name: "manufacturing_cost", type: "text" },
-            { label: "Selling Price", name: "value", type: "text" }
+            { label: "Intitulé", name: "name", type: "text" },
+            { label: "Coût unitaire", name: "manufacturing_cost", type: "text" },
+            { label: "Prix de vente HT", name: "value", type: "text" }
+        ],
+    },
+    charge: {
+        title: "Ajouter une charge",
+        fields: [
+            { label: "Intitulé", name: "name", type: "text" },
+            { label: "Coût mensuel en € HT", name: "value", type: "text" }
         ],
     },
 };

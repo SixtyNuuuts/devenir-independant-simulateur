@@ -6,7 +6,7 @@ import useCreateFinancialItem from "./hook/useCreateFinancialItem";
 import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
 import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
 
-function ProfitPage({ simulationId }) {
+function ProfessionalIncomesPage({ simulationId }) {
   const {
     financialItems,
     isLoading: loadingGetFinancialItems,
@@ -138,4 +138,4 @@ function ProfitPage({ simulationId }) {
   );
 }
 
-export default ProfitPage;
+export default ProfessionalIncomesPage;

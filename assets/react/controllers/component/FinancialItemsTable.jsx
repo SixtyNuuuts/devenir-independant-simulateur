@@ -20,6 +20,7 @@ const FinancialItemsTable = ({
     caption,
     headers,
     finalRowFinancialData,
+    annualTotalLabel,
     asteriskLegendText,
     addBtn,
   } = specification;
@@ -81,8 +82,10 @@ const FinancialItemsTable = ({
       </table>
       {annualTotal && (
         <figure>
-          <figcaption id="annualLabel">CA HT total Année 1:</figcaption>
-          <span aria-labelledby="annualLabel">
+          <figcaption id="annualTotalLabel">
+            {annualTotalLabel ?? "Total Année"}
+          </figcaption>
+          <span aria-labelledby="annualTotalLabel">
             {annualTotal === 0
               ? 0
               : annualTotal > 0
@@ -104,7 +107,7 @@ const FinancialItemsTable = ({
           )}
           {addBtn && (
             <button onClick={() => onAddFinancialItem()}>
-              {addBtn.text ?? "Ajouter un élément"}
+              {addBtn.text ?? "+ ajouter"}
             </button>
           )}
         </div>

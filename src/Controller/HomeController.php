@@ -74,14 +74,14 @@ class HomeController extends AbstractController
 		return $this->render('home/professional_incomes.html.twig', ['simulationId' => $simulationData['id']]);
 	}
 
-	#[Route('/{activitySlug}/frais/{simulationToken}', name: 'app_professional_expenses', methods: ['GET'])]
+	#[Route('/{activitySlug}/charges/{simulationToken}', name: 'app_professional_expenses', methods: ['GET'])]
 	public function professionalExpenses(string $activitySlug, ?string $simulationToken = null): Response
 	{
 		$currentUser = $this->userService->getCurrentUser();
 		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
 
 		if (!$simulationToken && $simulationData && \is_array($simulationData) && $simulationData['token'] !== 'default') {
-			return $this->redirectToRoute('app_professional_expenses', [
+			return $this->redirectToRoute('app_professional_incomes', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
 			]);
@@ -91,7 +91,7 @@ class HomeController extends AbstractController
 			return $this->redirectToRoute('app_home');
 		}
 
-		return $this->render('home/professional_expenses.html.twig', ['simulationData' => $simulationData]);
+		return $this->render('home/professional_expenses.html.twig', ['simulationId' => $simulationData['id']]);
 	}
 
 	#[Route('/{activitySlug}/niveau-de-vie/{simulationToken}', name: 'app_personal_incomes_expenses', methods: ['GET'])]
