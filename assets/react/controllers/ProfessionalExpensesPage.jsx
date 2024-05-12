@@ -8,9 +8,9 @@ import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
 
 function ProfessionalExpensesPage({ simulationId }) {
   const {
-    financialItems,
-    isLoading: loadingGetFinancialItems,
-    error,
+    financialItems: professionalExpensesData,
+    isLoading: professionalExpensesLoading,
+    error: professionalExpensesError,
   } = useGetFinancialItems("/professional/expense", simulationId);
 
   const { createFinancialItem, formatFinancialItemForCreate } =
@@ -29,8 +29,8 @@ function ProfessionalExpensesPage({ simulationId }) {
   ] = useState(false);
 
   useEffect(() => {
-    setProfessionalExpenses(financialItems);
-  }, [financialItems]);
+    setProfessionalExpenses(professionalExpensesData);
+  }, [professionalExpensesData]);
 
   const onAddFinancialItem = () => {
     setModalAddProfessionalExpenseOpen(true);
@@ -108,10 +108,10 @@ function ProfessionalExpensesPage({ simulationId }) {
   };
 
   return (
-    <div className={loadingGetFinancialItems ? "loading" : ""}>
-      {loadingGetFinancialItems ? (
+    <div className={professionalExpensesLoading ? "loading" : ""}>
+      {professionalExpensesLoading ? (
         <div>Chargement...</div>
-      ) : error ? (
+      ) : professionalExpensesError ? (
         <div>Une erreur est survenue lors du chargement des données.</div>
       ) : (
         <main>

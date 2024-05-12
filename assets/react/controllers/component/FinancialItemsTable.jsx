@@ -25,13 +25,18 @@ const FinancialItemsTable = ({
     addBtn,
   } = specification;
 
-  const { finalRowFinancialLabel, monthlyTotals, annualTotal } = useMemo(
+  const {
+    finalRowFinancialLabel,
+    monthlyTotals,
+    annualTotalSign,
+    annualTotal,
+  } = useMemo(
     () => (finalRowFinancialData ? finalRowFinancialData(financialItems) : {}),
     [financialItems]
   );
 
   const finalRowFinancialRender = useMemo(() => {
-    if (!monthlyTotals && !annualTotal) return null;
+    if (!monthlyTotals || !annualTotal) return null;
 
     const finalRowFinancialCells = [
       { value: finalRowFinancialLabel },
@@ -45,10 +50,7 @@ const FinancialItemsTable = ({
           <th key={index}>
             {index === 0
               ? cell.value
-              : f.displayValue(
-                  cell.value.toFixed(2).toString(),
-                  "financial-value"
-                )}
+              : f.displayValue(cell.value, "financial-value")}
           </th>
         ))}
       </tr>
@@ -88,13 +90,8 @@ const FinancialItemsTable = ({
           <span aria-labelledby="annualTotalLabel">
             {annualTotal === 0
               ? 0
-              : annualTotal > 0
-              ? `+ ${f.displayValue(
-                  annualTotal.toFixed(2).toString(),
-                  "financial-value"
-                )}`
-              : `- ${f.displayValue(
-                  Math.abs(annualTotal).toFixed(2).toString(),
+              : `${annualTotalSign} ${f.displayValue(
+                  annualTotal,
                   "financial-value"
                 )}`}
           </span>

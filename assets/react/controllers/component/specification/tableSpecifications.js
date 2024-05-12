@@ -1,5 +1,5 @@
 export const tableSpecifications = {
-  profits: {
+  'profits': {
     title: "Profits par mois",
     caption: "Combien je vais vendre de produits ou services par mois",
     headers: [
@@ -33,11 +33,12 @@ export const tableSpecifications = {
         }
       });
 
-      return { finalRowFinancialLabel: "CA HT", monthlyTotals, annualTotal };
+      return { finalRowFinancialLabel: "CA HT", monthlyTotals, annualTotalSign: "+", annualTotal };
     },
     annualTotalLabel: "CA HT total Année 1",
   },
-  products: {
+
+  'products': {
     title: "Prix de mes produits",
     caption: "À quel prix vais-je vendre chacun de ces produits ou services ?",
     headers: [
@@ -55,7 +56,8 @@ export const tableSpecifications = {
     asteriskLegendText: "* Facultatif : Précisez ici le montant HT coutant la réalisation de ce produit ou service",
     addBtn: { text: "+ ajouter" },
   },
-  charges: {
+
+  'charges': {
     title: "Charges par mois",
     caption: "Combien je vais dépenser par poste et par mois pour mon activité",
     headers: [
@@ -88,10 +90,67 @@ export const tableSpecifications = {
         }
       });
 
-      return { finalRowFinancialLabel: "Sous total HT", monthlyTotals, annualTotal };
+      return { finalRowFinancialLabel: "Sous total HT", monthlyTotals, annualTotalSign: "-", annualTotal };
     },
     annualTotalLabel: "Charges totales Année 1",
     addBtn: { text: "+ ajouter" },
+
+  },
+
+  'personal-incomes': {
+    title: "Salaire aujourd'hui",
+    caption: "Combien je gagne actuellement en salaire net par mois",
+    headers: [
+      { label: "Intitulé", key: "name" },
+      { label: "Mensuel", key: "value" },
+      { label: "Annuel" },
+    ],
+    rows: (item) => [
+      { value: item.name || "", type: "text", isEditable: true },
+      { value: item.value || "", type: "financial-value", isEditable: true },
+    ],
+    isDeletableItems: true,
+    columnTotalSum: true,
+    finalRowFinancialData: (financialItems) => {
+      let annualTotal = 0.00;
+
+      financialItems.forEach((item) => {
+        const annualItem = parseFloat(item.value) * 12;
+        annualTotal += annualItem;
+      });
+
+      return { finalRowFinancialLabel: "Sous total HT", monthlyTotals: null, annualTotalSign: "", annualTotal };
+    },
+    annualTotalLabel: "Total Revenus annuels",
+    addBtn: { text: "+ ajouter un revenu" },
+  },
+
+  'personal-expenses': {
+    title: "Frais personnels aujourd'hui",
+    caption: "Combien je dépense par mois/an pour vivre actuellement",
+    headers: [
+      { label: "Intitulé", key: "name" },
+      { label: "Mensuel", key: "value" },
+      { label: "Annuel" },
+    ],
+    rows: (item) => [
+      { value: item.name || "", type: "text", isEditable: true },
+      { value: item.value || "", type: "financial-value", isEditable: true },
+    ],
+    isDeletableItems: true,
+    columnTotalSum: true,
+    finalRowFinancialData: (financialItems) => {
+      let annualTotal = 0.00;
+
+      financialItems.forEach((item) => {
+        const annualItem = parseFloat(item.value) * 12;
+        annualTotal += annualItem;
+      });
+
+      return { finalRowFinancialLabel: "Sous total HT", monthlyTotals: null, annualTotalSign: "", annualTotal };
+    },
+    annualTotalLabel: "Total Frais annuels",
+    addBtn: { text: "+ ajouter un frais" },
 
   },
 };

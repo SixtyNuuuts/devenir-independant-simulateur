@@ -73,7 +73,7 @@ export default {
     switch (itemType) {
       case "financial-value":
         displayedValue =
-          value.toString().replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " €";
+          parseFloat(value).toFixed(2).toString().replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " €";
         break;
     }
 

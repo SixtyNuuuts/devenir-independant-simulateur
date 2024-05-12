@@ -22,20 +22,14 @@ class HomeController extends AbstractController
 	) {
 	}
 
-	#[Route('/', name: 'app_home')]
-	public function index(): Response
-	{
-		return $this->render('home/index.html.twig');
-	}
-
-	#[Route('/{activitySlug}/rentabilite/{simulationToken}', name: 'app_profitability', methods: ['GET'])]
+	#[Route('/{activitySlug}/{simulationToken}', name: 'app_home', methods: ['GET'])]
 	public function profitability(string $activitySlug, ?string $simulationToken = null): Response
 	{
 		$currentUser = $this->userService->getCurrentUser();
 		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
 
 		if (!$simulationToken && $simulationData && \is_array($simulationData) && $simulationData['token'] !== 'default') {
-			return $this->redirectToRoute('app_profitability', [
+			return $this->redirectToRoute('app_home', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
 			]);
@@ -45,9 +39,7 @@ class HomeController extends AbstractController
 			return $this->redirectToRoute('app_home');
 		}
 
-		$activityData = $this->activityRepository->findActivityDataBySlug($activitySlug);
-
-		return $this->render('home/profitability.html.twig', ['simulationData' => $simulationData, 'activityData' => $activityData]);
+		return $this->render('home/index.html.twig', ['simulationId' => $simulationData['id']]);
 	}
 
 	#[Route('/{activitySlug}/profits/{simulationToken}', name: 'app_professional_incomes', methods: ['GET'])]
@@ -67,10 +59,6 @@ class HomeController extends AbstractController
 			return $this->redirectToRoute('app_home');
 		}
 
-		// $simulation = $this->simulationRepository->findOneBy(['token' => $simulationData['token']]);
-		// $financialItems = $this->fidancialItemRepository->findBy(['simulation' => $simulation, 'nature' => 'professional', 'type' => 'income']);
-		// return $this->render('home/professional_incomes.html.twig', ['simulationData' => $simulationData, 'financialItems' => $financialItems]);
-
 		return $this->render('home/professional_incomes.html.twig', ['simulationId' => $simulationData['id']]);
 	}
 
@@ -81,7 +69,7 @@ class HomeController extends AbstractController
 		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
 
 		if (!$simulationToken && $simulationData && \is_array($simulationData) && $simulationData['token'] !== 'default') {
-			return $this->redirectToRoute('app_professional_incomes', [
+			return $this->redirectToRoute('app_professional_expenses', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
 			]);
@@ -94,14 +82,14 @@ class HomeController extends AbstractController
 		return $this->render('home/professional_expenses.html.twig', ['simulationId' => $simulationData['id']]);
 	}
 
-	#[Route('/{activitySlug}/niveau-de-vie/{simulationToken}', name: 'app_personal_incomes_expenses', methods: ['GET'])]
+	#[Route('/{activitySlug}/niveau-de-vie/{simulationToken}', name: 'app_personal_flows', methods: ['GET'])]
 	public function personalIncomesExpenses(string $activitySlug, ?string $simulationToken = null): Response
 	{
 		$currentUser = $this->userService->getCurrentUser();
 		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
 
 		if (!$simulationToken && $simulationData && \is_array($simulationData) && $simulationData['token'] !== 'default') {
-			return $this->redirectToRoute('app_personal_incomes_expenses', [
+			return $this->redirectToRoute('app_personal_flows', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
 			]);
@@ -111,6 +99,6 @@ class HomeController extends AbstractController
 			return $this->redirectToRoute('app_home');
 		}
 
-		return $this->render('home/personal_incomes_expenses.html.twig', ['simulationData' => $simulationData]);
+		return $this->render('home/personal_flows.html.twig', ['simulationId' => $simulationData['id']]);
 	}
 }

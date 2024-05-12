@@ -8,9 +8,9 @@ import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
 
 function ProfessionalIncomesPage({ simulationId }) {
   const {
-    financialItems,
-    isLoading: loadingGetFinancialItems,
-    error,
+    financialItems: professionalIncomesData,
+    isLoading: professionalIncomesLoading,
+    error: professionalIncomesError,
   } = useGetFinancialItems("/professional/income", simulationId);
 
   const { createFinancialItem, formatFinancialItemForCreate } =
@@ -27,8 +27,8 @@ function ProfessionalIncomesPage({ simulationId }) {
     useState(false);
 
   useEffect(() => {
-    setProfessionalIncomes(financialItems);
-  }, [financialItems]);
+    setProfessionalIncomes(professionalIncomesData);
+  }, [professionalIncomesData]);
 
   const onAddFinancialItem = () => {
     setModalAddProfessionalIncomeOpen(true);
@@ -104,10 +104,10 @@ function ProfessionalIncomesPage({ simulationId }) {
   };
 
   return (
-    <div className={loadingGetFinancialItems ? "loading" : ""}>
-      {loadingGetFinancialItems ? (
+    <div className={professionalIncomesLoading ? "loading" : ""}>
+      {professionalIncomesLoading ? (
         <div>Chargement...</div>
-      ) : error ? (
+      ) : professionalIncomesError ? (
         <div>Une erreur est survenue lors du chargement des données.</div>
       ) : (
         <main>

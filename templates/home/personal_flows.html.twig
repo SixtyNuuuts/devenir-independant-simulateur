@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Niveau de vie | Simulateur - Comment devenir indépendant ?{% endblock %}
+
+{% block body %}
+    <main {{ react_component('PersonalFlowsPage', { 'simulationId': simulationId }) }}>
+    </main>
+{% endblock %}
