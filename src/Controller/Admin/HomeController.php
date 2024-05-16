@@ -54,8 +54,8 @@ class HomeController extends AbstractController
 			}
 
 			$data = Yaml::parse($yamlContent);
-			if (!\is_array($data) || !isset($data['simulation']) || !\is_array($data['simulation']) || !isset($data['activity']) || !\is_array($data['activity']) || !isset($data['professional_income']) || !isset($data['professional_expense']) || !isset($data['personal_income']) || !isset($data['personal_expense'])) {
-				return $this->json(['error' => 'Le fichier ne contient pas les données nécessaires pour l\'import (activity, simulation, professional_income, professional_expense, personal_income, personal_expense).'], Response::HTTP_BAD_REQUEST);
+			if (!\is_array($data) || !isset($data['simulation']) || !\is_array($data['simulation']) || !isset($data['activity']) || !\is_array($data['activity']) || !isset($data['professional_income']) || !isset($data['professional_expense']) || !isset($data['personal_expense']) || !isset($data['salary_current']) || !isset($data['salary_target'])) {
+				return $this->json(['error' => 'Le fichier ne contient pas les données nécessaires pour l\'import (activity, simulation, professional_income, professional_expense, personal_expense, salary_current, salary_target).'], Response::HTTP_BAD_REQUEST);
 			}
 
 			$activitySlug = \is_string($data['activity']['slug'] ?? null) ? $data['activity']['slug'] : null;
@@ -93,18 +93,14 @@ class HomeController extends AbstractController
 					->setSlug($activitySlug)
 					->setSummary($activitySummary)
 					->setDescription($activityDescription)
-					->setBannerImage($activity->getBannerImage() ?? '/')
-				;
+					->setBannerImage($activity->getBannerImage() ?? '/');
 				$entityManager->persist($activity);
 
 				$simulationToken = \is_string($data['simulation']['token'] ?? null) ? $data['simulation']['token'] : '---';
-				$simulationTargetSalary = \is_string($data['simulation']['target_salary'] ?? null) ? $data['simulation']['target_salary'] : '2600.00';
 
 				$simulation ??= new Simulation();
 				$simulation->setActivity($activity)
-					->setToken($simulationToken)
-					->setTargetSalary($simulationTargetSalary)
-				;
+					->setToken($simulationToken);
 				$entityManager->persist($simulation);
 
 				$this->processFinancialItems($data, $simulation, $entityManager);
@@ -128,8 +124,8 @@ class HomeController extends AbstractController
 	 */
 	private function processFinancialItems(array $data, Simulation $simulation, EntityManagerInterface $entityManager): void
 	{
-		foreach (['professional_income', 'professional_expense', 'personal_income', 'personal_expense'] as $financialItemType) {
-			if (!\is_array($data[$financialItemType])) {
+		foreach (['professional_income', 'professional_expense', 'personal_income', 'personal_expense', 'salary_current', 'salary_target'] as $financialItemType) {
+			if (!isset($data[$financialItemType]) || !\is_array($data[$financialItemType])) {
 				continue;
 			}
 			foreach ($data[$financialItemType] as $financialItemData) {
@@ -159,8 +155,7 @@ class HomeController extends AbstractController
 			->setValue($financialItemValue)
 			->setAttributes($financialItemAttributes)
 			->setNature(FinancialItemNature::from($nature))
-			->setType(FinancialItemType::from($type))
-		;
+			->setType(FinancialItemType::from($type));
 
 		return $financialItem;
 	}

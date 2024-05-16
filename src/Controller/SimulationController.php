@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\AnonymousUser;
 use App\Entity\Simulation;
 use App\Entity\User;
+use App\Repository\ActivityRepository;
 use App\Repository\SimulationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -65,19 +66,21 @@ class SimulationController extends AbstractController
 	}
 
 	#[Route('/create', name: 'app_simulation_create', methods: ['POST'])]
-	public function create(Request $request): JsonResponse
+	public function create(Request $request, ActivityRepository $activityRepository): JsonResponse
 	{
 		$data = json_decode($request->getContent(), true);
 		if (!$data || !\is_array($data)) {
 			return $this->json(['error' => 'Données invalides'], JsonResponse::HTTP_BAD_REQUEST);
 		}
 
-		$simulationTargetSalary = \is_string($data['target_salary'] ?? null) ? $data['target_salary'] : '2000.00';
-
 		try {
+			$activity = $activityRepository->findOneBy(['slug' => $data['activitySlug'] ?? null]);
+			if (!$activity) {
+				return $this->json(['error' => 'Activité non trouvée'], JsonResponse::HTTP_BAD_REQUEST);
+			}
+
 			$simulation = new Simulation();
-			// Admin --> $simulation->setToken('default');
-			$simulation->setTargetSalary($simulationTargetSalary);
+			$simulation->setActivity($activity);
 
 			$this->em->persist($simulation);
 			$this->em->flush();
@@ -96,10 +99,8 @@ class SimulationController extends AbstractController
 			return $this->json(['error' => 'Données invalides'], JsonResponse::HTTP_BAD_REQUEST);
 		}
 
-		$simulationTargetSalary = \is_string($data['target_salary'] ?? null) ? $data['target_salary'] : $simulation->getTargetSalary() ?? '2000.00';
-
 		try {
-			$simulation->setTargetSalary($simulationTargetSalary);
+			// Admin --> $simulation->setToken
 
 			$this->em->flush();
 

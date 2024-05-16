@@ -22,7 +22,7 @@ const useCreateFinancialItem = () => {
         attributes = {
           sale_per_month: Array.from({ length: 12 }, (_, index) => ({
             month: index + 1,
-            quantity: 50
+            quantity: 100
           })),
           manufacturing_cost: item.manufacturing_cost
         }

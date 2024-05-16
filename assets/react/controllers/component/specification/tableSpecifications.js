@@ -12,7 +12,15 @@ export const tableSpecifications = {
     ],
     rows: (item) => [
       { value: item.name || "", type: "text", isEditable: true },
-      ...(item.attributes.sale_per_month || []).map(sale => ({ value: sale.quantity, type: "number", isEditable: true })),
+      ...(item.attributes.sale_per_month && item.attributes.sale_per_month.length > 0
+        ? item.attributes.sale_per_month.map(sale => ({ value: sale.quantity, type: "number", isEditable: true }))
+        : Array.from({ length: 12 }, (_, i) => ({
+          value: 100,
+          type: "number",
+          isEditable: true,
+          month: i + 1,
+        }))
+      ),
     ],
     columnTotalSum: true,
     isDeletableItems: true,
@@ -70,7 +78,15 @@ export const tableSpecifications = {
     ],
     rows: (item) => [
       { value: item.name || "", type: "text", isEditable: true },
-      ...(item.attributes.value_per_month || []).map(expense => ({ value: expense.value, type: "financial-value", isEditable: true })),
+      ...(item.attributes.value_per_month && item.attributes.value_per_month.length > 0
+        ? item.attributes.value_per_month.map(expense => ({ value: expense.value, type: "financial-value", isEditable: true }))
+        : Array.from({ length: 12 }, (_, i) => ({
+          value: item.value,
+          type: "financial-value",
+          isEditable: true,
+          month: i + 1,
+        }))
+      ),
     ],
     isDeletableItems: true,
     columnTotalSum: true,

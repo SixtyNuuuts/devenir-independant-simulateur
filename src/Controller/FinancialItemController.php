@@ -53,6 +53,17 @@ class FinancialItemController extends AbstractController
 			}
 			$financialItemsData = $this->financialItemRepository->findFinancialItemsDataByCriteria($simulation, $financialItemNatureEnum, $financialItemTypeEnum);
 
+			switch (true) {
+				case $financialItemNatureEnum === FinancialItemNature::PROFESSIONAL && $financialItemTypeEnum === FinancialItemType::EXPENSE:
+					$salaryTarget = $this->financialItemRepository->findFinancialItemsDataByCriteria($simulation, FinancialItemNature::SALARY, FinancialItemType::TARGET);
+					$financialItemsData = array_merge($financialItemsData, $salaryTarget);
+					break;
+				case $financialItemNatureEnum === FinancialItemNature::PERSONAL && $financialItemTypeEnum === FinancialItemType::INCOME:
+					$salaryCurrent = $this->financialItemRepository->findFinancialItemsDataByCriteria($simulation, FinancialItemNature::SALARY, FinancialItemType::CURRENT);
+					$financialItemsData = array_merge($salaryCurrent, $financialItemsData);
+					break;
+			}
+
 			return $this->json($financialItemsData, JsonResponse::HTTP_OK);
 		} catch (\Exception $exception) {
 			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);

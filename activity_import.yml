@@ -1,0 +1,115 @@
+activity:
+  name: "Pizzéria"
+  slug: "pizzeria"
+  summary: "vente de pizzas"
+  description: "Envide de tout plaquer pour devenir pizzaïolo ? Change de vie et lance une activité rentable !"
+
+simulation:
+  token: "default"
+
+salary_current:
+  - name: "Salaire net"
+    value: "2600.00"
+
+salary_target:
+  - name: "Salaire net envisagé"
+    value: "2000.00"
+
+professional_income:
+  - name: "Pizza Margherita"
+    value: "10.00"
+    attributes:      
+      manufacturing_cost: "4.00"
+      sale_per_month:
+        - { month: 1, quantity: 50 }
+        - { month: 2, quantity: 60 }
+        - { month: 3, quantity: 70 }
+        - { month: 4, quantity: 80 }
+        - { month: 5, quantity: 90 }
+        - { month: 6, quantity: 100 }
+        - { month: 7, quantity: 110 }
+        - { month: 8, quantity: 120 }
+        - { month: 9, quantity: 130 }
+        - { month: 10, quantity: 140 }
+        - { month: 11, quantity: 150 }
+        - { month: 12, quantity: 160 }
+  - name: "Pizza 3 fromages"
+    value: "11.00"
+    attributes: 
+      manufacturing_cost: "3.00"
+      sale_per_month:
+        - { month: 1, quantity: 40 }
+        - { month: 2, quantity: 50 }
+        - { month: 3, quantity: 60 }
+        - { month: 4, quantity: 70 }
+        - { month: 5, quantity: 80 }
+        - { month: 6, quantity: 90 }
+        - { month: 7, quantity: 100 }
+        - { month: 8, quantity: 110 }
+        - { month: 9, quantity: 120 }
+        - { month: 10, quantity: 130 }
+        - { month: 11, quantity: 140 }
+        - { month: 12, quantity: 150 }
+  - name: "Pizza 4 saisons"
+    value: "12.00"
+    attributes:      
+      manufacturing_cost: "5.00"
+      sale_per_month:
+        - { month: 1, quantity: 30 }
+        - { month: 2, quantity: 40 }
+        - { month: 3, quantity: 50 }
+        - { month: 4, quantity: 60 }
+        - { month: 5, quantity: 70 }
+        - { month: 6, quantity: 80 }
+        - { month: 7, quantity: 90 }
+        - { month: 8, quantity: 100 }
+        - { month: 9, quantity: 110 }
+        - { month: 10, quantity: 120 }
+        - { month: 11, quantity: 130 }
+        - { month: 12, quantity: 140 }
+
+professional_expense:
+  - name: "Location de local"
+    value: "300.00"
+  - name: "Achat de matières premières"
+    value: "200.00"
+    attributes:
+      value_per_month:
+        - { month: 1, value: "200.00" }
+        - { month: 2, value: "350.00" }
+        - { month: 3, value: "350.00" }
+        - { month: 4, value: "200.00" }
+        - { month: 5, value: "400.00" }
+        - { month: 6, value: "400.00" }
+        - { month: 7, value: "200.00" }
+        - { month: 8, value: "600.00" }
+        - { month: 9, value: "700.00" }
+        - { month: 10, value: "200.00" }
+        - { month: 11, value: "800.00" }
+        - { month: 12, value: "1000.00" }
+  - name: "Frais de livraison"
+    value: "50.00"
+  - name: "Autres frais"
+    value: "200.00"
+
+personal_expense:
+  - name: "Loyer"
+    value: "900.00"
+  - name: "Courses"
+    value:  "500.00"
+  - name: "Transports"
+    value: "100.00"
+  - name: "Loisirs"
+    value: "200.00"
+  - name: "Assurance"
+    value: "50.00"
+  - name: "Téléphone"
+    value: "30.00"
+  - name: "Internet"
+    value: "30.00"
+  - name: "Électricité"
+    value: "50.00"
+
+# personal_income:
+#   - name: "Autre revenu"
+#     value: "2600.00"

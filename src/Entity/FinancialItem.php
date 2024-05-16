@@ -18,6 +18,9 @@ class FinancialItem
 	#[ORM\Column(type: 'bigint')]
 	private ?string $id = null;
 
+	#[ORM\Column]
+	private ?\DateTimeImmutable $createdAt = null;
+
 	#[ORM\Column(length: 255)]
 	private ?string $name = null;
 
@@ -40,6 +43,11 @@ class FinancialItem
 	#[ORM\JoinColumn(nullable: false)]
 	private ?Simulation $simulation = null;
 
+	public function __construct()
+	{
+		$this->createdAt = new \DateTimeImmutable();
+	}
+
 	public function __toString(): string
 	{
 		return $this->name ?? '---';
@@ -48,6 +56,18 @@ class FinancialItem
 	public function getId(): ?string
 	{
 		return $this->id;
+	}
+
+	public function getCreatedAt(): ?\DateTimeImmutable
+	{
+		return $this->createdAt;
+	}
+
+	public function setCreatedAt(\DateTimeImmutable $createdAt): static
+	{
+		$this->createdAt = $createdAt;
+
+		return $this;
 	}
 
 	public function getName(): ?string

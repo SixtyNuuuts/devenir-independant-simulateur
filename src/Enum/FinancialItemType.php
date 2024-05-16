@@ -9,4 +9,6 @@ enum FinancialItemType: string
 	case DEFAULT = 'default';
 	case EXPENSE = 'expense';
 	case INCOME = 'income';
+	case CURRENT = 'current';
+	case TARGET = 'target';
 }

@@ -36,7 +36,7 @@ class HomeController extends AbstractController
 		}
 
 		if (!$simulationData) {
-			return $this->redirectToRoute('app_home');
+			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
 
 		return $this->render('home/index.html.twig', ['simulationId' => $simulationData['id']]);
@@ -56,7 +56,7 @@ class HomeController extends AbstractController
 		}
 
 		if (!$simulationData) {
-			return $this->redirectToRoute('app_home');
+			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
 
 		return $this->render('home/professional_incomes.html.twig', ['simulationId' => $simulationData['id']]);
@@ -76,7 +76,7 @@ class HomeController extends AbstractController
 		}
 
 		if (!$simulationData) {
-			return $this->redirectToRoute('app_home');
+			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
 
 		return $this->render('home/professional_expenses.html.twig', ['simulationId' => $simulationData['id']]);
@@ -96,7 +96,7 @@ class HomeController extends AbstractController
 		}
 
 		if (!$simulationData) {
-			return $this->redirectToRoute('app_home');
+			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
 
 		return $this->render('home/personal_flows.html.twig', ['simulationId' => $simulationData['id']]);

@@ -17,6 +17,9 @@ class AnonymousUser
 	#[ORM\Column(type: 'bigint')]
 	private ?string $id = null;
 
+	#[ORM\Column]
+	private ?\DateTimeImmutable $createdAt = null;
+
 	#[ORM\Column(length: 255, nullable: true)]
 	private ?string $sessionId = null;
 
@@ -25,6 +28,7 @@ class AnonymousUser
 
 	public function __construct()
 	{
+		$this->createdAt = new \DateTimeImmutable();
 		$this->simulations = new ArrayCollection();
 	}
 
@@ -41,6 +45,18 @@ class AnonymousUser
 	public function getId(): ?string
 	{
 		return $this->id;
+	}
+
+	public function getCreatedAt(): ?\DateTimeImmutable
+	{
+		return $this->createdAt;
+	}
+
+	public function setCreatedAt(\DateTimeImmutable $createdAt): static
+	{
+		$this->createdAt = $createdAt;
+
+		return $this;
 	}
 
 	public function getSessionId(): ?string

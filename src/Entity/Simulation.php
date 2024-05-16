@@ -28,9 +28,6 @@ class Simulation
 	#[ORM\JoinColumn(nullable: false)]
 	private ?Activity $activity = null;
 
-	#[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-	private ?string $targetSalary = null;
-
 	#[ORM\OneToMany(targetEntity: FinancialItem::class, mappedBy: 'simulation', orphanRemoval: true)]
 	private Collection $financialItems;
 
@@ -45,7 +42,6 @@ class Simulation
 		$this->financialItems = new ArrayCollection();
 		$this->createdAt = new \DateTimeImmutable();
 		$this->token = $this->generateShortUniqueId();
-		$this->targetSalary = '2000.00';
 	}
 
 	public function __toString(): string
@@ -90,18 +86,6 @@ class Simulation
 	public function setActivity(?Activity $activity): static
 	{
 		$this->activity = $activity;
-
-		return $this;
-	}
-
-	public function getTargetSalary(): ?string
-	{
-		return $this->targetSalary;
-	}
-
-	public function setTargetSalary(string $targetSalary): static
-	{
-		$this->targetSalary = $targetSalary;
 
 		return $this;
 	}
