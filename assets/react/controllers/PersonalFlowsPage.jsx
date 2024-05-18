@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import FinancialItemsTable from "./component/FinancialItemsTable";
 import AddFinancialItemModal from "./component/AddFinancialItemModal";
 import useGetFinancialItems from "./hook/useGetFinancialItems";
 import useCreateFinancialItem from "./hook/useCreateFinancialItem";
 import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
 import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
+import f from "./utils/function";
 
 function PersonalFlowsPage({ simulationId }) {
   const {
@@ -17,6 +18,11 @@ function PersonalFlowsPage({ simulationId }) {
     isLoading: personalExpensesLoading,
     error: personalExpensesError,
   } = useGetFinancialItems("/personal/expense", simulationId);
+  const {
+    financialItems: salaryTargetsData,
+    isLoading: salaryTargetsLoading,
+    error: salaryTargetsError,
+  } = useGetFinancialItems("/salary/target", simulationId);
 
   const { createFinancialItem, formatFinancialItemForCreate } =
     useCreateFinancialItem();
@@ -26,6 +32,13 @@ function PersonalFlowsPage({ simulationId }) {
 
   const [personalIncomes, setPersonalIncomes] = useState([]);
   const [personalExpenses, setPersonalExpenses] = useState([]);
+  const [salaryTargets, setSalaryTargets] = useState([]);
+
+  const [annualTotals, setAnnualTotals] = useState({
+    personalIncomes: "0.00",
+    personalExpenses: "0.00",
+    salaryTargets: "0.00",
+  });
 
   const [isModalAddPersonalIncomeOpen, setModalAddPersonalIncomeOpen] =
     useState(false);
@@ -38,6 +51,9 @@ function PersonalFlowsPage({ simulationId }) {
   useEffect(() => {
     setPersonalExpenses(personalExpensesData);
   }, [personalExpensesData]);
+  useEffect(() => {
+    setSalaryTargets(salaryTargetsData);
+  }, [salaryTargetsData]);
 
   const onAddPersonalIncome = () => {
     setModalAddPersonalIncomeOpen(true);
@@ -139,6 +155,49 @@ function PersonalFlowsPage({ simulationId }) {
       );
     }
   };
+  const onUpdateSalaryTarget = async (itemId, fieldKey, newValue) => {
+    setSalaryTargets((currentItems) =>
+      currentItems.map((item) =>
+        item.id === itemId ? { ...item, isLoading: true } : item
+      )
+    );
+    const originalItem = salaryTargets.find((item) => item.id === itemId);
+    const newItem = formatFinancialItemForUpdate(
+      originalItem,
+      fieldKey,
+      newValue
+    );
+    const result = await updateFinancialItem(newItem);
+    if (result && result.success) {
+      const netSalary = parseFloat(newValue);
+      const employeeContributionRate = 0.3; // 30% to calculate brut salary
+      const employerContributionRate = 0.13; // 13% to calculate total cost
+
+      const brutSalary = netSalary * employeeContributionRate + netSalary;
+      const totalCompanyCost =
+        brutSalary * employerContributionRate + brutSalary;
+
+      setSalaryTargets(
+        (currentItems) =>
+          (currentItems = currentItems.map((item) => {
+            if (item.id === itemId) {
+              return { ...item, ...newItem, isLoading: false };
+            } else if (item.type === "brut") {
+              return { ...item, value: brutSalary.toFixed(2) };
+            } else if (item.type === "total-company-cost") {
+              return { ...item, value: totalCompanyCost.toFixed(2) };
+            }
+            return item;
+          }))
+      );
+    } else {
+      setSalaryTargets((currentItems) =>
+        currentItems.map((item) =>
+          item.id === itemId ? { ...item, isLoading: false } : item
+        )
+      );
+    }
+  };
 
   const onDeletePersonalIncome = async (itemId) => {
     setPersonalIncomes((currentItems) =>
@@ -181,15 +240,38 @@ function PersonalFlowsPage({ simulationId }) {
     );
   };
 
+  const handleAnnualTotalChange = (type, annualTotal) => {
+    setAnnualTotals((prevTotals) => ({
+      ...prevTotals,
+      [type]: annualTotal,
+    }));
+  };
+
+  const personalBalanceToday = useMemo(() => {
+    return annualTotals["personal-incomes"] - annualTotals["personal-expenses"];
+  }, [annualTotals["personal-incomes"], annualTotals["personal-expenses"]]);
+
+  const personalBalanceTomorrow = useMemo(() => {
+    return annualTotals["salary-targets"] - annualTotals["personal-expenses"];
+  }, [annualTotals["salary-targets"], annualTotals["personal-expenses"]]);
+
   return (
     <div
       className={
-        personalIncomesLoading || personalExpensesLoading ? "loading" : ""
+        personalIncomesLoading ||
+        personalExpensesLoading ||
+        salaryTargetsLoading
+          ? "loading"
+          : ""
       }
     >
-      {personalIncomesLoading || personalExpensesLoading ? (
+      {personalIncomesLoading ||
+      personalExpensesLoading ||
+      salaryTargetsLoading ? (
         <div>Chargement...</div>
-      ) : personalIncomesError || personalExpensesError ? (
+      ) : personalIncomesError ||
+        personalExpensesError ||
+        salaryTargetsError ? (
         <div>Une erreur est survenue lors du chargement des données.</div>
       ) : (
         <main>
@@ -205,6 +287,7 @@ function PersonalFlowsPage({ simulationId }) {
             onAddFinancialItem={onAddPersonalExpense}
             onUpdateFinancialItem={onUpdatePersonalExpense}
             onDeleteFinancialItem={onDeletePersonalExpense}
+            onAnnualTotalChange={handleAnnualTotalChange}
           />
           <FinancialItemsTable
             financialItems={personalIncomes}
@@ -212,7 +295,42 @@ function PersonalFlowsPage({ simulationId }) {
             onAddFinancialItem={onAddPersonalIncome}
             onUpdateFinancialItem={onUpdatePersonalIncome}
             onDeleteFinancialItem={onDeletePersonalIncome}
+            onAnnualTotalChange={handleAnnualTotalChange}
           />
+          <figure>
+            <figcaption>
+              <strong>Equilibre niveau de vie d'aujourd'hui</strong> = Salaire
+              annuel - frais annuels actuels
+            </figcaption>
+            <span className={f.getCssClassForValue(personalBalanceToday)}>
+              {f.getSignForValue(personalBalanceToday)}{" "}
+              {f.displayValue(
+                Math.abs(personalBalanceToday),
+                "financial-value"
+              )}
+            </span>
+          </figure>
+          <FinancialItemsTable
+            financialItems={salaryTargets}
+            type="salary-targets"
+            onAddFinancialItem={null}
+            onUpdateFinancialItem={onUpdateSalaryTarget}
+            onDeleteFinancialItem={null}
+            onAnnualTotalChange={handleAnnualTotalChange}
+          />
+          <figure>
+            <figcaption>
+              <strong>Equilibre niveau de vie de demain</strong> = Salaire
+              annuel net envisagé - frais annuels actuels
+            </figcaption>
+            <span className={f.getCssClassForValue(personalBalanceTomorrow)}>
+              {f.getSignForValue(personalBalanceTomorrow)}{" "}
+              {f.displayValue(
+                Math.abs(personalBalanceTomorrow),
+                "financial-value"
+              )}
+            </span>
+          </figure>
           <AddFinancialItemModal
             type="personal-income"
             isOpen={isModalAddPersonalIncomeOpen}

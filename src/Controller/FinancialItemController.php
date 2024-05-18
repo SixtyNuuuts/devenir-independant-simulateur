@@ -10,6 +10,7 @@ use App\Enum\FinancialItemType;
 use App\Repository\FinancialItemRepository;
 use App\Repository\SimulationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Id;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,11 +57,61 @@ class FinancialItemController extends AbstractController
 			switch (true) {
 				case $financialItemNatureEnum === FinancialItemNature::PROFESSIONAL && $financialItemTypeEnum === FinancialItemType::EXPENSE:
 					$salaryTarget = $this->financialItemRepository->findFinancialItemsDataByCriteria($simulation, FinancialItemNature::SALARY, FinancialItemType::TARGET);
-					$financialItemsData = array_merge($financialItemsData, $salaryTarget);
+
+					if (isset($salaryTarget[0])) {
+						$netSalary = floatval($salaryTarget[0]['value']);
+						$employeeContributionRate = 0.30; // 30% to calculate brut salary
+						$employerContributionRate = 0.13; // 13% to calculate total cost
+
+						$brutSalary = ($netSalary * $employeeContributionRate) + $netSalary;
+						$totalCompanyCost = ($brutSalary * $employerContributionRate) + $brutSalary;
+
+						$totalCompanyCostItem = [
+							'id' => 'total-company-cost',
+							'name' => 'Cout total entreprise',
+							'value' => $totalCompanyCost,
+							'nature' => 'salary',
+							'type' => 'total-company-cost',
+							'attributes' => [],
+						];
+
+						$salaryTarget = [$totalCompanyCostItem];
+					}
+					$financialItemsData = array_merge($salaryTarget, $financialItemsData);
 					break;
 				case $financialItemNatureEnum === FinancialItemNature::PERSONAL && $financialItemTypeEnum === FinancialItemType::INCOME:
 					$salaryCurrent = $this->financialItemRepository->findFinancialItemsDataByCriteria($simulation, FinancialItemNature::SALARY, FinancialItemType::CURRENT);
 					$financialItemsData = array_merge($salaryCurrent, $financialItemsData);
+					break;
+				case $financialItemNatureEnum === FinancialItemNature::SALARY && $financialItemTypeEnum === FinancialItemType::TARGET:
+					$salaryTarget = $financialItemsData[0]; // $salaryNet
+					$employeeContributionRate = 0.30; // 30% to calculate brut salary
+					$employerContributionRate = 0.13; // 13% to calculate total cost
+
+					$netSalary = floatval($salaryTarget['value']);
+					$brutSalary = ($netSalary * $employeeContributionRate) + $netSalary;
+					$totalCompanyCost = ($brutSalary * $employerContributionRate) + $brutSalary;
+
+					$brutSalaryItem = [
+						'id' => 'salary-brut',
+						'name' => 'Salaire brut',
+						'value' => $brutSalary,
+						'nature' => 'salary',
+						'type' => 'brut',
+						'attributes' => [],
+					];
+
+					$totalCompanyCostItem = [
+						'id' => 'salary-total-company-cost',
+						'name' => 'Cout total entreprise',
+						'value' => $totalCompanyCost,
+						'nature' => 'salary',
+						'type' => 'total-company-cost',
+						'attributes' => [],
+					];
+
+					$financialItemsData[] = $brutSalaryItem;
+					$financialItemsData[] = $totalCompanyCostItem;
 					break;
 			}
 

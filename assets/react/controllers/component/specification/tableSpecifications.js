@@ -12,7 +12,7 @@ export const tableSpecifications = {
       { label: "" } // delete item btn,
     ],
     rows: (item) => [
-      { value: item.name || "", type: "text", isEditable: true },
+      { value: item.name || "", type: "product-name", isEditable: true },
       ...(item.attributes.sale_per_month && item.attributes.sale_per_month.length > 0
         ? item.attributes.sale_per_month.map(sale => ({ value: sale.quantity, type: "number", isEditable: true }))
         : Array.from({ length: 12 }, (_, i) => ({
@@ -57,7 +57,7 @@ export const tableSpecifications = {
       { label: "" } // delete item btn,
     ],
     rows: (item) => [
-      { value: item.name || "", type: "text", isEditable: true },
+      { value: item.name || "", type: "product-name", isEditable: true },
       { value: item.attributes.manufacturing_cost || "00.00", type: "financial-value", isEditable: true },
       { value: item.value || "00.00", type: "financial-value", isEditable: true },
     ],
@@ -80,7 +80,7 @@ export const tableSpecifications = {
       { label: "" } // delete item btn,
     ],
     rows: (item) => [
-      { value: item.nature === 'salary' ? 'Mon salaire' : item.name || "", type: "text", isEditable: item.nature === 'salary' ? false : true },
+      { value: item.nature === 'salary' ? 'Mon salaire (Cout total entreprise)' : item.name || "", type: "product-name", isEditable: item.nature === 'salary' ? false : true },
       ...(item.attributes.value_per_month && item.attributes.value_per_month.length > 0
         ? item.attributes.value_per_month.map(expense => ({ value: expense.value, type: "financial-value", isEditable: item.nature === 'salary' ? false : true }))
         : Array.from({ length: 12 }, (_, i) => ({
@@ -116,35 +116,6 @@ export const tableSpecifications = {
 
   },
 
-  'personal-incomes': {
-    title: "Salaire aujourd'hui",
-    caption: "Combien je gagne actuellement en salaire net par mois",
-    headers: [
-      { label: "Intitulé", key: "name" },
-      { label: "Mensuel", key: "value" },
-      { label: "Annuel" },
-      { label: "" } // delete item btn,
-    ],
-    rows: (item) => [
-      { value: item.nature === 'salary' ? 'Salaire net' : item.name || "", type: "text", isEditable: item.nature === 'salary' ? false : true },
-      { value: item.value || "00.00", type: "financial-value", isEditable: true },
-    ],
-    isDeletableItems: true,
-    columnTotalSum: true,
-    finalRowFinancialData: (financialItems) => {
-      let annualTotal = 0.00;
-
-      financialItems.forEach((item) => {
-        const annualItem = parseFloat(item.value) * 12;
-        annualTotal += annualItem;
-      });
-
-      return { finalRowFinancialLabel: "Sous total HT", monthlyTotals: null, annualTotalSign: "", annualTotal };
-    },
-    annualTotalLabel: "Total Revenus annuels",
-    addBtn: { text: "+ ajouter un revenu" },
-  },
-
   'personal-expenses': {
     title: "Frais personnels aujourd'hui",
     caption: "Combien je dépense par mois/an pour vivre actuellement",
@@ -155,7 +126,7 @@ export const tableSpecifications = {
       { label: "" } // delete item btn,
     ],
     rows: (item) => [
-      { value: item.name || "", type: "text", isEditable: true },
+      { value: item.name || "", type: "product-name", isEditable: true },
       { value: item.value || "00.00", type: "financial-value", isEditable: true },
     ],
     isDeletableItems: true,
@@ -173,5 +144,64 @@ export const tableSpecifications = {
     annualTotalLabel: "Total Frais annuels",
     addBtn: { text: "+ ajouter un frais" },
 
+  },
+
+  'personal-incomes': {
+    title: "Salaire aujourd'hui",
+    caption: "Combien je gagne actuellement en salaire net par mois",
+    headers: [
+      { label: "Intitulé", key: "name" },
+      { label: "Mensuel", key: "value" },
+      { label: "Annuel" },
+      { label: "" } // delete item btn,
+    ],
+    rows: (item) => [
+      { value: item.name || "", type: "product-name", isEditable: item.nature === 'salary' ? false : true },
+      { value: item.value || "00.00", type: "financial-value", isEditable: true },
+    ],
+    isDeletableItems: true,
+    columnTotalSum: true,
+    finalRowFinancialData: (financialItems) => {
+      let annualTotal = 0.00;
+
+      financialItems.forEach((item) => {
+        const annualItem = parseFloat(item.value) * 12;
+        annualTotal += annualItem;
+      });
+
+      return { finalRowFinancialLabel: "Sous total HT", monthlyTotals: null, annualTotalSign: "", annualTotal };
+    },
+    annualTotalLabel: "Salaire annuel",
+    addBtn: { text: "+ ajouter un revenu" },
+  },
+
+  'salary-targets': {
+    title: "Salaire demain",
+    caption: "Ce que je vise comme rémunération avec ma future activité",
+    headers: [
+      { label: "Intitulé", key: "name" },
+      { label: "Mensuel", key: "value" },
+      { label: "Annuel" },
+      { label: "" } // delete item btn,
+    ],
+    rows: (item) => [
+      { value: item.name, type: "product-name", isEditable: false },
+      { value: item.value || "00.00", type: "financial-value", isEditable: ['brut', 'total-company-cost'].includes(item.type) ? false : true },
+    ],
+    isDeletableItems: false,
+    columnTotalSum: true,
+    finalRowFinancialData: (financialItems) => {
+      let annualTotal = 0.00;
+
+      financialItems.forEach((item) => {
+        if (!['brut', 'total-company-cost'].includes(item.type)) {
+          const annualItem = parseFloat(item.value) * 12;
+          annualTotal += annualItem;
+        }
+      });
+
+      return { finalRowFinancialLabel: "Sous total HT", monthlyTotals: null, annualTotalSign: "", annualTotal };
+    },
+    annualTotalLabel: "Salaire annuel net envisagé",
   },
 };

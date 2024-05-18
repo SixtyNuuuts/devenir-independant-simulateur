@@ -44,8 +44,10 @@ const TableRow = ({ item, specification, onEditCell, onDelete }) => {
                   onEditCell(item.id, headers[index].key, newVal)
                 }
               />
+            ) : itemRow.type === "product-name" ? (
+              <h3>{f.displayValue(itemRow.value, itemRow.type)}</h3>
             ) : (
-              itemRow.value
+              f.displayValue(itemRow.value, itemRow.type)
             )}
           </td>
         ))}

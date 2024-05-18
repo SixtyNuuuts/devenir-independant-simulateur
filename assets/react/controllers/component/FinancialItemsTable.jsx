@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { tableSpecifications } from "./specification/tableSpecifications";
 import TableRow from "./TableRow";
 import f from "../utils/function";
@@ -9,6 +9,7 @@ const FinancialItemsTable = ({
   onAddFinancialItem,
   onUpdateFinancialItem,
   onDeleteFinancialItem,
+  onAnnualTotalChange,
 }) => {
   const specification = tableSpecifications[type];
   if (!specification) {
@@ -35,6 +36,10 @@ const FinancialItemsTable = ({
     [financialItems]
   );
 
+  useEffect(() => {
+    onAnnualTotalChange(type, annualTotal);
+  }, [annualTotal]);
+
   const finalRowFinancialRender = useMemo(() => {
     if (!monthlyTotals || !annualTotal) return null;
 
@@ -58,7 +63,7 @@ const FinancialItemsTable = ({
   }, [monthlyTotals, monthlyTotals]);
 
   return (
-    <section>
+    <section className={type}>
       {title && <h2>{title}</h2>}
       <table>
         <caption>{caption}</caption>

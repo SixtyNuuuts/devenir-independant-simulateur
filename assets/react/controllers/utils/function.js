@@ -80,4 +80,23 @@ export default {
     return displayedValue;
   },
 
+  getCssClassForValue(value) {
+    if (value > 0) {
+      return 'positive';
+    } else if (value < 0) {
+      return 'negative';
+    } else {
+      return 'neutral';
+    }
+  },
+
+  getSignForValue(value) {
+    if (value > 0) {
+      return '+';
+    } else if (value < 0) {
+      return '-';
+    } else {
+      return '';
+    }
+  }
 }

@@ -28,7 +28,11 @@ const EditableCell = ({ itemValue: initialValue, itemType, onSave }) => {
     <div>
       {editing ? (
         <input
-          type={itemType === "financial-value" ? "text" : itemType}
+          type={
+            ["product-name", "financial-value"].includes(itemType)
+              ? "text"
+              : itemType
+          }
           value={value}
           onChange={(e) => setValue(e.target.value)}
           autoFocus
@@ -42,7 +46,11 @@ const EditableCell = ({ itemValue: initialValue, itemType, onSave }) => {
           role="button"
           aria-label="Edit"
         >
-          {f.displayValue(value, itemType)}
+          {itemType === "product-name" ? (
+            <h3>{f.displayValue(value, itemType)}</h3>
+          ) : (
+            f.displayValue(value, itemType)
+          )}
         </span>
       )}
     </div>
