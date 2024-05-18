@@ -31,14 +31,16 @@ class ActivityRepository extends ServiceEntityRepository
 			'a.id',
 			'a.name',
 			'a.slug',
-			'a.summary',
+			'a.title',
+			'a.objectives',
 			'a.description',
-			'a.bannerImage',
+			'a.detailedDescription',
+			'a.mobileImage',
+			'a.desktopImage',
 		])
 			->where('a.id = :id')
 			->setParameter('id', $id)
-			->getQuery()
-		;
+			->getQuery();
 
 		try {
 			return $query->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
@@ -58,12 +60,14 @@ class ActivityRepository extends ServiceEntityRepository
 			'a.id',
 			'a.name',
 			'a.slug',
-			'a.summary',
+			'a.title',
+			'a.objectives',
 			'a.description',
-			'a.bannerImage',
+			'a.detailedDescription',
+			'a.mobileImage',
+			'a.desktopImage',
 		])
-			->getQuery()
-		;
+			->getQuery();
 
 		return $query->getArrayResult();
 	}
@@ -76,18 +80,17 @@ class ActivityRepository extends ServiceEntityRepository
 		$qb = $this->createQueryBuilder('a');
 
 		if (null === $fields) {
-			$fields = ['id', 'name', 'slug', 'summary', 'description', 'bannerImage'];
+			$fields = ['id', 'name', 'slug', 'title', 'objectives', 'description', 'detailedDescription', 'mobileImage', 'desktopImage'];
 		}
 
 		$selectFields = [];
 		foreach ($fields as $field) {
-			$selectFields[] = 'a.'.$field;
+			$selectFields[] = 'a.' . $field;
 		}
 		$qb->select($selectFields);
 
 		$qb->where('a.slug = :slug')
-			->setParameter('slug', $slug)
-		;
+			->setParameter('slug', $slug);
 
 		$result = $qb->getQuery()->getOneOrNullResult();
 

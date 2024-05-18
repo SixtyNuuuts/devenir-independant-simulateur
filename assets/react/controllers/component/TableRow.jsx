@@ -37,33 +37,31 @@ const TableRow = ({ item, specification, onEditCell, onDelete }) => {
         ItemRows.map((itemRow, index) => (
           <td key={index} className={item.isLoading ? "loading" : ""}>
             {itemRow.isEditable ? (
-              <>
-                {index === 0 && isDeletableItems && (
-                  <div className="cell-with-delete">
-                    <button
-                      type="button"
-                      aria-label="Supprimer Produit"
-                      className="delete-icon"
-                      onClick={() => onDelete(item.id)}
-                    >
-                      X
-                    </button>
-                  </div>
-                )}
-                <EditableCell
-                  itemValue={itemRow.value}
-                  itemType={itemRow.type}
-                  onSave={(newVal) =>
-                    onEditCell(item.id, headers[index].key, newVal)
-                  }
-                />
-              </>
+              <EditableCell
+                itemValue={itemRow.value}
+                itemType={itemRow.type}
+                onSave={(newVal) =>
+                  onEditCell(item.id, headers[index].key, newVal)
+                }
+              />
             ) : (
               itemRow.value
             )}
           </td>
         ))}
       {columnTotalSumRender && <td>{columnTotalSumRender}</td>}
+      {isDeletableItems && ItemRows[0].isEditable && (
+        <td>
+          <button
+            type="button"
+            aria-label="Supprimer Produit"
+            className="delete-icon"
+            onClick={() => onDelete(item.id)}
+          >
+            X
+          </button>
+        </td>
+      )}
     </tr>
   );
 };

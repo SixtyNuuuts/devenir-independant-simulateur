@@ -45,10 +45,21 @@ function ProfessionalExpensesPage({ simulationId }) {
     );
     const result = await createFinancialItem(newItem);
     if (result && result.success && result.id) {
-      setProfessionalExpenses((currentItems) => [
-        ...currentItems,
-        { ...newItem, id: result.id },
-      ]);
+      setProfessionalExpenses((currentItems) => {
+        const salaryItemIndex = currentItems.findIndex(
+          (item) => item.nature === "salary"
+        );
+
+        if (salaryItemIndex === -1) {
+          return [...currentItems, { ...newItem, id: currentItems.length + 1 }];
+        }
+
+        return [
+          ...currentItems.slice(0, salaryItemIndex),
+          { ...newItem, id: currentItems.length + 1 },
+          ...currentItems.slice(salaryItemIndex),
+        ];
+      });
     } else {
       // Gérer l'erreur
     }

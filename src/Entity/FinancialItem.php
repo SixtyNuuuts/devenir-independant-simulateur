@@ -21,6 +21,9 @@ class FinancialItem
 	#[ORM\Column]
 	private ?\DateTimeImmutable $createdAt = null;
 
+	#[ORM\Column]
+	private ?\DateTime $updatedAt = null;
+
 	#[ORM\Column(length: 255)]
 	private ?string $name = null;
 
@@ -36,8 +39,8 @@ class FinancialItem
 	/**
 	 * @var array<mixed>|null
 	 */
-	#[ORM\Column(nullable: true)]
-	private ?array $attributes = null;
+	#[ORM\Column(type: Types::JSON, nullable: true)]
+	private ?array $attributes = [];
 
 	#[ORM\ManyToOne(inversedBy: 'financialItems')]
 	#[ORM\JoinColumn(nullable: false)]
@@ -46,11 +49,23 @@ class FinancialItem
 	public function __construct()
 	{
 		$this->createdAt = new \DateTimeImmutable();
+		$this->updatedAt = new \DateTime();
+	}
+
+	#[ORM\PreUpdate]
+	public function onPreUpdate(): void
+	{
+		$this->updatedAt = new \DateTime();
 	}
 
 	public function __toString(): string
 	{
 		return $this->name ?? '---';
+	}
+
+	public function __clone()
+	{
+		$this->id = null;
 	}
 
 	public function getId(): ?string
@@ -66,6 +81,18 @@ class FinancialItem
 	public function setCreatedAt(\DateTimeImmutable $createdAt): static
 	{
 		$this->createdAt = $createdAt;
+
+		return $this;
+	}
+
+	public function getUpdatedAt(): ?\DateTime
+	{
+		return $this->updatedAt;
+	}
+
+	public function setUpdatedAt(\DateTime $updatedAt): static
+	{
+		$this->updatedAt = $updatedAt;
 
 		return $this;
 	}

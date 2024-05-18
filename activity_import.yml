@@ -1,11 +1,35 @@
 activity:
   name: "Pizzéria"
   slug: "pizzeria"
-  summary: "vente de pizzas"
-  description: "Envide de tout plaquer pour devenir pizzaïolo ? Change de vie et lance une activité rentable !"
-
-simulation:
-  token: "default"
+  title: "Calcule la rentabilité de ta future pizzéria !"
+  objectives:
+    - "Maintient ton niveau de vie"
+    - "Lance une activité rentable"
+  description: |
+    <p>
+      Le premier simulateur de rentabilité d'entreprise en ligne gratuit !
+    </p> 
+    <p>
+      Créé ton business plan avant de <em>lancer ton activité</em> 
+      <strong>de vente de pizzas.</strong>
+    </p>
+  detailed_description: |
+    <p>
+      Bienvenue sur <em>krizalid</em>, l'application conçue pour les entrepreneurs ambitieux en quête de clarté financière 
+      dès le début de leur aventure. Chez <em>krizalid</em>, nous comprenons que le passage de l'emploi traditionnel à la 
+      création d'entreprise peut être intimidant. C'est pourquoi nous avons créé une solution puissante pour vous 
+      aider à estimer et à visualiser votre rentabilité dès le départ.
+    </p> 
+    <p>
+      Vous rêvez de quitter votre emploi pour créer votre entreprise, mais la peur de l'inconnu financier freine vos 
+      ambitions ? Comment savoir si votre nouvelle entreprise sera rentable? Comment estimer le seuil de rentabilité 
+      nécessaire pour maintenir votre style de vie actuel?
+    </p>
+    <p>
+      Notre application intuitive vous guide pas à pas pour estimer vos revenus, évaluer vos charges mensuelles et 
+      déterminer le seuil de rentabilité de votre future entreprise. En utilisant des données claires et précises, 
+      <em>krizalid</em> vous offre une vision instantanée de la viabilité financière de votre projet.
+    </p>
 
 salary_current:
   - name: "Salaire net"

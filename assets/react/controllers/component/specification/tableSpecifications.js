@@ -9,6 +9,7 @@ export const tableSpecifications = {
         key: `attributes.sale_per_month.${i}.quantity`,
       })),
       { label: "Total ANNUEL" },
+      { label: "" } // delete item btn,
     ],
     rows: (item) => [
       { value: item.name || "", type: "text", isEditable: true },
@@ -53,6 +54,7 @@ export const tableSpecifications = {
       { label: "Intitulé", key: "name" },
       { label: "Coût unitaire*", key: "attributes.manufacturing_cost" },
       { label: "Prix de vente HT", key: "value" },
+      { label: "" } // delete item btn,
     ],
     rows: (item) => [
       { value: item.name || "", type: "text", isEditable: true },
@@ -75,15 +77,16 @@ export const tableSpecifications = {
         key: `attributes.value_per_month.${i}.value`,
       })),
       { label: "Total ANNUEL" },
+      { label: "" } // delete item btn,
     ],
     rows: (item) => [
-      { value: item.name || "", type: "text", isEditable: true },
+      { value: item.nature === 'salary' ? 'Mon salaire' : item.name || "", type: "text", isEditable: item.nature === 'salary' ? false : true },
       ...(item.attributes.value_per_month && item.attributes.value_per_month.length > 0
-        ? item.attributes.value_per_month.map(expense => ({ value: expense.value, type: "financial-value", isEditable: true }))
+        ? item.attributes.value_per_month.map(expense => ({ value: expense.value, type: "financial-value", isEditable: item.nature === 'salary' ? false : true }))
         : Array.from({ length: 12 }, (_, i) => ({
           value: item.value,
           type: "financial-value",
-          isEditable: true,
+          isEditable: item.nature === 'salary' ? false : true,
           month: i + 1,
         }))
       ),
@@ -120,9 +123,10 @@ export const tableSpecifications = {
       { label: "Intitulé", key: "name" },
       { label: "Mensuel", key: "value" },
       { label: "Annuel" },
+      { label: "" } // delete item btn,
     ],
     rows: (item) => [
-      { value: item.name || "", type: "text", isEditable: true },
+      { value: item.nature === 'salary' ? 'Salaire net' : item.name || "", type: "text", isEditable: item.nature === 'salary' ? false : true },
       { value: item.value || "", type: "financial-value", isEditable: true },
     ],
     isDeletableItems: true,
@@ -148,6 +152,7 @@ export const tableSpecifications = {
       { label: "Intitulé", key: "name" },
       { label: "Mensuel", key: "value" },
       { label: "Annuel" },
+      { label: "" } // delete item btn,
     ],
     rows: (item) => [
       { value: item.name || "", type: "text", isEditable: true },

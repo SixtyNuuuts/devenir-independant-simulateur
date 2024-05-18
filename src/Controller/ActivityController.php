@@ -58,22 +58,28 @@ class ActivityController extends AbstractController
 
 		$activityName = \is_string($data['name'] ?? null) ? $data['name'] : '---';
 		$activitySlug = \is_string($data['slug'] ?? null) ? $data['slug'] : '---';
-		$activitySummary = \is_string($data['summary'] ?? null) ? $data['summary'] : '---';
+		$activityTitle = \is_string($data['title'] ?? null) ? $data['title'] : '---';
+		$activityObjectives = \is_array($data['objectives'] ?? null) ? $data['objectives'] : [];
 		$activityDescription = \is_string($data['description'] ?? null) ? $data['description'] : '---';
-		$activityBannerImage = \is_string($data['bannerImage'] ?? null) ? $data['bannerImage'] : '/';
+		$activityDetailedDescription = \is_string($data['detailed_description'] ?? null) ? $data['detailed_description'] : '---';
+		$activityMobileImage = \is_string($data['mobileImage'] ?? null) ? $data['mobileImage'] : '/';
+		$activityDesktopImage = \is_string($data['desktopImage'] ?? null) ? $data['desktopImage'] : '/';
 
 		try {
 			$activity = new Activity();
 			$activity->setName($activityName);
 			$activity->setSlug($activitySlug);
-			$activity->setSummary($activitySummary);
+			$activity->setTitle($activityTitle);
+			$activity->setObjectives($activityObjectives);
 			$activity->setDescription($activityDescription);
-			$activity->setBannerImage($activityBannerImage);
+			$activity->setDetailedDescription($activityDetailedDescription);
+			$activity->setMobileImage($activityMobileImage);
+			$activity->setDesktopImage($activityDesktopImage);
 
 			$this->em->persist($activity);
 			$this->em->flush();
 
-			return $this->json(['success' => 'Activité créée !'], JsonResponse::HTTP_CREATED);
+			return $this->json(['success' => 'Activité créée !', 'id' => $activity->getId()], JsonResponse::HTTP_CREATED);
 		} catch (\Exception $exception) {
 			return $this->json(['error' => $exception->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
 		}
@@ -89,16 +95,22 @@ class ActivityController extends AbstractController
 
 		$activityName = \is_string($data['name'] ?? null) ? $data['name'] : $activity->getName() ?? '---';
 		$activitySlug = \is_string($data['slug'] ?? null) ? $data['slug'] : $activity->getSlug() ?? '---';
-		$activitySummary = \is_string($data['summary'] ?? null) ? $data['summary'] : $activity->getSummary() ?? '---';
+		$activityTitle = \is_string($data['title'] ?? null) ? $data['title'] : $activity->getTitle() ?? '---';
+		$activityObjectives = \is_array($data['objectives'] ?? null) ? $data['objectives'] : $activity->getObjectives() ?? [];
 		$activityDescription = \is_string($data['description'] ?? null) ? $data['description'] : $activity->getDescription() ?? '---';
-		$activityBannerImage = \is_string($data['bannerImage'] ?? null) ? $data['bannerImage'] : $activity->getBannerImage() ?? '/';
+		$activityDetailedDescription = \is_string($data['detailed_description'] ?? null) ? $data['detailed_description'] : $activity->getDetailedDescription() ?? '---';
+		$activityMobileImage = \is_string($data['mobileImage'] ?? null) ? $data['mobileImage'] : $activity->getMobileImage() ?? '/';
+		$activityDesktopImage = \is_string($data['desktopImage'] ?? null) ? $data['desktopImage'] : $activity->getDesktopImage() ?? '/';
 
 		try {
 			$activity->setName($activityName);
 			$activity->setSlug($activitySlug);
-			$activity->setSummary($activitySummary);
+			$activity->setTitle($activityTitle);
+			$activity->setObjectives($activityObjectives);
 			$activity->setDescription($activityDescription);
-			$activity->setBannerImage($activityBannerImage);
+			$activity->setDetailedDescription($activityDetailedDescription);
+			$activity->setMobileImage($activityMobileImage);
+			$activity->setDesktopImage($activityDesktopImage);
 
 			$this->em->flush();
 

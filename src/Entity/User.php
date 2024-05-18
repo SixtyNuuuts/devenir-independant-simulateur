@@ -25,6 +25,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 	#[ORM\Column(length: 180)]
 	private ?string $email = null;
 
+	#[ORM\Column]
+	private ?\DateTimeImmutable $createdAt = null;
+
+	#[ORM\Column]
+	private ?\DateTime $updatedAt = null;
+
 	/**
 	 * @var list<string> The user roles
 	 */
@@ -45,7 +51,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 	public function __construct()
 	{
+		$this->createdAt = new \DateTimeImmutable();
+		$this->updatedAt = new \DateTime();
 		$this->simulations = new ArrayCollection();
+	}
+
+	#[ORM\PreUpdate]
+	public function onPreUpdate(): void
+	{
+		$this->updatedAt = new \DateTime();
 	}
 
 	public function __toString(): string
@@ -71,6 +85,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 	public function setEmail(string $email): static
 	{
 		$this->email = $email;
+
+		return $this;
+	}
+
+	public function getCreatedAt(): ?\DateTimeImmutable
+	{
+		return $this->createdAt;
+	}
+
+	public function setCreatedAt(\DateTimeImmutable $createdAt): static
+	{
+		$this->createdAt = $createdAt;
+
+		return $this;
+	}
+
+	public function getUpdatedAt(): ?\DateTime
+	{
+		return $this->updatedAt;
+	}
+
+	public function setUpdatedAt(\DateTime $updatedAt): static
+	{
+		$this->updatedAt = $updatedAt;
 
 		return $this;
 	}

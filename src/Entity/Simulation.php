@@ -24,6 +24,9 @@ class Simulation
 	#[ORM\Column]
 	private ?\DateTimeImmutable $createdAt = null;
 
+	#[ORM\Column]
+	private ?\DateTime $updatedAt = null;
+
 	#[ORM\ManyToOne(inversedBy: 'simulations')]
 	#[ORM\JoinColumn(nullable: false)]
 	private ?Activity $activity = null;
@@ -41,7 +44,14 @@ class Simulation
 	{
 		$this->financialItems = new ArrayCollection();
 		$this->createdAt = new \DateTimeImmutable();
+		$this->updatedAt = new \DateTime();
 		$this->token = $this->generateShortUniqueId();
+	}
+
+	#[ORM\PreUpdate]
+	public function onPreUpdate(): void
+	{
+		$this->updatedAt = new \DateTime();
 	}
 
 	public function __toString(): string
@@ -54,18 +64,6 @@ class Simulation
 		return $this->id;
 	}
 
-	public function getToken(): ?string
-	{
-		return $this->token;
-	}
-
-	public function setToken(string $token): static
-	{
-		$this->token = $token;
-
-		return $this;
-	}
-
 	public function getCreatedAt(): ?\DateTimeImmutable
 	{
 		return $this->createdAt;
@@ -74,6 +72,30 @@ class Simulation
 	public function setCreatedAt(\DateTimeImmutable $createdAt): static
 	{
 		$this->createdAt = $createdAt;
+
+		return $this;
+	}
+
+	public function getUpdatedAt(): ?\DateTime
+	{
+		return $this->updatedAt;
+	}
+
+	public function setUpdatedAt(\DateTime $updatedAt): static
+	{
+		$this->updatedAt = $updatedAt;
+
+		return $this;
+	}
+
+	public function getToken(): ?string
+	{
+		return $this->token;
+	}
+
+	public function setToken(string $token): static
+	{
+		$this->token = $token;
 
 		return $this;
 	}

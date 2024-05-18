@@ -54,8 +54,8 @@ class HomeController extends AbstractController
 			}
 
 			$data = Yaml::parse($yamlContent);
-			if (!\is_array($data) || !isset($data['simulation']) || !\is_array($data['simulation']) || !isset($data['activity']) || !\is_array($data['activity']) || !isset($data['professional_income']) || !isset($data['professional_expense']) || !isset($data['personal_expense']) || !isset($data['salary_current']) || !isset($data['salary_target'])) {
-				return $this->json(['error' => 'Le fichier ne contient pas les données nécessaires pour l\'import (activity, simulation, professional_income, professional_expense, personal_expense, salary_current, salary_target).'], Response::HTTP_BAD_REQUEST);
+			if (!\is_array($data) || !isset($data['activity']) || !\is_array($data['activity']) || !isset($data['professional_income']) || !isset($data['professional_expense']) || !isset($data['personal_expense']) || !isset($data['salary_current']) || !isset($data['salary_target'])) {
+				return $this->json(['error' => 'Le fichier ne contient pas les données nécessaires pour l\'import (activity, professional_income, professional_expense, personal_expense, salary_current, salary_target).'], Response::HTTP_BAD_REQUEST);
 			}
 
 			$activitySlug = \is_string($data['activity']['slug'] ?? null) ? $data['activity']['slug'] : null;
@@ -85,22 +85,27 @@ class HomeController extends AbstractController
 				}
 
 				$activityName = \is_string($data['activity']['name'] ?? null) ? $data['activity']['name'] : '---';
-				$activitySummary = \is_string($data['activity']['summary'] ?? null) ? $data['activity']['summary'] : '---';
+				$activitySlug = \is_string($data['activity']['slug'] ?? null) ? $data['activity']['slug'] : '---';
+				$activityTitle = \is_string($data['activity']['title'] ?? null) ? $data['activity']['title'] : '---';
+				$activityObjectives = \is_array($data['activity']['objectives'] ?? null) ? $data['activity']['objectives'] : [];
 				$activityDescription = \is_string($data['activity']['description'] ?? null) ? $data['activity']['description'] : '---';
+				$activityDetailedDescription = \is_string($data['activity']['detailed_description'] ?? null) ? $data['activity']['detailed_description'] : '---';
 
 				$activity ??= new Activity();
 				$activity->setName($activityName)
 					->setSlug($activitySlug)
-					->setSummary($activitySummary)
+					->setTitle($activityTitle)
+					->setObjectives($activityObjectives)
 					->setDescription($activityDescription)
-					->setBannerImage($activity->getBannerImage() ?? '/');
-				$entityManager->persist($activity);
+					->setDetailedDescription($activityDetailedDescription)
+					->setMobileImage($activity->getMobileImage() ?? '/')
+					->setDesktopImage($activity->getDesktopImage() ?? '/');
 
-				$simulationToken = \is_string($data['simulation']['token'] ?? null) ? $data['simulation']['token'] : '---';
+				$entityManager->persist($activity);
 
 				$simulation ??= new Simulation();
 				$simulation->setActivity($activity)
-					->setToken($simulationToken);
+					->setToken('default');
 				$entityManager->persist($simulation);
 
 				$this->processFinancialItems($data, $simulation, $entityManager);
