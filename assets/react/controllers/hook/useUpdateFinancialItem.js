@@ -17,15 +17,33 @@ const useUpdateFinancialItem = () => {
 
   const formatFinancialItemForUpdate = (item, valuePath, value) => {
     const newItem = { ...item };
-    const targetKey = valuePath.split(".")[1];
 
-    if ((targetKey === "value_per_month" || targetKey === "sale_per_month") && newItem.attributes && !newItem.attributes.length) {
-      newItem.attributes = {};
-      newItem.attributes[targetKey] = Array.from({ length: 12 }, (_, i) => {
-        return targetKey === "sale_per_month" ?
-          { month: i + 1, quantity: 100 } :
-          { month: i + 1, value: item.value };
-      });
+    console.log(newItem.attributes)
+
+    // Si attributes est vide, on inalise avec valeurs defaut
+    const validKeys = ["value_per_month", "sale_per_month", "manufacturing_cost"];
+    const targetKey = valuePath.split(".")[1];
+    if (validKeys.includes(targetKey) && newItem.attributes && !newItem.attributes[targetKey]) {
+      if (Array.isArray(newItem.attributes) && newItem.attributes.length === 0) {
+        newItem.attributes = {};
+      }
+
+      switch (targetKey) {
+        case "sale_per_month":
+        case "manufacturing_cost":
+          newItem.attributes["sale_per_month"] = Array.from({ length: 12 }, (_, i) => ({
+            month: i + 1,
+            quantity: 100
+          }));
+          newItem.attributes["manufacturing_cost"] = newItem.attributes["manufacturing_cost"] ?? "00.00";
+          break;
+        case "value_per_month":
+          newItem.attributes["value_per_month"] = Array.from({ length: 12 }, (_, i) => ({
+            month: i + 1,
+            value: item.value
+          }));
+          break;
+      }
     }
 
     if (valuePath.includes(".")) {

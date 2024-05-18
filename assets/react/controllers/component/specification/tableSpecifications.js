@@ -58,8 +58,8 @@ export const tableSpecifications = {
     ],
     rows: (item) => [
       { value: item.name || "", type: "text", isEditable: true },
-      { value: item.attributes.manufacturing_cost || "", type: "financial-value", isEditable: true },
-      { value: item.value || "", type: "financial-value", isEditable: true },
+      { value: item.attributes.manufacturing_cost || "00.00", type: "financial-value", isEditable: true },
+      { value: item.value || "00.00", type: "financial-value", isEditable: true },
     ],
     columnTotalSum: false,
     isDeletableItems: true,
@@ -127,7 +127,7 @@ export const tableSpecifications = {
     ],
     rows: (item) => [
       { value: item.nature === 'salary' ? 'Salaire net' : item.name || "", type: "text", isEditable: item.nature === 'salary' ? false : true },
-      { value: item.value || "", type: "financial-value", isEditable: true },
+      { value: item.value || "00.00", type: "financial-value", isEditable: true },
     ],
     isDeletableItems: true,
     columnTotalSum: true,
@@ -156,7 +156,7 @@ export const tableSpecifications = {
     ],
     rows: (item) => [
       { value: item.name || "", type: "text", isEditable: true },
-      { value: item.value || "", type: "financial-value", isEditable: true },
+      { value: item.value || "00.00", type: "financial-value", isEditable: true },
     ],
     isDeletableItems: true,
     columnTotalSum: true,
