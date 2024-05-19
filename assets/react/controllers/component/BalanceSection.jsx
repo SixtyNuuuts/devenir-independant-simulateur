@@ -8,7 +8,7 @@ const BalanceSection = ({
   balanceValue,
 }) => (
   <section aria-labelledby={id} className="balance-section">
-    <h4 id={id}>{title}</h4>
+    <h2 id={id}>{title}</h2>
     <p>{description}</p>
     <div className={balanceClass}>{balanceValue}</div>
   </section>
