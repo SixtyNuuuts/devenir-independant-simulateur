@@ -18,12 +18,11 @@ const useUpdateFinancialItem = () => {
   const formatFinancialItemForUpdate = (item, valuePath, value) => {
     const newItem = { ...item };
 
-    console.log(newItem.attributes)
-
     // Si attributes est vide, on inalise avec valeurs defaut
     const validKeys = ["value_per_month", "sale_per_month", "manufacturing_cost"];
     const targetKey = valuePath.split(".")[1];
     if (validKeys.includes(targetKey) && newItem.attributes && !newItem.attributes[targetKey]) {
+      console.log('newItem.attributes', targetKey);
       if (Array.isArray(newItem.attributes) && newItem.attributes.length === 0) {
         newItem.attributes = {};
       }

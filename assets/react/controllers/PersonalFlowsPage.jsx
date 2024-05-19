@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from "react";
-import FinancialItemsTable from "./component/FinancialItemsTable";
-import AddFinancialItemModal from "./component/AddFinancialItemModal";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import useGetFinancialItems from "./hook/useGetFinancialItems";
 import useCreateFinancialItem from "./hook/useCreateFinancialItem";
 import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
 import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
+import FinancialItemsTable from "./component/FinancialItemsTable";
+import AddFinancialItemModal from "./component/AddFinancialItemModal";
+import BalanceSection from "./component/BalanceSection";
 import f from "./utils/function";
 
 function PersonalFlowsPage({ simulationId }) {
@@ -30,9 +31,11 @@ function PersonalFlowsPage({ simulationId }) {
     useUpdateFinancialItem();
   const { deleteFinancialItem } = useDeleteFinancialItem();
 
-  const [personalIncomes, setPersonalIncomes] = useState([]);
-  const [personalExpenses, setPersonalExpenses] = useState([]);
-  const [salaryTargets, setSalaryTargets] = useState([]);
+  const [financialData, setFinancialData] = useState({
+    personalIncomes: [],
+    personalExpenses: [],
+    salaryTargets: [],
+  });
 
   const [annualTotals, setAnnualTotals] = useState({
     personalIncomes: "0.00",
@@ -40,205 +43,146 @@ function PersonalFlowsPage({ simulationId }) {
     salaryTargets: "0.00",
   });
 
-  const [isModalAddPersonalIncomeOpen, setModalAddPersonalIncomeOpen] =
-    useState(false);
-  const [isModalAddPersonalExpenseOpen, setModalAddPersonalExpenseOpen] =
-    useState(false);
+  const [modalState, setModalState] = useState({
+    personalIncome: false,
+    personalExpense: false,
+  });
 
   useEffect(() => {
-    setPersonalIncomes(personalIncomesData);
+    setFinancialData((prevState) => ({
+      ...prevState,
+      personalIncomes: personalIncomesData,
+    }));
   }, [personalIncomesData]);
+
   useEffect(() => {
-    setPersonalExpenses(personalExpensesData);
+    setFinancialData((prevState) => ({
+      ...prevState,
+      personalExpenses: personalExpensesData,
+    }));
   }, [personalExpensesData]);
+
   useEffect(() => {
-    setSalaryTargets(salaryTargetsData);
+    setFinancialData((prevState) => ({
+      ...prevState,
+      salaryTargets: salaryTargetsData,
+    }));
   }, [salaryTargetsData]);
 
-  const onAddPersonalIncome = () => {
-    setModalAddPersonalIncomeOpen(true);
-  };
-  const onAddPersonalExpense = () => {
-    setModalAddPersonalExpenseOpen(true);
+  const toggleModal = (type, state) => {
+    setModalState((prevState) => ({ ...prevState, [type]: state }));
   };
 
-  const onAddPersonalIncomeProcess = async (item) => {
+  const handleAddItemProcess = useCallback(async (type, item) => {
     const newItem = formatFinancialItemForCreate(
       item,
       simulationId,
       "personal",
-      "income"
+      type === "personalIncomes"
+        ? "income"
+        : type === "personalExpenses"
+        ? "expense"
+        : "default"
     );
     const result = await createFinancialItem(newItem);
-    if (result && result.success && result.id) {
-      setPersonalIncomes((currentItems) => [
-        ...currentItems,
-        { ...newItem, id: result.id },
-      ]);
+    if (result?.success && result.id) {
+      setFinancialData((prevState) => ({
+        ...prevState,
+        [type]: [...prevState[type], { ...newItem, id: result.id }],
+      }));
     } else {
       // Gérer l'erreur
     }
+    toggleModal(type, false);
+  }, []);
 
-    setModalAddPersonalIncomeOpen(false);
+  const handleUpdateItem = useCallback(
+    async (type, itemId, fieldKey, newValue) => {
+      setFinancialData((prevState) => ({
+        ...prevState,
+        [type]: prevState[type].map((item) =>
+          item.id === itemId ? { ...item, isLoading: true } : item
+        ),
+      }));
+      const originalItem = financialData[type].find(
+        (item) => item.id === itemId
+      );
+      const newItem = formatFinancialItemForUpdate(
+        originalItem,
+        fieldKey,
+        newValue
+      );
+      const result = await updateFinancialItem(newItem);
+      if (result?.success) {
+        if (type === "salaryTargets") {
+          handleUpdateSalaryTarget(itemId, newItem, newValue);
+        } else {
+          setFinancialData((prevState) => ({
+            ...prevState,
+            [type]: prevState[type].map((item) =>
+              item.id === itemId
+                ? { ...item, ...newItem, isLoading: false }
+                : item
+            ),
+          }));
+        }
+      } else {
+        setFinancialData((prevState) => ({
+          ...prevState,
+          [type]: prevState[type].map((item) =>
+            item.id === itemId ? { ...item, isLoading: false } : item
+          ),
+        }));
+      }
+    },
+    [financialData]
+  );
+
+  const handleUpdateSalaryTarget = (itemId, newItem, newValue) => {
+    const netSalary = parseFloat(newValue);
+    const employeeContributionRate = 0.3; // 30% to calculate brut salary
+    const employerContributionRate = 0.13; // 13% to calculate total cost
+
+    const brutSalary = netSalary * employeeContributionRate + netSalary;
+    const totalCompanyCost = brutSalary * employerContributionRate + brutSalary;
+
+    setFinancialData((prevState) => ({
+      ...prevState,
+      salaryTargets: prevState.salaryTargets.map((item) => {
+        if (item.id === itemId) {
+          return { ...item, ...newItem, isLoading: false };
+        } else if (item.type === "brut") {
+          return { ...item, value: brutSalary.toFixed(2) };
+        } else if (item.type === "total-company-cost") {
+          return { ...item, value: totalCompanyCost.toFixed(2) };
+        }
+        return item;
+      }),
+    }));
   };
-  const onAddPersonalExpenseProcess = async (item) => {
-    const newItem = formatFinancialItemForCreate(
-      item,
-      simulationId,
-      "personal",
-      "expense"
-    );
-    const result = await createFinancialItem(newItem);
-    if (result && result.success && result.id) {
-      setPersonalExpenses((currentItems) => [
-        ...currentItems,
-        { ...newItem, id: result.id },
-      ]);
-    } else {
-      // Gérer l'erreur
-    }
 
-    setModalAddPersonalExpenseOpen(false);
-  };
-
-  const onUpdatePersonalIncome = async (itemId, fieldKey, newValue) => {
-    setPersonalIncomes((currentItems) =>
-      currentItems.map((item) =>
+  const handleDeleteItem = useCallback(async (type, itemId) => {
+    setFinancialData((prevState) => ({
+      ...prevState,
+      [type]: prevState[type].map((item) =>
         item.id === itemId ? { ...item, isLoading: true } : item
-      )
-    );
-    const originalItem = personalIncomes.find((item) => item.id === itemId);
-    const newItem = formatFinancialItemForUpdate(
-      originalItem,
-      fieldKey,
-      newValue
-    );
-    const result = await updateFinancialItem(newItem);
-    if (result && result.success) {
-      setPersonalIncomes((currentItems) =>
-        currentItems.map((item) =>
-          item.id === itemId ? { ...item, ...newItem, isLoading: false } : item
-        )
-      );
-    } else {
-      setPersonalIncomes((currentItems) =>
-        currentItems.map((item) =>
-          item.id === itemId ? { ...item, isLoading: false } : item
-        )
-      );
-    }
-  };
-  const onUpdatePersonalExpense = async (itemId, fieldKey, newValue) => {
-    setPersonalExpenses((currentItems) =>
-      currentItems.map((item) =>
-        item.id === itemId ? { ...item, isLoading: true } : item
-      )
-    );
-    const originalItem = personalExpenses.find((item) => item.id === itemId);
-    const newItem = formatFinancialItemForUpdate(
-      originalItem,
-      fieldKey,
-      newValue
-    );
-    const result = await updateFinancialItem(newItem);
-    if (result && result.success) {
-      setPersonalExpenses((currentItems) =>
-        currentItems.map((item) =>
-          item.id === itemId ? { ...item, ...newItem, isLoading: false } : item
-        )
-      );
-    } else {
-      setPersonalExpenses((currentItems) =>
-        currentItems.map((item) =>
-          item.id === itemId ? { ...item, isLoading: false } : item
-        )
-      );
-    }
-  };
-  const onUpdateSalaryTarget = async (itemId, fieldKey, newValue) => {
-    setSalaryTargets((currentItems) =>
-      currentItems.map((item) =>
-        item.id === itemId ? { ...item, isLoading: true } : item
-      )
-    );
-    const originalItem = salaryTargets.find((item) => item.id === itemId);
-    const newItem = formatFinancialItemForUpdate(
-      originalItem,
-      fieldKey,
-      newValue
-    );
-    const result = await updateFinancialItem(newItem);
-    if (result && result.success) {
-      const netSalary = parseFloat(newValue);
-      const employeeContributionRate = 0.3; // 30% to calculate brut salary
-      const employerContributionRate = 0.13; // 13% to calculate total cost
-
-      const brutSalary = netSalary * employeeContributionRate + netSalary;
-      const totalCompanyCost =
-        brutSalary * employerContributionRate + brutSalary;
-
-      setSalaryTargets(
-        (currentItems) =>
-          (currentItems = currentItems.map((item) => {
-            if (item.id === itemId) {
-              return { ...item, ...newItem, isLoading: false };
-            } else if (item.type === "brut") {
-              return { ...item, value: brutSalary.toFixed(2) };
-            } else if (item.type === "total-company-cost") {
-              return { ...item, value: totalCompanyCost.toFixed(2) };
-            }
-            return item;
-          }))
-      );
-    } else {
-      setSalaryTargets((currentItems) =>
-        currentItems.map((item) =>
-          item.id === itemId ? { ...item, isLoading: false } : item
-        )
-      );
-    }
-  };
-
-  const onDeletePersonalIncome = async (itemId) => {
-    setPersonalIncomes((currentItems) =>
-      currentItems.map((item) =>
-        item.id === itemId ? { ...item, isLoading: true } : item
-      )
-    );
+      ),
+    }));
     const result = await deleteFinancialItem(itemId);
-    if (result && result.success) {
-      setPersonalIncomes((currentItems) =>
-        currentItems.filter((item) => item.id !== itemId)
-      );
+    if (result?.success) {
+      setFinancialData((prevState) => ({
+        ...prevState,
+        [type]: prevState[type].filter((item) => item.id !== itemId),
+      }));
     } else {
-      // Gérer l'erreur
+      setFinancialData((prevState) => ({
+        ...prevState,
+        [type]: prevState[type].map((item) =>
+          item.id === itemId ? { ...item, isLoading: false } : item
+        ),
+      }));
     }
-    setPersonalIncomes((currentItems) =>
-      currentItems.map((item) =>
-        item.id === itemId ? { ...item, isLoading: false } : item
-      )
-    );
-  };
-  const onDeletePersonalExpense = async (itemId) => {
-    setPersonalExpenses((currentItems) =>
-      currentItems.map((item) =>
-        item.id === itemId ? { ...item, isLoading: true } : item
-      )
-    );
-    const result = await deleteFinancialItem(itemId);
-    if (result && result.success) {
-      setPersonalExpenses((currentItems) =>
-        currentItems.filter((item) => item.id !== itemId)
-      );
-    } else {
-      // Gérer l'erreur
-    }
-    setPersonalExpenses((currentItems) =>
-      currentItems.map((item) =>
-        item.id === itemId ? { ...item, isLoading: false } : item
-      )
-    );
-  };
+  }, []);
 
   const handleAnnualTotalChange = (type, annualTotal) => {
     setAnnualTotals((prevTotals) => ({
@@ -248,103 +192,111 @@ function PersonalFlowsPage({ simulationId }) {
   };
 
   const personalBalanceToday = useMemo(() => {
-    return annualTotals["personal-incomes"] - annualTotals["personal-expenses"];
-  }, [annualTotals["personal-incomes"], annualTotals["personal-expenses"]]);
+    return annualTotals.personalIncomes - annualTotals.personalExpenses;
+  }, [annualTotals]);
 
   const personalBalanceTomorrow = useMemo(() => {
-    return annualTotals["salary-targets"] - annualTotals["personal-expenses"];
-  }, [annualTotals["salary-targets"], annualTotals["personal-expenses"]]);
+    return annualTotals.salaryTargets - annualTotals.personalExpenses;
+  }, [annualTotals]);
+
+  if (
+    personalIncomesLoading ||
+    personalExpensesLoading ||
+    salaryTargetsLoading
+  ) {
+    return <div className="loading">Chargement...</div>;
+  }
+
+  if (personalIncomesError || personalExpensesError || salaryTargetsError) {
+    return <div>Une erreur est survenue lors du chargement des données.</div>;
+  }
 
   return (
-    <div
-      className={
-        personalIncomesLoading ||
-        personalExpensesLoading ||
-        salaryTargetsLoading
-          ? "loading"
-          : ""
-      }
-    >
-      {personalIncomesLoading ||
-      personalExpensesLoading ||
-      salaryTargetsLoading ? (
-        <div>Chargement...</div>
-      ) : personalIncomesError ||
-        personalExpensesError ||
-        salaryTargetsError ? (
-        <div>Une erreur est survenue lors du chargement des données.</div>
-      ) : (
-        <main>
-          <h1>Niveau de vie personnel</h1>
-          <p>
-            Pour pouvoir vivre de votre future activité professionnelle il faut
-            que vous puissiez couvrir vos frais personnels en vous versant une
-            rémunération minimum
-          </p>
-          <FinancialItemsTable
-            financialItems={personalExpenses}
-            type="personal-expenses"
-            onAddFinancialItem={onAddPersonalExpense}
-            onUpdateFinancialItem={onUpdatePersonalExpense}
-            onDeleteFinancialItem={onDeletePersonalExpense}
-            onAnnualTotalChange={handleAnnualTotalChange}
-          />
-          <FinancialItemsTable
-            financialItems={personalIncomes}
-            type="personal-incomes"
-            onAddFinancialItem={onAddPersonalIncome}
-            onUpdateFinancialItem={onUpdatePersonalIncome}
-            onDeleteFinancialItem={onDeletePersonalIncome}
-            onAnnualTotalChange={handleAnnualTotalChange}
-          />
-          <figure>
-            <figcaption>
-              <strong>Equilibre niveau de vie d'aujourd'hui</strong> = Salaire
-              annuel - frais annuels actuels
-            </figcaption>
-            <span className={f.getCssClassForValue(personalBalanceToday)}>
-              {f.getSignForValue(personalBalanceToday)}{" "}
-              {f.displayValue(
-                Math.abs(personalBalanceToday),
-                "financial-value"
-              )}
-            </span>
-          </figure>
-          <FinancialItemsTable
-            financialItems={salaryTargets}
-            type="salary-targets"
-            onAddFinancialItem={null}
-            onUpdateFinancialItem={onUpdateSalaryTarget}
-            onDeleteFinancialItem={null}
-            onAnnualTotalChange={handleAnnualTotalChange}
-          />
-          <figure>
-            <figcaption>
-              <strong>Equilibre niveau de vie de demain</strong> = Salaire
-              annuel net envisagé - frais annuels actuels
-            </figcaption>
-            <span className={f.getCssClassForValue(personalBalanceTomorrow)}>
-              {f.getSignForValue(personalBalanceTomorrow)}{" "}
-              {f.displayValue(
-                Math.abs(personalBalanceTomorrow),
-                "financial-value"
-              )}
-            </span>
-          </figure>
-          <AddFinancialItemModal
-            type="personal-income"
-            isOpen={isModalAddPersonalIncomeOpen}
-            onClose={() => setModalAddPersonalIncomeOpen(false)}
-            onSave={onAddPersonalIncomeProcess}
-          />
-          <AddFinancialItemModal
-            type="personal-expense"
-            isOpen={isModalAddPersonalExpenseOpen}
-            onClose={() => setModalAddPersonalExpenseOpen(false)}
-            onSave={onAddPersonalExpenseProcess}
-          />
-        </main>
-      )}
+    <div>
+      <main>
+        <h1>Niveau de vie personnel</h1>
+        <p>
+          Pour pouvoir vivre de votre future activité professionnelle il faut
+          que vous puissiez couvrir vos frais personnels en vous versant une
+          rémunération minimum
+        </p>
+        <FinancialItemsTable
+          financialItems={financialData.personalExpenses}
+          type="personal-expenses"
+          onAddFinancialItem={() => toggleModal("personalExpense", true)}
+          onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
+            handleUpdateItem("personalExpenses", itemId, fieldKey, newValue)
+          }
+          onDeleteFinancialItem={(itemId) =>
+            handleDeleteItem("personalExpenses", itemId)
+          }
+          onAnnualTotalChange={(annualTotal) =>
+            handleAnnualTotalChange("personalExpenses", annualTotal)
+          }
+        />
+        <FinancialItemsTable
+          financialItems={financialData.personalIncomes}
+          type="personal-incomes"
+          onAddFinancialItem={() => toggleModal("personalIncome", true)}
+          onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
+            handleUpdateItem("personalIncomes", itemId, fieldKey, newValue)
+          }
+          onDeleteFinancialItem={(itemId) =>
+            handleDeleteItem("personalIncomes", itemId)
+          }
+          onAnnualTotalChange={(annualTotal) =>
+            handleAnnualTotalChange("personalIncomes", annualTotal)
+          }
+        />
+        <BalanceSection
+          id="balance-today"
+          title="Équilibre niveau de vie d'aujourd'hui"
+          description="Salaire annuel - frais annuels actuels"
+          balanceClass={f.getCssClassForValue(personalBalanceToday)}
+          balanceValue={`${f.getSignForValue(
+            personalBalanceToday
+          )} ${f.displayValue(
+            Math.abs(personalBalanceToday),
+            "financial-value"
+          )}`}
+        />
+        <FinancialItemsTable
+          financialItems={financialData.salaryTargets}
+          type="salary-targets"
+          onAddFinancialItem={null}
+          onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
+            handleUpdateItem("salaryTargets", itemId, fieldKey, newValue)
+          }
+          onDeleteFinancialItem={null}
+          onAnnualTotalChange={(annualTotal) =>
+            handleAnnualTotalChange("salaryTargets", annualTotal)
+          }
+        />
+        <BalanceSection
+          id="balance-tomorrow"
+          title="Équilibre niveau de vie de demain"
+          description="Salaire annuel net envisagé - frais annuels actuels"
+          balanceClass={f.getCssClassForValue(personalBalanceTomorrow)}
+          balanceValue={`${f.getSignForValue(
+            personalBalanceTomorrow
+          )} ${f.displayValue(
+            Math.abs(personalBalanceTomorrow),
+            "financial-value"
+          )}`}
+        />
+        <AddFinancialItemModal
+          type="personal-income"
+          isOpen={modalState.personalIncome}
+          onClose={() => toggleModal("personalIncome", false)}
+          onSave={(item) => handleAddItemProcess("personalIncomes", item)}
+        />
+        <AddFinancialItemModal
+          type="personal-expense"
+          isOpen={modalState.personalExpense}
+          onClose={() => toggleModal("personalExpense", false)}
+          onSave={(item) => handleAddItemProcess("personalExpenses", item)}
+        />
+      </main>
     </div>
   );
 }
