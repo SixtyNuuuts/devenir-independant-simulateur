@@ -36,7 +36,7 @@ class SimulationService
         $simulation = new Simulation();
         $simulation->setActivity($activity);
 
-        if ($currentUser->getType() === 'User') {
+        if ($currentUser->getType() === 'user') {
             $simulation->setUser($currentUser);
         } else {
             $simulation->setAnonymousUser($currentUser);

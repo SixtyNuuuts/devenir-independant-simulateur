@@ -55,7 +55,7 @@ class SimulationController extends AbstractController
 
 			$user = null;
 			if ($userType && $userId) {
-				$repositoryClass = $userType === 'User' ? User::class : ($userType === 'AnonymousUser' ? AnonymousUser::class : null);
+				$repositoryClass = $userType === 'user' ? User::class : ($userType === 'anonymousUser' ? AnonymousUser::class : null);
 				if ($repositoryClass) {
 					$user = $this->em->getRepository($repositoryClass)->find($userId) ?? '---';
 				}
@@ -113,6 +113,14 @@ class SimulationController extends AbstractController
 	#[Route('/delete/{id}', name: 'app_simulation_delete', methods: ['DELETE'])]
 	public function delete(Simulation $simulation): JsonResponse
 	{
+		$currentUser = $this->userService->getCurrentUser();
+		$isAdmin = $this->isGranted('ROLE_ADMIN');
+		$isOwner = $simulation->getUser() === $currentUser;
+
+		if (!$isAdmin && !$isOwner) {
+			return $this->json(['error' => 'Vous n\'êtes pas autorisé à supprimer cette simulation.'], JsonResponse::HTTP_FORBIDDEN);
+		}
+
 		try {
 			$this->em->remove($simulation);
 			$this->em->flush();

@@ -37,7 +37,9 @@ const FinancialItemsTable = ({
   );
 
   useEffect(() => {
-    onAnnualTotalChange(annualTotal);
+    if (onAnnualTotalChange) {
+      onAnnualTotalChange(annualTotal);
+    }
   }, [annualTotal]);
 
   const finalRowFinancialRender = useMemo(() => {
@@ -60,7 +62,7 @@ const FinancialItemsTable = ({
         ))}
       </tr>
     );
-  }, [monthlyTotals, monthlyTotals]);
+  }, [monthlyTotals]);
 
   return (
     <section aria-labelledby={type} className="financial-table">

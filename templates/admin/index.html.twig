@@ -3,7 +3,65 @@
 {% block title %}Admin Accueil | Simulateur - Comment devenir indépendant ?{% endblock %}
 
 {% block body %}
-	<div class="container">
-		<h1>Admin</h1>
-	</div>
+    <h1>Admin Dashboard</h1>
+
+    <h2>Activités</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Slug</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity in paginationActivities %}
+                <tr>
+                    <td>{{ activity.id }}</td>
+                    <td>{{ activity.name }}</td>
+                    <td>{{ activity.slug }}</td>
+                    <td>
+                        <a href="{{ path('app_activity_update', { id: activity.id }) }}">Edit</a>
+                        <form action="{{ path('app_activity_delete', { id: activity.id }) }}" method="post" style="display:inline;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit">X</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {{ knp_pagination_render(paginationActivities) }}
+
+    <h2>Simulations</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Activité</th>
+                <th>Token</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for simulation in paginationSimulations %}
+                <tr>
+                    <td>{{ simulation.id }}</td>
+                    <td>{{ simulation.activity.name }}</td>
+                    <td>{{ simulation.token }}</td>
+                    <td>
+                        <a href="{{ path('app_simulation_update', { id: simulation.id }) }}">Edit</a>
+                        <form action="{{ path('app_simulation_delete', { id: simulation.id }) }}" method="post" style="display:inline;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit">X</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {{ knp_pagination_render(paginationSimulations) }}
 {% endblock %}

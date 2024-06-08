@@ -1,3 +1,5 @@
+import f from "../../utils/function";
+
 export const tableSpecifications = {
   'profits': {
     title: "Profits par mois",
@@ -26,22 +28,7 @@ export const tableSpecifications = {
     columnTotalSum: true,
     isDeletableItems: true,
     finalRowFinancialData: (financialItems) => {
-      const monthlyTotals = Array.from({ length: 12 }, () => 0);
-      let annualTotal = 0.00;
-
-      financialItems.forEach((item) => {
-        for (let i = 0; i < 12; i++) {
-          const monthSale =
-            item.attributes.sale_per_month && item.attributes.sale_per_month[i]
-              ? item.attributes.sale_per_month[i].quantity
-              : 0;
-          const price = item.value || 0.00;
-          const monthlyRevenue = parseFloat(monthSale) * parseFloat(price);
-          monthlyTotals[i] += monthlyRevenue;
-          annualTotal += monthlyRevenue;
-        }
-      });
-
+      const { monthlyTotals, annualTotal } = f.calculateMonthlyTotalsAndAnnualTotalFinancialItems(financialItems, 'sale_per_month');
       return { finalRowFinancialLabel: "CA HT", monthlyTotals, annualTotalSign: "+", annualTotal };
     },
     annualTotalLabel: "CA HT total Année 1",
@@ -94,21 +81,7 @@ export const tableSpecifications = {
     isDeletableItems: true,
     columnTotalSum: true,
     finalRowFinancialData: (financialItems) => {
-      const monthlyTotals = Array.from({ length: 12 }, () => 0.00);
-      let annualTotal = 0.00;
-
-      financialItems.forEach((item) => {
-        for (let i = 0; i < 12; i++) {
-          const monthExpense =
-            item.attributes.value_per_month && item.attributes.value_per_month[i]
-              ? item.attributes.value_per_month[i].value
-              : 0.00;
-          const monthExpenseFloat = parseFloat(monthExpense);
-          monthlyTotals[i] += monthExpenseFloat;
-          annualTotal += monthExpenseFloat;
-        }
-      });
-
+      const { monthlyTotals, annualTotal } = f.calculateMonthlyTotalsAndAnnualTotalFinancialItems(financialItems, 'value_per_month');
       return { finalRowFinancialLabel: "Sous total HT", monthlyTotals, annualTotalSign: "-", annualTotal };
     },
     annualTotalLabel: "Charges totales Année 1",
@@ -132,13 +105,7 @@ export const tableSpecifications = {
     isDeletableItems: true,
     columnTotalSum: true,
     finalRowFinancialData: (financialItems) => {
-      let annualTotal = 0.00;
-
-      financialItems.forEach((item) => {
-        const annualItem = parseFloat(item.value) * 12;
-        annualTotal += annualItem;
-      });
-
+      const annualTotal = f.calculateAnnualTotalFinancialItems(financialItems);
       return { finalRowFinancialLabel: "Sous total HT", monthlyTotals: null, annualTotalSign: "", annualTotal };
     },
     annualTotalLabel: "Total Frais annuels",
@@ -162,13 +129,7 @@ export const tableSpecifications = {
     isDeletableItems: true,
     columnTotalSum: true,
     finalRowFinancialData: (financialItems) => {
-      let annualTotal = 0.00;
-
-      financialItems.forEach((item) => {
-        const annualItem = parseFloat(item.value) * 12;
-        annualTotal += annualItem;
-      });
-
+      const annualTotal = f.calculateAnnualTotalFinancialItems(financialItems);
       return { finalRowFinancialLabel: "Sous total HT", monthlyTotals: null, annualTotalSign: "", annualTotal };
     },
     annualTotalLabel: "Salaire annuel",
@@ -191,17 +152,69 @@ export const tableSpecifications = {
     isDeletableItems: false,
     columnTotalSum: true,
     finalRowFinancialData: (financialItems) => {
-      let annualTotal = 0.00;
-
-      financialItems.forEach((item) => {
-        if (!['brut', 'total-company-cost'].includes(item.type)) {
-          const annualItem = parseFloat(item.value) * 12;
-          annualTotal += annualItem;
-        }
-      });
-
+      const annualTotal = f.calculateAnnualTotalFinancialItems(financialItems, ['brut', 'total-company-cost']);
       return { finalRowFinancialLabel: "Sous total HT", monthlyTotals: null, annualTotalSign: "", annualTotal };
     },
     annualTotalLabel: "Salaire annuel net envisagé",
+  },
+
+  'profits-view': {
+    headers: [
+      { label: "Profits", key: "name" },
+      ...Array.from({ length: 12 }, (_, i) => ({
+        label: new Date(0, i).toLocaleString("fr", { month: "short" }),
+        key: `attributes.sale_per_month.${i}.quantity`,
+      })),
+      { label: "Total ANNUEL" },
+    ],
+    rows: (item) => [
+      { value: item.name || "", type: "product-name", isEditable: false },
+      ...(item.attributes.sale_per_month && item.attributes.sale_per_month.length > 0
+        ? item.attributes.sale_per_month.map(sale => ({ value: sale.quantity, type: "number", isEditable: false }))
+        : Array.from({ length: 12 }, (_, i) => ({
+          value: 100,
+          type: "number",
+          isEditable: false,
+          month: i + 1,
+        }))
+      ),
+    ],
+    columnTotalSum: true,
+    isDeletableItems: false,
+    finalRowFinancialData: (financialItems) => {
+      const { monthlyTotals, annualTotal } = f.calculateMonthlyTotalsAndAnnualTotalFinancialItems(financialItems, 'sale_per_month');
+      return { finalRowFinancialLabel: "CA HT", monthlyTotals, annualTotalSign: "+", annualTotal };
+    },
+    annualTotalLabel: "CA HT total Année 1",
+  },
+
+  'charges-view': {
+    headers: [
+      { label: "Charges", key: "name" },
+      ...Array.from({ length: 12 }, (_, i) => ({
+        label: new Date(0, i).toLocaleString("fr", { month: "short" }),
+        key: `attributes.value_per_month.${i}.value`,
+      })),
+      { label: "Total ANNUEL" },
+    ],
+    rows: (item) => [
+      { value: item.nature === 'salary' ? 'Mon salaire (Cout total entreprise)' : item.name || "", type: "product-name", isEditable: false },
+      ...(item.attributes.value_per_month && item.attributes.value_per_month.length > 0
+        ? item.attributes.value_per_month.map(expense => ({ value: expense.value, type: "financial-value", isEditable: false }))
+        : Array.from({ length: 12 }, (_, i) => ({
+          value: item.value,
+          type: "financial-value",
+          isEditable: false,
+          month: i + 1,
+        }))
+      ),
+    ],
+    columnTotalSum: true,
+    isDeletableItems: false,
+    finalRowFinancialData: (financialItems) => {
+      const { monthlyTotals, annualTotal } = f.calculateMonthlyTotalsAndAnnualTotalFinancialItems(financialItems, 'value_per_month');
+      return { finalRowFinancialLabel: "Sous total HT", monthlyTotals, annualTotalSign: "-", annualTotal };
+    },
+    annualTotalLabel: "Charges totales Année 1",
   },
 };

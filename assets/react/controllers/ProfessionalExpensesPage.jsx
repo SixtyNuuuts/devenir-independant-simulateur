@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import FinancialItemsTable from "./component/FinancialItemsTable";
 import AddFinancialItemModal from "./component/AddFinancialItemModal";
 import useGetFinancialItems from "./hook/useGetFinancialItems";
@@ -32,11 +32,11 @@ function ProfessionalExpensesPage({ simulationId }) {
     setProfessionalExpenses(professionalExpensesData);
   }, [professionalExpensesData]);
 
-  const onAddFinancialItem = () => {
+  const onAddFinancialItem = useCallback(() => {
     setModalAddProfessionalExpenseOpen(true);
-  };
+  }, []);
 
-  const onAddFinancialItemProcess = async (item) => {
+  const onAddFinancialItemProcess = useCallback(async (item) => {
     const newItem = formatFinancialItemForCreate(
       item,
       simulationId,
@@ -44,7 +44,7 @@ function ProfessionalExpensesPage({ simulationId }) {
       "expense"
     );
     const result = await createFinancialItem(newItem);
-    if (result && result.success && result.id) {
+    if (result?.success && result.id) {
       setProfessionalExpenses((currentItems) => [
         ...currentItems,
         { ...newItem, id: result.id },
@@ -69,46 +69,51 @@ function ProfessionalExpensesPage({ simulationId }) {
     }
 
     setModalAddProfessionalExpenseOpen(false);
-  };
+  }, []);
 
-  const onUpdateFinancialItem = async (itemId, fieldKey, newValue) => {
-    setProfessionalExpenses((currentItems) =>
-      currentItems.map((item) =>
-        item.id === itemId ? { ...item, isLoading: true } : item
-      )
-    );
-    const originalItem = professionalExpenses.find(
-      (item) => item.id === itemId
-    );
-    const newItem = formatFinancialItemForUpdate(
-      originalItem,
-      fieldKey,
-      newValue
-    );
-    const result = await updateFinancialItem(newItem);
-    if (result && result.success) {
+  const onUpdateFinancialItem = useCallback(
+    async (itemId, fieldKey, newValue) => {
       setProfessionalExpenses((currentItems) =>
         currentItems.map((item) =>
-          item.id === itemId ? { ...item, ...newItem, isLoading: false } : item
+          item.id === itemId ? { ...item, isLoading: true } : item
         )
       );
-    } else {
-      setProfessionalExpenses((currentItems) =>
-        currentItems.map((item) =>
-          item.id === itemId ? { ...item, isLoading: false } : item
-        )
+      const originalItem = professionalExpenses.find(
+        (item) => item.id === itemId
       );
-    }
-  };
+      const newItem = formatFinancialItemForUpdate(
+        originalItem,
+        fieldKey,
+        newValue
+      );
+      const result = await updateFinancialItem(newItem);
+      if (result?.success) {
+        setProfessionalExpenses((currentItems) =>
+          currentItems.map((item) =>
+            item.id === itemId
+              ? { ...item, ...newItem, isLoading: false }
+              : item
+          )
+        );
+      } else {
+        setProfessionalExpenses((currentItems) =>
+          currentItems.map((item) =>
+            item.id === itemId ? { ...item, isLoading: false } : item
+          )
+        );
+      }
+    },
+    [professionalExpenses]
+  );
 
-  const onDeleteFinancialItem = async (itemId) => {
+  const onDeleteFinancialItem = useCallback(async (itemId) => {
     setProfessionalExpenses((currentItems) =>
       currentItems.map((item) =>
         item.id === itemId ? { ...item, isLoading: true } : item
       )
     );
     const result = await deleteFinancialItem(itemId);
-    if (result && result.success) {
+    if (result?.success) {
       setProfessionalExpenses((currentItems) =>
         currentItems.filter((item) => item.id !== itemId)
       );
@@ -120,7 +125,7 @@ function ProfessionalExpensesPage({ simulationId }) {
         item.id === itemId ? { ...item, isLoading: false } : item
       )
     );
-  };
+  }, []);
 
   return (
     <div className={professionalExpensesLoading ? "loading" : ""}>

@@ -4,24 +4,27 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Entity\User;
 use App\Entity\Activity;
+use App\Entity\Simulation;
 use App\Entity\AnonymousUser;
 use App\Entity\FinancialItem;
-use App\Entity\Simulation;
-use App\Entity\User;
-use App\Enum\FinancialItemNature;
-use App\Enum\FinancialItemType;
 use App\Security\UserService;
+use App\Enum\FinancialItemType;
+use Symfony\Component\Yaml\Yaml;
+use App\Enum\FinancialItemNature;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin')]
+#[IsGranted('ROLE_ADMIN')]
 class HomeController extends AbstractController
 {
 	private User|AnonymousUser $user;
@@ -33,9 +36,32 @@ class HomeController extends AbstractController
 	}
 
 	#[Route('/', name: 'app_admin_home')]
-	public function index(): Response
+	public function index(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
 	{
-		return $this->render('admin/index.html.twig');
+		$activityRepo = $entityManager->getRepository(Activity::class);
+		$simulationRepo = $entityManager->getRepository(Simulation::class);
+
+		$queryActivities = $activityRepo->createQueryBuilder('a')->getQuery();
+		$querySimulations = $simulationRepo->createQueryBuilder('s')
+			->where('s.token != :defaultToken')
+			->setParameter('defaultToken', 'default')
+			->orderBy('s.createdAt', 'DESC')
+			->getQuery();
+
+		$pageActivities = $request->query->getInt('page_activities', 1);
+		$pageSimulations = $request->query->getInt('page_simulations', 1);
+
+		$paginationActivities = $paginator->paginate($queryActivities, $pageActivities, 25, [
+			'pageParameterName' => 'page_activities',
+		]);
+		$paginationSimulations = $paginator->paginate($querySimulations, $pageSimulations, 25, [
+			'pageParameterName' => 'page_simulations',
+		]);
+
+		return $this->render('admin/index.html.twig', [
+			'paginationActivities' => $paginationActivities,
+			'paginationSimulations' => $paginationSimulations,
+		]);
 	}
 
 	#[Route('/import/{importOverwrite}', name: 'app_admin_import', methods: ['GET', 'POST'])]

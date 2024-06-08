@@ -111,12 +111,17 @@ class HomeController extends AbstractController
 		return $this->render('home/personal_flows.html.twig', ['simulationId' => $simulationData['id']]);
 	}
 
-	#[Route('/{activitySlug}/{simulationToken}', name: 'app_home', methods: ['GET'])]
+	#[Route('/{activitySlug}/{simulationToken}', name: 'app_home', methods: ['GET'], requirements: ['activitySlug' => '^(?!activity|admin|financial-item|inscription|verify|reset-password|connexion|deconnexion|simulation)[a-z-]+$'])]
 	public function profitability(string $activitySlug = '', ?string $simulationToken = null): Response
 	{
 		$activity = $this->activityRepository->findOneBySlug($activitySlug);
 		if (!$activity) {
-			return $this->redirectToRoute('app_404'); // TODO : 404 page;
+			$defaultActivity  = $this->activityRepository->findOneBy([], ['id' => 'ASC']);
+			if (!$defaultActivity) {
+				return $this->redirectToRoute('app_404'); // TODO : 404 page;
+			}
+			$activitySlug = $defaultActivity->getSlug();
+			$activity = $defaultActivity;
 		}
 
 		$currentUser = $this->userService->getCurrentUser();
@@ -142,6 +147,6 @@ class HomeController extends AbstractController
 			]);
 		}
 
-		return $this->render('home/index.html.twig', ['simulationId' => $simulationData['id']]);
+		return $this->render('home/index.html.twig', ['simulationId' => $simulationData['id'], 'activity' => $activity]);
 	}
 }

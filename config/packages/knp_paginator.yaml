@@ -1,0 +1,10 @@
+knp_paginator:
+    page_range: 5          # combien de pages à afficher de chaque côté de la page actuelle
+    default_options:
+        page_name: page    # nom du paramètre GET pour la page actuelle (par défaut 'page')
+        sort_field_name: sort  # nom du paramètre GET pour le tri (par défaut 'sort')
+        sort_direction_name: direction # nom du paramètre GET pour la direction du tri (par défaut 'direction')
+        distinct: true     # distinctes query (par défaut 'true')
+    template:
+        pagination: '@KnpPaginator/Pagination/sliding.html.twig' # chemin du modèle de pagination
+        sortable: '@KnpPaginator/Pagination/sortable_link.html.twig' # chemin du modèle de tri

@@ -6,7 +6,6 @@ import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
 import FinancialItemsTable from "./component/FinancialItemsTable";
 import AddFinancialItemModal from "./component/AddFinancialItemModal";
 import BalanceSection from "./component/BalanceSection";
-import f from "./utils/function";
 
 function PersonalFlowsPage({ simulationId }) {
   const {
@@ -69,9 +68,9 @@ function PersonalFlowsPage({ simulationId }) {
     }));
   }, [salaryTargetsData]);
 
-  const toggleModal = (type, state) => {
+  const toggleModal = useCallback((type, state) => {
     setModalState((prevState) => ({ ...prevState, [type]: state }));
-  };
+  }, []);
 
   const handleAddItemProcess = useCallback(async (type, item) => {
     const newItem = formatFinancialItemForCreate(
@@ -184,12 +183,12 @@ function PersonalFlowsPage({ simulationId }) {
     }
   }, []);
 
-  const handleAnnualTotalChange = (type, annualTotal) => {
+  const handleAnnualTotalChange = useCallback((type, annualTotal) => {
     setAnnualTotals((prevTotals) => ({
       ...prevTotals,
       [type]: annualTotal,
     }));
-  };
+  }, []);
 
   const personalBalanceToday = useMemo(() => {
     return annualTotals.personalIncomes - annualTotals.personalExpenses;
@@ -252,13 +251,7 @@ function PersonalFlowsPage({ simulationId }) {
           id="balance-today"
           title="Équilibre niveau de vie d'aujourd'hui"
           description="Salaire annuel - frais annuels actuels"
-          balanceClass={f.getCssClassForValue(personalBalanceToday)}
-          balanceValue={`${f.getSignForValue(
-            personalBalanceToday
-          )} ${f.displayValue(
-            Math.abs(personalBalanceToday),
-            "financial-value"
-          )}`}
+          balanceValue={personalBalanceToday}
         />
         <FinancialItemsTable
           financialItems={financialData.salaryTargets}
@@ -276,13 +269,7 @@ function PersonalFlowsPage({ simulationId }) {
           id="balance-tomorrow"
           title="Équilibre niveau de vie de demain"
           description="Salaire annuel net envisagé - frais annuels actuels"
-          balanceClass={f.getCssClassForValue(personalBalanceTomorrow)}
-          balanceValue={`${f.getSignForValue(
-            personalBalanceTomorrow
-          )} ${f.displayValue(
-            Math.abs(personalBalanceTomorrow),
-            "financial-value"
-          )}`}
+          balanceValue={personalBalanceTomorrow}
         />
         <AddFinancialItemModal
           type="personal-income"

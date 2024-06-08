@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/activity')]
 class ActivityController extends AbstractController
@@ -48,6 +49,7 @@ class ActivityController extends AbstractController
 		}
 	}
 
+	#[IsGranted('ROLE_ADMIN')]
 	#[Route('/create', name: 'app_activity_create', methods: ['POST'])]
 	public function create(Request $request): JsonResponse
 	{
@@ -85,6 +87,7 @@ class ActivityController extends AbstractController
 		}
 	}
 
+	#[IsGranted('ROLE_ADMIN')]
 	#[Route('/update/{id}', name: 'app_activity_update', methods: ['PUT'])]
 	public function update(Request $request, Activity $activity): JsonResponse
 	{
@@ -120,6 +123,7 @@ class ActivityController extends AbstractController
 		}
 	}
 
+	#[IsGranted('ROLE_ADMIN')]
 	#[Route('/delete/{id}', name: 'app_activity_delete', methods: ['DELETE'])]
 	public function delete(Activity $activity): JsonResponse
 	{

@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 class Activity
@@ -16,36 +17,47 @@ class Activity
 	#[ORM\Id]
 	#[ORM\GeneratedValue]
 	#[ORM\Column]
+	#[Groups(['activity_read'])]
 	private ?int $id = null;
 
 	#[ORM\Column]
+	#[Groups(['activity_read'])]
 	private ?\DateTimeImmutable $createdAt = null;
 
 	#[ORM\Column]
+	#[Groups(['activity_read'])]
 	private ?\DateTime $updatedAt = null;
 
 	#[ORM\Column(length: 255)]
+	#[Groups(['activity_read'])]
 	private ?string $name = null;
 
 	#[ORM\Column(length: 255)]
+	#[Groups(['activity_read'])]
 	private ?string $slug = null;
 
 	#[ORM\Column(length: 255)]
+	#[Groups(['activity_read'])]
 	private ?string $title = null;
 
 	#[ORM\Column(type: Types::JSON)]
+	#[Groups(['activity_read'])]
 	private array $objectives = [];
 
 	#[ORM\Column(type: Types::TEXT, nullable: false)]
+	#[Groups(['activity_read'])]
 	private ?string $description = null;
 
 	#[ORM\Column(type: Types::TEXT)]
+	#[Groups(['activity_read'])]
 	private ?string $detailed_description = null;
 
 	#[ORM\Column(length: 255)]
+	#[Groups(['activity_read'])]
 	private ?string $mobileImage = null;
 
 	#[ORM\Column(length: 255)]
+	#[Groups(['activity_read'])]
 	private ?string $desktopImage = null;
 
 	#[ORM\OneToMany(targetEntity: Simulation::class, mappedBy: 'activity', orphanRemoval: true)]

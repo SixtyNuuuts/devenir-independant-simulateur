@@ -2,6 +2,55 @@ const minValNum = 0;
 const maxValNum = 999999;
 
 export default {
+  debounce(func, delay) {
+    let timeoutId;
+    return (...args) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  },
+
+  calculateAnnualTotalFinancialItems(financialItems, itemExclusionKeys = []) {
+    let annualTotal = 0.00;
+    financialItems.forEach((item) => {
+      if (!itemExclusionKeys.includes(item.type)) {
+        const annualItem = parseFloat(item.value) * 12;
+        annualTotal += annualItem;
+      }
+    });
+    return annualTotal;
+  },
+
+  calculateMonthlyTotalsAndAnnualTotalFinancialItems(financialItems, monthValueType, itemExclusionKeys = []) {
+    const monthlyTotals = Array.from({ length: 12 }, () => 0.00);
+    let annualTotal = 0.00;
+    financialItems.forEach((item) => {
+      if (!itemExclusionKeys.includes(item.type)) {
+        for (let i = 0; i < 12; i++) {
+          const monthValue =
+            item.attributes[monthValueType] && item.attributes[monthValueType][i]
+              ? item.attributes[monthValueType][i][monthValueType === 'sale_per_month' ? 'quantity' : 'value']
+              : monthValueType === 'sale_per_month' ? 0 : 0.00;
+          const monthlyResult = monthValueType === 'sale_per_month' ? (parseFloat(monthValue) * parseFloat((item.value || 0.00))) : parseFloat(monthValue);
+          monthlyTotals[i] += monthlyResult;
+          annualTotal += monthlyResult;
+        }
+      }
+    });
+    return { monthlyTotals, annualTotal };
+  },
+
+  calculateAnnualSalary(monthlySalary) {
+    return parseFloat(monthlySalary) * 12;
+  },
+
+  calculateLifeBalanceSalary(annualSalary, annualPersonalExpenses) {
+    return parseFloat(annualSalary) - parseFloat(annualPersonalExpenses);
+  },
 
   formatValue(value, itemType) {
     let formatedValue = value;
@@ -74,6 +123,10 @@ export default {
       case "financial-value":
         displayedValue =
           parseFloat(value).toFixed(2).toString().replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " €";
+        break;
+      case "financial-value-rounded":
+        displayedValue =
+          parseInt(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         break;
     }
 
