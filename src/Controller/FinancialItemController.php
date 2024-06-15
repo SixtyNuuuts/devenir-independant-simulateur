@@ -154,7 +154,7 @@ class FinancialItemController extends AbstractController
 		}
 	}
 
-	#[Route('/update/{id}', name: 'app_financial-item_update', methods: ['PUT'])]
+	#[Route('/update/{id}', name: 'app_financial-item_update', methods: ['PATCH'])]
 	public function update(Request $request, FinancialItem $financialItem): JsonResponse
 	{
 		$data = json_decode($request->getContent(), true);

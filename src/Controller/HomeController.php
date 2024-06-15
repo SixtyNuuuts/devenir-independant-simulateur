@@ -28,7 +28,7 @@ class HomeController extends AbstractController
 	public function professionalIncomes(string $activitySlug, ?string $simulationToken = null): Response
 	{
 		$currentUser = $this->userService->getCurrentUser();
-		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
+		$simulationData = $this->simulationRepository->findLastSimulationDataByActivity($activitySlug, $simulationToken, $currentUser);
 		if (!$simulationData || !\is_array($simulationData)) {
 			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
@@ -57,7 +57,7 @@ class HomeController extends AbstractController
 	public function professionalExpenses(string $activitySlug, ?string $simulationToken = null): Response
 	{
 		$currentUser = $this->userService->getCurrentUser();
-		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
+		$simulationData = $this->simulationRepository->findLastSimulationDataByActivity($activitySlug, $simulationToken, $currentUser);
 		if (!$simulationData || !\is_array($simulationData)) {
 			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
@@ -86,7 +86,7 @@ class HomeController extends AbstractController
 	public function personalIncomesExpenses(string $activitySlug, ?string $simulationToken = null): Response
 	{
 		$currentUser = $this->userService->getCurrentUser();
-		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
+		$simulationData = $this->simulationRepository->findLastSimulationDataByActivity($activitySlug, $simulationToken, $currentUser);
 		if (!$simulationData || !\is_array($simulationData)) {
 			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
@@ -125,12 +125,12 @@ class HomeController extends AbstractController
 		}
 
 		$currentUser = $this->userService->getCurrentUser();
-		$simulationData = $this->simulationRepository->findSimulationsDataByActivity($activitySlug, $simulationToken, $currentUser);
+		$simulationData = $this->simulationRepository->findLastSimulationDataByActivity($activitySlug, $simulationToken, $currentUser);
 		if (!$simulationData || !\is_array($simulationData)) {
 			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
 
-		if ($simulationData['token'] === 'default') {
+		if ($simulationData['token'] === 'default' && !$this->isGranted('ROLE_ADMIN')) {
 			try {
 				$simulation = $this->simulationService->createSimulation($activitySlug);
 				$simulationData['id'] = $simulation->getId();
@@ -147,6 +147,6 @@ class HomeController extends AbstractController
 			]);
 		}
 
-		return $this->render('home/index.html.twig', ['simulationId' => $simulationData['id'], 'activity' => $activity]);
+		return $this->render('home/index.html.twig', ['simulationId' => $simulationData['id'], 'activity' => $activity, 'isAdminActivityContext' => $this->isGranted('ROLE_ADMIN') && $simulationData['token'] === 'default']);
 	}
 }

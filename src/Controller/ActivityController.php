@@ -88,7 +88,7 @@ class ActivityController extends AbstractController
 	}
 
 	#[IsGranted('ROLE_ADMIN')]
-	#[Route('/update/{id}', name: 'app_activity_update', methods: ['PUT'])]
+	#[Route('/update/{id}', name: 'app_activity_update', methods: ['PATCH'])]
 	public function update(Request $request, Activity $activity): JsonResponse
 	{
 		$data = json_decode($request->getContent(), true);
@@ -124,12 +124,14 @@ class ActivityController extends AbstractController
 	}
 
 	#[IsGranted('ROLE_ADMIN')]
-	#[Route('/delete/{id}', name: 'app_activity_delete', methods: ['DELETE'])]
-	public function delete(Activity $activity): JsonResponse
+	#[Route('/delete/{id}', name: 'app_activity_delete', methods: ['DELETE', 'POST'])]
+	public function delete(Activity $activity, Request $request): JsonResponse
 	{
 		try {
-			$this->em->remove($activity);
-			$this->em->flush();
+			if ($this->isCsrfTokenValid('DELETE' . $activity->getId(), (string) $request->request->get('_token'))) {
+				$this->em->remove($activity);
+				$this->em->flush();
+			}
 
 			return $this->json(['success' => 'Activité supprimée !'], JsonResponse::HTTP_OK);
 		} catch (\Exception $exception) {

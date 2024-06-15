@@ -36,8 +36,7 @@ class SimulationRepository extends ServiceEntityRepository
 		])
 			->where('s.id = :id')
 			->setParameter('id', $id)
-			->getQuery()
-		;
+			->getQuery();
 
 		try {
 			return $query->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
@@ -49,14 +48,14 @@ class SimulationRepository extends ServiceEntityRepository
 	/**
 	 * @param string[]|null $fields
 	 */
-	public function findSimulationsDataByActivity(string $activitySlug, ?string $simulationToken = null, User|AnonymousUser|null $user = null, ?array $fields = null): mixed
+	public function findLastSimulationDataByActivity(string $activitySlug, ?string $simulationToken = null, User|AnonymousUser|null $user = null, ?array $fields = null): mixed
 	{
 		$qb = $this->createQueryBuilder('s');
 
 		$fields ??= ['id', 'token'];
 		$selectFields = [];
 		foreach ($fields as $field) {
-			$selectFields[] = 's.'.$field;
+			$selectFields[] = 's.' . $field;
 		}
 		$qb->select($selectFields);
 
@@ -64,29 +63,58 @@ class SimulationRepository extends ServiceEntityRepository
 			->where('a.slug = :activitySlug')
 			->setParameter('activitySlug', $activitySlug)
 			->orderBy('s.createdAt', 'DESC')
-		;
+			->setMaxResults(1);;
 
 		if ($simulationToken) {
 			$qb->andWhere('s.token = :simulationToken')
-				->setParameter('simulationToken', $simulationToken)
-			;
+				->setParameter('simulationToken', $simulationToken);
 		} elseif (null !== $user) {
 			$userField = $user->getType();
 
-			$qb->andWhere('s.'.$userField.' = :user') /* @phpstan-ignore-line */
-				->setParameter('user', $user)
-			;
+			$qb->andWhere('s.' . $userField . ' = :user') /* @phpstan-ignore-line */
+				->setParameter('user', $user);
 		}
 
 		$result = $qb->getQuery()->getScalarResult();
 
 		if (!$result && !$simulationToken) {
-			$result = $this->findSimulationsDataByActivity($activitySlug, 'default', null, ['id', 'token']);
+			$result = $this->findLastSimulationDataByActivity($activitySlug, 'default', null, ['id', 'token']);
 		}
 
 		if (\is_array($result) && \count($result) === 1) {
 			return $result[0];
 		}
+
+		return $result;
+	}
+
+	/**
+	 * @param string[]|null $fields
+	 */
+	public function findSimulationsDataByActivity(string $activitySlug, User|AnonymousUser|null $user = null, ?array $fields = null): mixed
+	{
+		$qb = $this->createQueryBuilder('s');
+
+		$fields ??= ['id', 'token'];
+		$selectFields = [];
+		foreach ($fields as $field) {
+			$selectFields[] = 's.' . $field;
+		}
+		$qb->select($selectFields);
+
+		$qb->innerJoin('s.activity', 'a')
+			->where('a.slug = :activitySlug')
+			->setParameter('activitySlug', $activitySlug)
+			->orderBy('s.createdAt', 'DESC');
+
+		if (null !== $user) {
+			$userField = $user->getType();
+
+			$qb->andWhere('s.' . $userField . ' = :user') /* @phpstan-ignore-line */
+				->setParameter('user', $user);
+		}
+
+		$result = $qb->getQuery()->getScalarResult();
 
 		return $result;
 	}
@@ -112,21 +140,18 @@ class SimulationRepository extends ServiceEntityRepository
 			->leftJoin('s.activity', 'a')
 			->where('s.token != :defaultToken')
 			->setParameter('defaultToken', 'default')
-			->orderBy('s.createdAt', 'DESC')
-		;
+			->orderBy('s.createdAt', 'DESC');
 
 		if ($activitySlug) {
 			$qb->andWhere('a.slug = :activitySlug')
-				->setParameter('activitySlug', $activitySlug)
-			;
+				->setParameter('activitySlug', $activitySlug);
 		}
 
 		if ($user) {
 			$userField = \is_object($user) && is_a($user, User::class) ? 'user' : 'anonymousUser';
-			$qb->addSelect("'".$userField."' as userType")
-				->andWhere('s.'.$userField.' = :user')
-				->setParameter('user', $user)
-			;
+			$qb->addSelect("'" . $userField . "' as userType")
+				->andWhere('s.' . $userField . ' = :user')
+				->setParameter('user', $user);
 		}
 
 		$paginator = new Paginator($qb);
@@ -134,8 +159,7 @@ class SimulationRepository extends ServiceEntityRepository
 			->setUseOutputWalkers(false)
 			->getQuery()
 			->setFirstResult($pageSize * ($page - 1))
-			->setMaxResults($pageSize)
-		;
+			->setMaxResults($pageSize);
 
 		$totalItems = \count($paginator);
 		$pagesCount = (int) ceil($totalItems / $pageSize);

@@ -30,6 +30,7 @@
     "dependencies": {
         "autoprefixer": "^10.4.19",
         "postcss": "^8.4.38",
-        "postcss-loader": "^7.3.4"
+        "postcss-loader": "^7.3.4",
+        "react-quill": "^2.0.0"
     }
 }

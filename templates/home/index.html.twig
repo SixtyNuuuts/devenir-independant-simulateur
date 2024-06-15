@@ -3,6 +3,6 @@
 {% block title %}Accueil | Simulateur - Comment devenir indépendant ?{% endblock %}
 
 {% block body %}
-    <div {{ react_component('HomePage', { 'simulationId': simulationId, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw }) }}>
+    <div {{ react_component('HomePage', { 'simulationId': simulationId, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw, 'isAdminActivityContext': isAdminActivityContext }) }}>
     </div>
 {% endblock %}

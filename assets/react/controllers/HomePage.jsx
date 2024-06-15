@@ -1,12 +1,23 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import useGetFinancialItems from "./hook/useGetFinancialItems";
 import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
+import useUpdateActivity from "./hook/useUpdateActivity";
 import FinancialItemsTable from "./component/FinancialItemsTable";
 import SalarySection from "./component/SalarySection";
 import BalanceSection from "./component/BalanceSection";
+import AdminActivityModeButton from "./component/Admin/Activity/AdminActivityModeButton";
+import AdminActivityHeader from "./component/Admin/Activity/AdminActivityHeader";
+import AdminActivityWysiwyg from "./component/Admin/Activity/AdminActivityWysiwyg";
+import {
+  handleAdminActivityInputChange,
+  handleAdminActivityObjectiveChange,
+  handleAdminActivityAddObjective,
+  handleAdminActivityRemoveObjective,
+  handleAdminActivitySaveActivity,
+} from "./component/Admin/Activity/adminActivityHandlers";
 import f from "./utils/function";
 
-function HomePage({ simulationId, activityData }) {
+function HomePage({ simulationId, activityData, isAdminActivityContext }) {
   const {
     financialItems: salaryCurrentData,
     isLoading: salaryCurrentLoading,
@@ -35,6 +46,9 @@ function HomePage({ simulationId, activityData }) {
 
   const { updateFinancialItem, formatFinancialItemForUpdate } =
     useUpdateFinancialItem();
+  const { updateActivity } = useUpdateActivity();
+
+  const [isAdminActivity, setToggleAdminActivity] = useState(false);
 
   const [financialData, setFinancialData] = useState({
     salaryCurrent: [],
@@ -164,29 +178,54 @@ function HomePage({ simulationId, activityData }) {
 
   return (
     <>
+      {isAdminActivityContext && (
+        <AdminActivityModeButton
+          activity={activity}
+          isAdminActivity={isAdminActivity}
+          setToggleAdminActivity={setToggleAdminActivity}
+          updateActivity={updateActivity}
+          handleSaveActivity={handleAdminActivitySaveActivity}
+        />
+      )}
       <header>
-        <div>
-          <h1>{activity.title}</h1>
-          <ul>
-            {activity.objectives?.map((objective) => (
-              <li key={objective}>{objective}</li>
-            ))}
-          </ul>
-        </div>
-        <figure>
-          <picture>
-            <source media="(max-width: 768px)" srcset={activity.mobile_image} />
-            <source
-              media="(min-width: 769px)"
-              srcset={activity.desktop_image}
-            />
-            <img
-              src={activity.desktop_image}
-              alt={`Image de l'activité ${activity.name}`}
-              title={`Image de l'activité ${activity.name}`}
-            />
-          </picture>
-        </figure>
+        {isAdminActivity ? (
+          <AdminActivityHeader
+            activity={activity}
+            handleInputChange={handleAdminActivityInputChange}
+            handleAddObjective={handleAdminActivityAddObjective}
+            handleObjectiveChange={handleAdminActivityObjectiveChange}
+            handleRemoveObjective={handleAdminActivityRemoveObjective}
+            setActivity={setActivity}
+          />
+        ) : (
+          <>
+            <div>
+              <h1>{activity.title}</h1>
+              <ul>
+                {activity.objectives?.map((objective, index) => (
+                  <li key={index}>{objective}</li>
+                ))}
+              </ul>
+            </div>
+            <figure>
+              <picture>
+                <source
+                  media="(max-width: 768px)"
+                  srcSet={activity.mobileImage}
+                />
+                <source
+                  media="(min-width: 769px)"
+                  srcSet={activity.desktopImage}
+                />
+                <img
+                  src={activity.desktopImage}
+                  alt={`Image de l'activité ${activity.name}`}
+                  title={`Image de l'activité ${activity.name}`}
+                />
+              </picture>
+            </figure>
+          </>
+        )}
       </header>
       <main>
         <div>
@@ -264,12 +303,36 @@ function HomePage({ simulationId, activityData }) {
             />
           </section>
         </div>
-        <section
-          dangerouslySetInnerHTML={{ __html: activity.description }}
-        ></section>
-        <section
-          dangerouslySetInnerHTML={{ __html: activity.detailed_description }}
-        ></section>
+        {isAdminActivity ? (
+          <AdminActivityWysiwyg
+            value={activity.description}
+            onChange={(value) =>
+              setActivity((prevActivity) => ({
+                ...prevActivity,
+                description: value,
+              }))
+            }
+          />
+        ) : (
+          <section
+            dangerouslySetInnerHTML={{ __html: activity.description }}
+          ></section>
+        )}
+        {isAdminActivity ? (
+          <AdminActivityWysiwyg
+            value={activity.detailed_description}
+            onChange={(value) =>
+              setActivity((prevActivity) => ({
+                ...prevActivity,
+                detailed_description: value,
+              }))
+            }
+          />
+        ) : (
+          <section
+            dangerouslySetInnerHTML={{ __html: activity.detailed_description }}
+          ></section>
+        )}
         <section aria-labelledby="start-simulation">
           <a id="start-simulation" href="">
             Commencer ma simulation

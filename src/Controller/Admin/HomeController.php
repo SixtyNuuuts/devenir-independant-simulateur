@@ -58,9 +58,25 @@ class HomeController extends AbstractController
 			'pageParameterName' => 'page_simulations',
 		]);
 
+		// Requêtes pour compter les entités
+		$totalActivities = $activityRepo->createQueryBuilder('a')
+			->select('count(a.id)')
+			->getQuery()
+			->getSingleScalarResult();
+
+		$totalSimulations = $simulationRepo->createQueryBuilder('s')
+			->select('count(s.id)')
+			->where('s.token != :defaultToken')
+			->setParameter('defaultToken', 'default')
+			->getQuery()
+			->getSingleScalarResult();
+
+
 		return $this->render('admin/index.html.twig', [
 			'paginationActivities' => $paginationActivities,
 			'paginationSimulations' => $paginationSimulations,
+			'totalActivities' => $totalActivities,
+			'totalSimulations' => $totalSimulations,
 		]);
 	}
 

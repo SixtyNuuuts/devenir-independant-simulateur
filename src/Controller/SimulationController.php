@@ -91,7 +91,7 @@ class SimulationController extends AbstractController
 		}
 	}
 
-	#[Route('/update/{id}', name: 'app_simulation_update', methods: ['PUT'])]
+	#[Route('/update/{id}', name: 'app_simulation_update', methods: ['PATCH'])]
 	public function update(Request $request, Simulation $simulation): JsonResponse
 	{
 		$data = json_decode($request->getContent(), true);
@@ -110,8 +110,8 @@ class SimulationController extends AbstractController
 		}
 	}
 
-	#[Route('/delete/{id}', name: 'app_simulation_delete', methods: ['DELETE'])]
-	public function delete(Simulation $simulation): JsonResponse
+	#[Route('/delete/{id}', name: 'app_simulation_delete', methods: ['DELETE', 'POST'])]
+	public function delete(Simulation $simulation, Request $request): JsonResponse
 	{
 		$currentUser = $this->userService->getCurrentUser();
 		$isAdmin = $this->isGranted('ROLE_ADMIN');
@@ -122,8 +122,10 @@ class SimulationController extends AbstractController
 		}
 
 		try {
-			$this->em->remove($simulation);
-			$this->em->flush();
+			if ($this->isCsrfTokenValid('DELETE' . $simulation->getId(), (string) $request->request->get('_token'))) {
+				$this->em->remove($simulation);
+				$this->em->flush();
+			}
 
 			return $this->json(['success' => 'Simulation supprimée !'], JsonResponse::HTTP_OK);
 		} catch (\Exception $exception) {

@@ -5,11 +5,13 @@
 {% block body %}
     <h1>Admin Dashboard</h1>
 
-    <h2>Activités</h2>
+    <h2>Activités ({{totalActivities}})</h2>
     <table>
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Créé le</th>
+                <th>Mis à jour le</th>
                 <th>Nom</th>
                 <th>Slug</th>
                 <th>Actions</th>
@@ -19,12 +21,14 @@
             {% for activity in paginationActivities %}
                 <tr>
                     <td>{{ activity.id }}</td>
+                    <td>{{ activity.createdAt|date('d-m-Y') }}</td>
+                    <td>{{ activity.updatedAt|date('d-m-Y') }}</td>
                     <td>{{ activity.name }}</td>
                     <td>{{ activity.slug }}</td>
                     <td>
-                        <a href="{{ path('app_activity_update', { id: activity.id }) }}">Edit</a>
-                        <form action="{{ path('app_activity_delete', { id: activity.id }) }}" method="post" style="display:inline;">
-                            <input type="hidden" name="_method" value="DELETE">
+                        <a href="{{ path('app_home', { activitySlug: activity.slug, simulationToken: 'default' }) }}" target="_blank">Edit</a>
+                        <form action="{{ path('app_activity_delete', { id: activity.id }) }}" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de bien vouloir supprimer l'activité "{{ activity.name }}"');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('DELETE' ~ activity.id) }}">
                             <button type="submit">X</button>
                         </form>
                     </td>
@@ -35,11 +39,19 @@
 
     {{ knp_pagination_render(paginationActivities) }}
 
-    <h2>Simulations</h2>
+    <h3>Importer Activité (.yml)</h3>
+    <form method="post" action="/admin/import" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit" class="btn btn-primary">Importer</button>
+    </form>
+    
+    <h2>Simulations ({{totalSimulations}})</h2>
     <table>
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Créé le</th>
+                <th>Mis à jour le</th>
                 <th>Activité</th>
                 <th>Token</th>
                 <th>Actions</th>
@@ -49,12 +61,14 @@
             {% for simulation in paginationSimulations %}
                 <tr>
                     <td>{{ simulation.id }}</td>
+                    <td>{{ simulation.createdAt|date('d-m-Y') }}</td>
+                    <td>{{ simulation.updatedAt|date('d-m-Y') }}</td>
                     <td>{{ simulation.activity.name }}</td>
                     <td>{{ simulation.token }}</td>
                     <td>
-                        <a href="{{ path('app_simulation_update', { id: simulation.id }) }}">Edit</a>
-                        <form action="{{ path('app_simulation_delete', { id: simulation.id }) }}" method="post" style="display:inline;">
-                            <input type="hidden" name="_method" value="DELETE">
+                        <a href="{{ path('app_home', { activitySlug: simulation.activity.slug, simulationToken: simulation.token }) }}" target="_blank">Voir</a>
+                        <form action="{{ path('app_simulation_delete', { id: simulation.id }) }}" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de bien vouloir supprimer la simulation "{{ simulation.token }}"');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('DELETE' ~ simulation.id) }}">
                             <button type="submit">X</button>
                         </form>
                     </td>
