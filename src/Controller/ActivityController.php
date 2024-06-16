@@ -60,6 +60,7 @@ class ActivityController extends AbstractController
 
 		$activityName = \is_string($data['name'] ?? null) ? $data['name'] : '---';
 		$activitySlug = \is_string($data['slug'] ?? null) ? $data['slug'] : '---';
+		$activityGoal = \is_string($data['goal'] ?? null) ? $data['goal'] : '---';
 		$activityTitle = \is_string($data['title'] ?? null) ? $data['title'] : '---';
 		$activityObjectives = \is_array($data['objectives'] ?? null) ? $data['objectives'] : [];
 		$activityDescription = \is_string($data['description'] ?? null) ? $data['description'] : '---';
@@ -71,6 +72,7 @@ class ActivityController extends AbstractController
 			$activity = new Activity();
 			$activity->setName($activityName);
 			$activity->setSlug($activitySlug);
+			$activity->setGoal($activityGoal);
 			$activity->setTitle($activityTitle);
 			$activity->setObjectives($activityObjectives);
 			$activity->setDescription($activityDescription);
@@ -98,6 +100,7 @@ class ActivityController extends AbstractController
 
 		$activityName = \is_string($data['name'] ?? null) ? $data['name'] : $activity->getName() ?? '---';
 		$activitySlug = \is_string($data['slug'] ?? null) ? $data['slug'] : $activity->getSlug() ?? '---';
+		$activityGoal = \is_string($data['goal'] ?? null) ? $data['goal'] : $activity->getGoal() ?? '---';
 		$activityTitle = \is_string($data['title'] ?? null) ? $data['title'] : $activity->getTitle() ?? '---';
 		$activityObjectives = \is_array($data['objectives'] ?? null) ? $data['objectives'] : $activity->getObjectives() ?? [];
 		$activityDescription = \is_string($data['description'] ?? null) ? $data['description'] : $activity->getDescription() ?? '---';
@@ -108,6 +111,7 @@ class ActivityController extends AbstractController
 		try {
 			$activity->setName($activityName);
 			$activity->setSlug($activitySlug);
+			$activity->setGoal($activityGoal);
 			$activity->setTitle($activityTitle);
 			$activity->setObjectives($activityObjectives);
 			$activity->setDescription($activityDescription);

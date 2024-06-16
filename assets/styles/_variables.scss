@@ -1,0 +1,39 @@
+$tablet-minwidth: 1024px;
+$desktop-minwidth: 1025px;
+
+$white: #FFFFFF;
+$gray-1: #F2F5F7;
+$gray-2: #ECEDF1;
+$gray-3: #D6DBDF;
+$gray-4: #AAAFBA;
+$gray-5: #9399A6;
+$gray-6: #46516D;
+$black: #000000;
+$blue-light-1: #F1F5FF;
+$blue-light-2: #CCD9F9;
+$blue: #3369FF;
+$green: #3DB24B;
+$yellow: #ffcb46;
+$red: #F4586C;
+$blue-green: #57cdbf;
+
+$primary: $blue;
+$secondary: $gray-1;
+$success: $green;
+$warning: $yellow;
+$danger: $red;
+$info: $blue-green;
+$gray-light: $gray-1;
+$gray-medium: $gray-2;
+$gray-dark: $gray-5;
+
+$user-icon-mobile-connected: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50' width='24px' height='26px'%3E%3Cpath d='M 34.800781 33.800781 C 33.101563 33.101563 31 32.199219 31 31.5 L 31 27 C 33.5 25.101563 35 22.101563 35 19 L 35 13 C 35 7.5 30.5 3 25 3 C 19.5 3 15 7.5 15 13 L 15 19 C 15 22.101563 16.5 25.199219 19 27 L 19 31.5 C 19 32.101563 16.898438 33 15.199219 33.800781 C 11.101563 35.5 5 38.101563 5 45 L 5 46 L 45 46 L 45 45 C 45 38.101563 38.898438 35.5 34.800781 33.800781 Z' fill='%233369FF'/%3E%3C/svg%3E");
+$user-icon-mobile-not-connected: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50' width='24px' height='26px'%3E%3Cpath d='M 34.800781 33.800781 C 33.101563 33.101563 31 32.199219 31 31.5 L 31 27 C 33.5 25.101563 35 22.101563 35 19 L 35 13 C 35 7.5 30.5 3 25 3 C 19.5 3 15 7.5 15 13 L 15 19 C 15 22.101563 16.5 25.199219 19 27 L 19 31.5 C 19 32.101563 16.898438 33 15.199219 33.800781 C 11.101563 35.5 5 38.101563 5 45 L 5 46 L 45 46 L 45 45 C 45 38.101563 38.898438 35.5 34.800781 33.800781 Z' fill='%23D6DBDF'/%3E%3C/svg%3E");
+$user-icon-desktop-connected: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50' width='26px' height='28px'%3E%3Cpath d='M 34.800781 33.800781 C 33.101563 33.101563 31 32.199219 31 31.5 L 31 27 C 33.5 25.101563 35 22.101563 35 19 L 35 13 C 35 7.5 30.5 3 25 3 C 19.5 3 15 7.5 15 13 L 15 19 C 15 22.101563 16.5 25.199219 19 27 L 19 31.5 C 19 32.101563 16.898438 33 15.199219 33.800781 C 11.101563 35.5 5 38.101563 5 45 L 5 46 L 45 46 L 45 45 C 45 38.101563 38.898438 35.5 34.800781 33.800781 Z' fill='%233369FF'/%3E%3C/svg%3E");
+$user-icon-desktop-not-connected: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50' width='26px' height='28px'%3E%3Cpath d='M 34.800781 33.800781 C 33.101563 33.101563 31 32.199219 31 31.5 L 31 27 C 33.5 25.101563 35 22.101563 35 19 L 35 13 C 35 7.5 30.5 3 25 3 C 19.5 3 15 7.5 15 13 L 15 19 C 15 22.101563 16.5 25.199219 19 27 L 19 31.5 C 19 32.101563 16.898438 33 15.199219 33.800781 C 11.101563 35.5 5 38.101563 5 45 L 5 46 L 45 46 L 45 45 C 45 38.101563 38.898438 35.5 34.800781 33.800781 Z' fill='%23D6DBDF'/%3E%3C/svg%3E");
+
+$box-shadow-xs: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.07), 0 0.1rem 0.2rem rgba(0, 0, 0, 0.19);
+$box-shadow-s: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.11), 0 0.3rem 0.6rem rgba(0, 0, 0, 0.18);
+$box-shadow-m: 0 1rem 2rem rgba(0, 0, 0, 0.14), 0 0.6rem 0.6rem rgba(0, 0, 0, 0.18);
+$box-shadow-l: 0 1.4rem 2.8rem rgba(0, 0, 0, 0.20), 0 1rem 1rem rgba(0, 0, 0, 0.17);
+$box-shadow-xl: 0 1.9rem 3.8rem rgba(0, 0, 0, 0.25), 0 1.5rem 1.2rem rgba(0, 0, 0, 0.17);

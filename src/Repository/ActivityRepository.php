@@ -31,6 +31,7 @@ class ActivityRepository extends ServiceEntityRepository
 			'a.id',
 			'a.name',
 			'a.slug',
+			'a.goal',
 			'a.title',
 			'a.objectives',
 			'a.description',
@@ -60,6 +61,7 @@ class ActivityRepository extends ServiceEntityRepository
 			'a.id',
 			'a.name',
 			'a.slug',
+			'a.goal',
 			'a.title',
 			'a.objectives',
 			'a.description',
@@ -80,7 +82,7 @@ class ActivityRepository extends ServiceEntityRepository
 		$qb = $this->createQueryBuilder('a');
 
 		if (null === $fields) {
-			$fields = ['id', 'name', 'slug', 'title', 'objectives', 'description', 'detailedDescription', 'mobileImage', 'desktopImage'];
+			$fields = ['id', 'name', 'slug', 'goal', 'title', 'objectives', 'description', 'detailedDescription', 'mobileImage', 'desktopImage'];
 		}
 
 		$selectFields = [];

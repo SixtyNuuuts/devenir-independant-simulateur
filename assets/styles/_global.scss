@@ -1,0 +1,10 @@
+body {
+    font-size: 1.1rem;
+    line-height: 1.2;
+
+    background-color: $gray-light;
+}
+
+body>div {
+    overflow: hidden;
+}

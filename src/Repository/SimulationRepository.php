@@ -120,6 +120,34 @@ class SimulationRepository extends ServiceEntityRepository
 	}
 
 	/**
+	 * @param string[]|null $fields
+	 */
+	public function findAllSimulationsModels(): mixed
+	{
+		$qb = $this->createQueryBuilder('s');
+
+		$fields ??= ['id', 'token', 'activity.goal', 'activity.slug'];
+		$selectFields = [];
+		foreach ($fields as $field) {
+			if (strpos($field, 'activity.') === 0) {
+				$selectFields[] = str_replace('activity.', 'a.', $field) . ' AS ' . str_replace('.', '_', $field);
+			} else {
+				$selectFields[] = 's.' . $field;
+			}
+		}
+		$qb->select($selectFields)
+			->leftJoin('s.activity', 'a');
+
+		$qb->andWhere('s.token = :simulationToken')
+			->setParameter('simulationToken', 'default')
+			->orderBy('s.createdAt', 'DESC');
+
+		$result = $qb->getQuery()->getScalarResult();
+
+		return $result;
+	}
+
+	/**
 	 * @return array{
 	 *   data: list<array{
 	 *     id: mixed,

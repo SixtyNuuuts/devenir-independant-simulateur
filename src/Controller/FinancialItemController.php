@@ -10,7 +10,6 @@ use App\Enum\FinancialItemType;
 use App\Repository\FinancialItemRepository;
 use App\Repository\SimulationRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Id;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

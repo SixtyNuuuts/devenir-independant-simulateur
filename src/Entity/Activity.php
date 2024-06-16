@@ -40,6 +40,10 @@ class Activity
 	#[Groups(['activity_read'])]
 	private ?string $title = null;
 
+	#[ORM\Column(length: 255)]
+	#[Groups(['activity_read'])]
+	private ?string $goal = null;
+
 	#[ORM\Column(type: Types::JSON)]
 	#[Groups(['activity_read'])]
 	private array $objectives = [];
@@ -130,6 +134,18 @@ class Activity
 	public function setSlug(string $slug): static
 	{
 		$this->slug = $slug;
+
+		return $this;
+	}
+
+	public function getGoal(): ?string
+	{
+		return $this->goal;
+	}
+
+	public function setGoal(string $goal): static
+	{
+		$this->goal = $goal;
 
 		return $this;
 	}

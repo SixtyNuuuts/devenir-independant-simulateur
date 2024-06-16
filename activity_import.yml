@@ -1,6 +1,7 @@
 activity:
   name: "Pizzéria"
   slug: "pizzeria"
+  goal: "Vendre des pizzas"
   title: "Calcule la rentabilité de ta future pizzéria !"
   objectives:
     - "Maintient ton niveau de vie"

@@ -128,6 +128,7 @@ class HomeController extends AbstractController
 
 				$activityName = \is_string($data['activity']['name'] ?? null) ? $data['activity']['name'] : '---';
 				$activitySlug = \is_string($data['activity']['slug'] ?? null) ? $data['activity']['slug'] : '---';
+				$activityGoal = \is_string($data['activity']['goal'] ?? null) ? $data['activity']['goal'] : '---';
 				$activityTitle = \is_string($data['activity']['title'] ?? null) ? $data['activity']['title'] : '---';
 				$activityObjectives = \is_array($data['activity']['objectives'] ?? null) ? $data['activity']['objectives'] : [];
 				$activityDescription = \is_string($data['activity']['description'] ?? null) ? $data['activity']['description'] : '---';
@@ -136,6 +137,7 @@ class HomeController extends AbstractController
 				$activity ??= new Activity();
 				$activity->setName($activityName)
 					->setSlug($activitySlug)
+					->setGoal($activityGoal)
 					->setTitle($activityTitle)
 					->setObjectives($activityObjectives)
 					->setDescription($activityDescription)

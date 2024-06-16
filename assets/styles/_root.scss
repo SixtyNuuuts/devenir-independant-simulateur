@@ -1,0 +1,27 @@
+:root {
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+    font-size: 62.5%;
+
+    background-color: $white;
+    color: $black;
+    scroll-behavior: smooth;
+}
+
+// * {
+//     box-sizing: border-box;
+//     scrollbar-width: thin;
+//     scrollbar-color: #e7dfcd;    
+// }
+
+// ::-webkit-scrollbar {
+//     width: 8px;
+//     height: 8px;
+//     display: block;
+//     background: transparent;
+// }
+
+// ::-webkit-scrollbar-thumb {
+//     background: #e7dfcd;
+//     border: 2px solid $white;
+//     border-radius: 4px;
+// }

@@ -2,7 +2,11 @@
 
 {% block title %}Accueil | Simulateur - Comment devenir indépendant ?{% endblock %}
 
+{% block navbar %}
+    {% include 'partial/_navbar.html.twig' with {'activitySlug': activity.slug, 'simulationToken': simulationToken} %}
+{% endblock %}
+
 {% block body %}
-    <div {{ react_component('HomePage', { 'simulationId': simulationId, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw, 'isAdminActivityContext': isAdminActivityContext }) }}>
+    <div {{ react_component('HomePage', { 'simulationId': simulationId, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw, 'isAdminActivityContext': app.user and 'ROLE_ADMIN' in app.user.roles and simulationToken is same as('default') }) }}>
     </div>
 {% endblock %}
