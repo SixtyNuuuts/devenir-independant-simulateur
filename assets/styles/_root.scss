@@ -5,23 +5,23 @@
     background-color: $white;
     color: $black;
     scroll-behavior: smooth;
+
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: $gray-4;
+        box-sizing: border-box;
+    }
 }
 
-// * {
-//     box-sizing: border-box;
-//     scrollbar-width: thin;
-//     scrollbar-color: #e7dfcd;    
-// }
+::-webkit-scrollbar {
+    width: 1rem;
+    height: 1rem;
+    display: block;
+    background: transparent;
+}
 
-// ::-webkit-scrollbar {
-//     width: 8px;
-//     height: 8px;
-//     display: block;
-//     background: transparent;
-// }
-
-// ::-webkit-scrollbar-thumb {
-//     background: #e7dfcd;
-//     border: 2px solid $white;
-//     border-radius: 4px;
-// }
+::-webkit-scrollbar-thumb {
+    background: $gray-4;
+    border: 0.2rem solid $white;
+    border-radius: 0.4rem;
+}

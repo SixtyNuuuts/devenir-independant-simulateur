@@ -70,16 +70,33 @@
 </nav>
 <div class="overlay" id="menuOverlay"></div>
 <nav class="burger-menu" id="burgerMenu">
-    <h3>Menu</h3>
+    <span class="cross"></span>
+    <h4 class="burger-menu-title">Menu</h4>
     <ul>
         <li>
-            Calcul rentabilité : nos modèles gratuits
+            Calcul rentabilité : nos&nbsp;modèles&nbsp;gratuits
             <ul>
                 {% for simulation_model in get_simulations_models() %}
                     <li><a href="{{ path('app_home', {'activitySlug': simulation_model.activity_slug}) }}">{{ simulation_model.activity_goal }}</a></li>
-             {% endfor %}
+                {% endfor %}
+                    {# <li><a href="#">sqdqsd qdsqs dqdsqsd qsdqs dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd qdsqs dqs dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd qdsqs </a></li>
+                    <li><a href="#">sqdqsd qdsqs dqdd qsdqs dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd  qsdqs dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsdsd qsdqs dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd s dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd qdsdqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd qdsqs dqdsqsd qsdqs dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd qdsqs dqs dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd qdsqs </a></li>
+                    <li><a href="#">sqdqsd qdsqs dqdd qsdqs dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd  qsdqs dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsdsd qsdqs dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd s dqdsq sdq</a></li>
+                    <li><a href="#">sqdqsd qdsdqdsq sdq</a></li> #}
             </ul>
-            <a class="button-small-secondary" href="mailto:contact@julien-clement.com">Proposer un modèle</a>
+            <a class="btn-secondary btn-s" href="mailto:contact@julien-clement.com">Proposer un modèle</a>
         </li>
         <li><a href="#">Blog</a></li>
         <li><a href="#">Questions fréquentes</a></li>
@@ -90,7 +107,7 @@
                 <li><a href="#">Instagram</a></li>
             </ul>
         </li>
-        <li>Crédits
+        <li class="credits">Crédits
             <ul>
                 <li>Fait avec ❤ à Lyon</li>
                 <li><a href="{{ path('app_legal_notices') }}">Mentions légales</a></li>
