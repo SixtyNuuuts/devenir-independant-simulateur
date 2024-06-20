@@ -87,10 +87,14 @@
     }
 }
 
-
 .btn-tertiary {
     @include button-base;
     @include button-state($transparent, $primary, $transparent, $transparent, $transparent, $primary-hover, $primary-active, $transparent, $transparent, $transparent, $disabled, $transparent);
+
+    &.btn-s {
+        padding: 0.67rem 1.93rem;
+        font-size: 1.1rem
+    }
 
     &.btn-success {
         @include button-state($transparent, $success, $transparent, $transparent, $transparent, $success-hover, $success-active, $transparent, $transparent, $transparent, $disabled, $transparent);
@@ -213,6 +217,46 @@
             width: 2.7rem;
             height: 2.6rem;
             fill: #FFFFFF;
+        }
+    }
+}
+
+.btn-delete {
+    display: inline;
+    cursor: pointer;
+    width: 2.1rem;
+    height: 2.1rem;
+    background: none;
+    border: 0.1rem solid #e8e8e8;
+    position: relative;
+    border-radius: 50%;
+    transition: all 0.35s;
+
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        width: 1.2rem;
+        height: 0.1rem;
+        background-color: $gray-dark;
+        top: 50%;
+        left: 50%;
+    }
+
+    &::before {
+        transform: translate(-50%, -50%) rotate(135deg);
+    }
+
+    &::after {
+        transform: translate(-50%, -50%) rotate(-135deg);
+    }
+
+    &:hover {
+        border: 0.1rem solid $blue-light-2;
+
+        &::before,
+        &::after {
+            background-color: $primary;
         }
     }
 }

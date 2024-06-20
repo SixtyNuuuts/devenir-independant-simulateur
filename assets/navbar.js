@@ -29,13 +29,41 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('overflow-hidden');
     });
 
-    accountMenuBtn.addEventListener('click', () => {
-        accountDropdown.classList.toggle('open');
-    });
 
     document.addEventListener('click', (event) => {
-        if (!accountMenuBtn.contains(event.target) && !accountDropdown.contains(event.target)) {
+        const isClickInsideDropdown = accountDropdown.contains(event.target);
+        const isClickInMenuBtn = event.target.classList.contains('navbar-user-icon');
+
+        if (isClickInMenuBtn) {
+            accountDropdown.classList.toggle('open');
+        } else if (!isClickInsideDropdown) {
             accountDropdown.classList.remove('open');
         }
+    });
+
+    document.querySelectorAll('.delete-simulation').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        var liElement = form.closest('li');
+                        if (liElement) {
+                            liElement.remove();
+                        }
+                    } else {
+                        return response.json().then(data => {
+                            console.error('Error:', data);
+                        });
+                    }
+                })
+                .catch(error => console.error('Fetch error:', error));
+        });
     });
 });

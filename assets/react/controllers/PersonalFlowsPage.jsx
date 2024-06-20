@@ -211,80 +211,78 @@ function PersonalFlowsPage({ simulationId }) {
   }
 
   return (
-    <div>
-      <main>
-        <h1>Niveau de vie personnel</h1>
-        <p>
-          Pour pouvoir vivre de votre future activité professionnelle il faut
-          que vous puissiez couvrir vos frais personnels en vous versant une
-          rémunération minimum
-        </p>
-        <FinancialItemsTable
-          financialItems={financialData.personalExpenses}
-          type="personal-expenses"
-          onAddFinancialItem={() => toggleModal("personalExpense", true)}
-          onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
-            handleUpdateItem("personalExpenses", itemId, fieldKey, newValue)
-          }
-          onDeleteFinancialItem={(itemId) =>
-            handleDeleteItem("personalExpenses", itemId)
-          }
-          onAnnualTotalChange={(annualTotal) =>
-            handleAnnualTotalChange("personalExpenses", annualTotal)
-          }
-        />
-        <FinancialItemsTable
-          financialItems={financialData.personalIncomes}
-          type="personal-incomes"
-          onAddFinancialItem={() => toggleModal("personalIncome", true)}
-          onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
-            handleUpdateItem("personalIncomes", itemId, fieldKey, newValue)
-          }
-          onDeleteFinancialItem={(itemId) =>
-            handleDeleteItem("personalIncomes", itemId)
-          }
-          onAnnualTotalChange={(annualTotal) =>
-            handleAnnualTotalChange("personalIncomes", annualTotal)
-          }
-        />
-        <BalanceSection
-          id="balance-today"
-          title="Équilibre niveau de vie d'aujourd'hui"
-          description="Salaire annuel - frais annuels actuels"
-          balanceValue={personalBalanceToday}
-        />
-        <FinancialItemsTable
-          financialItems={financialData.salaryTargets}
-          type="salary-targets"
-          onAddFinancialItem={null}
-          onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
-            handleUpdateItem("salaryTargets", itemId, fieldKey, newValue)
-          }
-          onDeleteFinancialItem={null}
-          onAnnualTotalChange={(annualTotal) =>
-            handleAnnualTotalChange("salaryTargets", annualTotal)
-          }
-        />
-        <BalanceSection
-          id="balance-tomorrow"
-          title="Équilibre niveau de vie de demain"
-          description="Salaire annuel net envisagé - frais annuels actuels"
-          balanceValue={personalBalanceTomorrow}
-        />
-        <AddFinancialItemModal
-          type="personal-income"
-          isOpen={modalState.personalIncome}
-          onClose={() => toggleModal("personalIncome", false)}
-          onSave={(item) => handleAddItemProcess("personalIncomes", item)}
-        />
-        <AddFinancialItemModal
-          type="personal-expense"
-          isOpen={modalState.personalExpense}
-          onClose={() => toggleModal("personalExpense", false)}
-          onSave={(item) => handleAddItemProcess("personalExpenses", item)}
-        />
-      </main>
-    </div>
+    <>
+      <h1 className="title-1">Niveau de vie personnel</h1>
+      <p className="description-1">
+        Pour pouvoir vivre de votre future activité professionnelle il faut que
+        vous puissiez couvrir vos frais personnels en vous versant une
+        rémunération minimum
+      </p>
+      <FinancialItemsTable
+        financialItems={financialData.personalExpenses}
+        type="personal-expenses"
+        onAddFinancialItem={() => toggleModal("personalExpense", true)}
+        onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
+          handleUpdateItem("personalExpenses", itemId, fieldKey, newValue)
+        }
+        onDeleteFinancialItem={(itemId) =>
+          handleDeleteItem("personalExpenses", itemId)
+        }
+        onAnnualTotalChange={(annualTotal) =>
+          handleAnnualTotalChange("personalExpenses", annualTotal)
+        }
+      />
+      <FinancialItemsTable
+        financialItems={financialData.personalIncomes}
+        type="personal-incomes"
+        onAddFinancialItem={() => toggleModal("personalIncome", true)}
+        onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
+          handleUpdateItem("personalIncomes", itemId, fieldKey, newValue)
+        }
+        onDeleteFinancialItem={(itemId) =>
+          handleDeleteItem("personalIncomes", itemId)
+        }
+        onAnnualTotalChange={(annualTotal) =>
+          handleAnnualTotalChange("personalIncomes", annualTotal)
+        }
+      />
+      <BalanceSection
+        id="balance-today"
+        title="Équilibre niveau de vie d'aujourd'hui"
+        description="Salaire annuel - frais annuels actuels"
+        balanceValue={personalBalanceToday}
+      />
+      <FinancialItemsTable
+        financialItems={financialData.salaryTargets}
+        type="salary-targets"
+        onAddFinancialItem={null}
+        onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
+          handleUpdateItem("salaryTargets", itemId, fieldKey, newValue)
+        }
+        onDeleteFinancialItem={null}
+        onAnnualTotalChange={(annualTotal) =>
+          handleAnnualTotalChange("salaryTargets", annualTotal)
+        }
+      />
+      <BalanceSection
+        id="balance-tomorrow"
+        title="Équilibre niveau de vie de demain"
+        description="Salaire annuel net envisagé - frais annuels actuels"
+        balanceValue={personalBalanceTomorrow}
+      />
+      <AddFinancialItemModal
+        type="personal-income"
+        isOpen={modalState.personalIncome}
+        onClose={() => toggleModal("personalIncome", false)}
+        onSave={(item) => handleAddItemProcess("personalIncomes", item)}
+      />
+      <AddFinancialItemModal
+        type="personal-expense"
+        isOpen={modalState.personalExpense}
+        onClose={() => toggleModal("personalExpense", false)}
+        onSave={(item) => handleAddItemProcess("personalExpenses", item)}
+      />
+    </>
   );
 }
 

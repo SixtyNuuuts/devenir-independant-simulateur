@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import EditableCell from "./EditableCell";
 import "./TableRow.scss";
 import f from "../utils/function";
+import classNames from "classnames";
 
 const TableRow = ({ item, specification, onEditCell, onDelete }) => {
   const { headers, rows, isDeletableItems, columnTotalSum } = specification;
@@ -35,7 +36,13 @@ const TableRow = ({ item, specification, onEditCell, onDelete }) => {
     <tr key={item.id}>
       {ItemRows.length &&
         ItemRows.map((itemRow, index) => (
-          <td key={index} className={item.isLoading ? "loading" : ""}>
+          <td
+            key={index}
+            className={classNames({
+              loading: item.isLoading,
+              "is-editable": itemRow.isEditable,
+            })}
+          >
             {itemRow.isEditable ? (
               <EditableCell
                 itemValue={itemRow.value}
@@ -52,18 +59,16 @@ const TableRow = ({ item, specification, onEditCell, onDelete }) => {
           </td>
         ))}
       {columnTotalSumRender && <td>{columnTotalSumRender}</td>}
-      {isDeletableItems && ItemRows[0].isEditable && (
-        <td>
+      <td>
+        {isDeletableItems && ItemRows[0].isEditable && (
           <button
             type="button"
-            aria-label="Supprimer Produit"
-            className="delete-icon"
+            aria-label="Supprimer Item"
+            className="btn-delete"
             onClick={() => onDelete(item.id)}
-          >
-            X
-          </button>
-        </td>
-      )}
+          ></button>
+        )}
+      </td>
     </tr>
   );
 };

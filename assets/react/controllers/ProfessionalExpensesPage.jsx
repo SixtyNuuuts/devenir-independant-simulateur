@@ -128,14 +128,14 @@ function ProfessionalExpensesPage({ simulationId }) {
   }, []);
 
   return (
-    <div className={professionalExpensesLoading ? "loading" : ""}>
+    <>
       {professionalExpensesLoading ? (
         <div>Chargement...</div>
       ) : professionalExpensesError ? (
         <div>Une erreur est survenue lors du chargement des données.</div>
       ) : (
-        <main>
-          <h1>Charges</h1>
+        <>
+          <h1 className="title-1 hidden-mobile">Charges</h1>
           <FinancialItemsTable
             financialItems={professionalExpenses}
             type="charges"
@@ -149,9 +149,9 @@ function ProfessionalExpensesPage({ simulationId }) {
             onClose={() => setModalAddProfessionalExpenseOpen(false)}
             onSave={onAddFinancialItemProcess}
           />
-        </main>
+        </>
       )}
-    </div>
+    </>
   );
 }
 

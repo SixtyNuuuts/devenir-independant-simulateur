@@ -25,7 +25,7 @@ const EditableCell = ({ itemValue: initialValue, itemType, onSave }) => {
   };
 
   return (
-    <div>
+    <>
       {editing ? (
         <input
           type={
@@ -53,7 +53,7 @@ const EditableCell = ({ itemValue: initialValue, itemType, onSave }) => {
           )}
         </span>
       )}
-    </div>
+    </>
   );
 };
 

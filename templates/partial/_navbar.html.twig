@@ -26,12 +26,12 @@
             </li>
         </ul>
     {% endif %}
-   <div class="navbar-user" id="accountMenuBtn">
-       <span class="navbar-user-icon {% if app.user %}connected{% else %}not-connected{% endif %}"></span>
+    <div class="navbar-user {% if app.user %}connected{% else %}not-connected{% endif %}" id="accountMenuBtn">
+        <span class="navbar-user-icon"></span>
         <ul class="navbar-user-dropdown" id="accountDropdown">
             {% if app.user %}
                 <li>
-                    <p>Connecté en tant que <strong>{{ app.user.email }}</strong></p>
+                    <p>Connecté en tant que <span>{{ app.user.email }}</span></p>
                 </li>
                 {% if 'ROLE_ADMIN' in app.user.roles %}
                     <li>
@@ -44,10 +44,10 @@
                         <ul>
                             {% for simulation in app.user.simulations %}
                                 <li>
-                                    <a href="{{ path('app_home', { activitySlug: simulation.activity.slug, simulationToken: simulation.token }) }}">{{ simulation.activity.goal }} | {{ simulation.token }}</a>
+                                    <a href="{{ path('app_home', { activitySlug: simulation.activity.slug, simulationToken: simulation.token }) }}">{{ simulation.activity.goal }}</a>
                                     <form class="delete-simulation" action="{{ path('app_simulation_delete', { id: simulation.id }) }}" method="post">
                                         <input type="hidden" name="_token" value="{{ csrf_token('DELETE' ~ simulation.id) }}">
-                                        <button type="submit">✖</button>
+                                        <button class="btn-delete" type="submit" aria-label="Supprimer Simulation"></button>
                                     </form>
                                 </li>
                             {% endfor %}

@@ -49,15 +49,18 @@ const FinancialItemsTable = ({
       { value: finalRowFinancialLabel },
       ...monthlyTotals.map((total) => ({ value: total })),
       { value: annualTotal },
+      null,
     ];
 
     return (
       <tr>
         {finalRowFinancialCells.map((cell, index) => (
           <th key={index}>
-            {index === 0
-              ? cell.value
-              : f.displayValue(cell.value, "financial-value")}
+            {cell
+              ? index === 0
+                ? cell.value
+                : f.displayValue(cell.value, "financial-value")
+              : ""}
           </th>
         ))}
       </tr>
@@ -65,10 +68,16 @@ const FinancialItemsTable = ({
   }, [monthlyTotals]);
 
   return (
-    <section aria-labelledby={type} className="financial-table">
-      {title && <h2 id={type}>{title}</h2>}
-      <table>
-        <caption>{caption}</caption>
+    <section aria-labelledby={type} className="table">
+      {title && (
+        <h2 className="table-title" id={type}>
+          {title}
+        </h2>
+      )}
+      <p id="table-caption" className="table-caption">
+        {caption}
+      </p>
+      <table aria-labelledby="table-caption">
         <thead>
           <tr>
             {headers.map((header) => (
@@ -94,7 +103,10 @@ const FinancialItemsTable = ({
           <figcaption id={`${type}-total-annual`}>
             {annualTotalLabel ?? "Total Année"}
           </figcaption>
-          <span aria-labelledby={`${type}-total-annual`}>
+          <span
+            class="btn-secondary btn-s btn-cancel"
+            aria-labelledby={`${type}-total-annual`}
+          >
             {annualTotal === 0
               ? 0
               : `${annualTotalSign} ${f.displayValue(
@@ -105,12 +117,21 @@ const FinancialItemsTable = ({
         </figure>
       )}
       {(addBtn || asteriskLegendText) && (
-        <div role="complementary">
+        <div className="complementary" role="complementary">
           {asteriskLegendText && (
-            <p aria-label="Explication de l'astérisque">{asteriskLegendText}</p>
+            <p
+              className="asterisk-legend-text"
+              aria-label="Explication de l'astérisque"
+            >
+              {asteriskLegendText}
+            </p>
           )}
           {addBtn && (
-            <button onClick={() => onAddFinancialItem()}>
+            <button
+              aria-label="Ajouter Item"
+              className="btn-tertiary btn-s"
+              onClick={() => onAddFinancialItem()}
+            >
               {addBtn.text ?? "+ ajouter"}
             </button>
           )}

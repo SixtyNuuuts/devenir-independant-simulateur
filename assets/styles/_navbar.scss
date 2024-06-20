@@ -11,6 +11,8 @@
     flex-wrap: wrap;
     max-width: 125.5rem;
     margin: auto;
+    border-radius: 0 0 0.5rem 0.5rem;
+    border: 1px solid $gray-medium;
 
     @media (min-width: $desktop-minwidth) {
         min-height: 9.9rem;
@@ -27,9 +29,9 @@
 .navbar-burger-icon {
     position: relative;
     top: 0.089rem;
-    width: 2.1rem;
+    width: 2.2rem;
     height: 1.5rem;
-    margin-left: 1.7rem;
+    margin-left: 1.9rem;
     transform: rotate(0deg);
     transition: .5s ease-in-out;
     cursor: pointer;
@@ -68,28 +70,6 @@
             top: 1.4rem;
         }
     }
-
-    // &.open {
-    //     span {
-    //         width: 90%;
-
-    //         &:nth-child(1) {
-    //             top: 0.9rem;
-    //             transform: rotate(135deg);
-    //         }
-
-    //         &:nth-child(2) {
-    //             opacity: 0;
-    //             left: 0.04rem;
-    //             top: 0.8rem;
-    //         }
-
-    //         &:nth-child(3) {
-    //             top: 0.9rem;
-    //             transform: rotate(-135deg);
-    //         }
-    //     }
-    // }
 }
 
 .navbar-site-infos {
@@ -228,7 +208,6 @@
     left: -0.2rem;
     width: 2.5rem;
     height: 2.6rem;
-    cursor: pointer;
 
     @media (min-width: $desktop-minwidth) {
         top: 0;
@@ -242,8 +221,11 @@
     .navbar-user-icon {
         width: 100%;
         height: 100%;
+        cursor: pointer;
+    }
 
-        &.connected::before {
+    &.connected {
+        .navbar-user-icon::before {
             content: $user-icon-mobile-connected;
             display: block;
             width: 100%;
@@ -254,7 +236,7 @@
             }
         }
 
-        &.connected::after {
+        .navbar-user-icon::after {
             content: "";
             display: block;
             position: absolute;
@@ -267,7 +249,13 @@
             top: 0;
         }
 
-        &.not-connected::before {
+        .navbar-user-dropdown {
+            min-width: 22rem;
+        }
+    }
+
+    &.not-connected {
+        .navbar-user-icon::before {
             content: $user-icon-mobile-not-connected;
             display: block;
             width: 100%;
@@ -280,24 +268,115 @@
     }
 }
 
-.navbar-user-dropdown,
-.burger-menu {
-    display: none;
-    position: absolute;
-    background: $white;
-    box-shadow: $box-shadow-s;
-}
-
 .navbar-user-dropdown {
+    display: flex;
+    flex-direction: column;
+    background: $white;
+    position: absolute;
     right: 0;
-    top: 100%;
-    min-width: 200px;
+    top: 3.2rem;
     z-index: 1010;
-    transition: all 0.3s ease-in-out;
+    transition: visibility 0.3s, opacity 0.3s, max-height 0.6s;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    border: 1px solid $gray-medium;
+    padding: 0.4rem 0;
+
+    &.open {
+        opacity: 1;
+        visibility: visible;
+        max-height: 50rem;
+    }
+
+    >li {
+        font-size: 1.4rem;
+        font-weight: bold;
+        line-height: 1.1;
+        padding: 1rem 2rem;
+        white-space: nowrap;
+
+        p {
+            margin: 0;
+        }
+
+        a {
+            display: block;
+            transition: 0.25s;
+
+            &:hover {
+                color: $primary;
+            }
+        }
+
+        &:first-child {
+            padding-bottom: 1.3rem;
+
+            >p {
+                font-weight: 400;
+                line-height: 1.2;
+
+                >span {
+                    color: $primary;
+                    font-weight: 600;
+                    display: block;
+                }
+            }
+        }
+
+        &:last-child {
+            padding-top: 1.3rem;
+            border-top: 0.1rem solid $gray-medium;
+        }
+
+        ul {
+            margin-top: 0.6rem;
+            padding-left: 1.55rem;
+            border-left: 0.1rem solid $gray-3;
+            max-height: 22.4rem;
+            overflow: hidden;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            margin-top: 0.6rem;
+
+            >li {
+                display: flex;
+                font-size: 1.4rem;
+                font-weight: normal;
+                margin-bottom: 0.5rem;
+                margin-top: 0.5rem;
+                white-space: nowrap;
+                max-width: 98%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                a {
+                    padding: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    position: relative;
+                    top: 0.3rem;
+                }
+
+                .btn-delete {
+                    margin-left: 0.45rem;
+                }
+            }
+        }
+
+        &.credits {
+            a {
+                text-decoration: underline;
+            }
+        }
+    }
 }
 
 .burger-menu {
     display: flex;
+    background: $white;
+    position: absolute;
     top: 0;
     left: -100%;
     width: 87vw;
@@ -309,6 +388,7 @@
     display: flex;
     flex-direction: column;
     padding: 2.2rem 0;
+    box-shadow: $box-shadow-s;
 
     @media (min-width: $desktop-minwidth) {
         transition: all 0.5s ease-in-out;
@@ -320,11 +400,12 @@
         font-size: 2rem;
         font-weight: bold;
         padding-left: 2.6rem;
-        margin-bottom: 3.5rem;
+        margin-bottom: 1.5rem;
     }
 
     >ul {
         padding: 0 2.6rem;
+        overflow: auto;
 
         >li {
             font-size: 1.6rem;
@@ -334,8 +415,9 @@
 
             &:first-child {
                 position: relative;
-                padding-bottom: 3rem;
+                padding-bottom: 2.6rem;
                 margin-bottom: 2.6rem;
+                margin-top: 1rem;
 
                 &::after {
                     content: "";
@@ -353,26 +435,17 @@
                     margin-top: 1.4rem;
                     margin-bottom: 1.4rem;
                     max-height: 22.4rem;
-                    overflow: auto;
+                    overflow: hidden;
+                    overflow-y: auto;
                     scrollbar-width: thin;
 
                     li {
                         list-style: inside;
-
-                        a {}
+                        white-space: nowrap;
+                        max-width: 98%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                     }
-
-                    // li::before {
-                    //     content: "";
-                    //     display: inline-block;
-                    //     width: 4px;
-                    //     height: 4px;
-                    //     background-color: black;
-                    //     border-radius: 50%;
-                    //     margin-right: 0.6rem;
-                    //     top: -1px;
-                    //     position: relative;
-                    // }
                 }
 
                 .btn-secondary.btn-s {

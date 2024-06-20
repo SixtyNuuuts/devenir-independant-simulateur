@@ -111,14 +111,14 @@ function ProfessionalIncomesPage({ simulationId }) {
   }, []);
 
   return (
-    <div className={professionalIncomesLoading ? "loading" : ""}>
+    <>
       {professionalIncomesLoading ? (
         <div>Chargement...</div>
       ) : professionalIncomesError ? (
         <div>Une erreur est survenue lors du chargement des données.</div>
       ) : (
-        <main>
-          <h1>Profits</h1>
+        <>
+          <h1 className="title-1 hidden-mobile">Profits</h1>
           <FinancialItemsTable
             financialItems={professionalIncomes}
             type="profits"
@@ -139,9 +139,9 @@ function ProfessionalIncomesPage({ simulationId }) {
             onClose={() => setModalAddProfessionalIncomeOpen(false)}
             onSave={onAddFinancialItemProcess}
           />
-        </main>
+        </>
       )}
-    </div>
+    </>
   );
 }
 

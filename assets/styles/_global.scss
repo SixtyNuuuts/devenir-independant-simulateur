@@ -22,4 +22,46 @@ body {
         text-decoration: none;
         color: $black;
     }
+
+    main {
+        overflow: hidden;
+        max-width: 112.6rem;
+        margin: auto;
+        padding: 1.5rem 0;
+        background-color: $white;
+        margin-top: 0.7rem;
+
+        @media (min-width: $desktop-minwidth) {
+            padding: 6.3rem 0;
+            background-color: $transparent;
+            margin-top: 0;
+        }
+
+        .title-1 {
+            font-size: $global-title-1-font-size-mobile;
+            margin: 0;
+
+            &.hidden-mobile {
+                display: none;
+
+                @media (min-width: $desktop-minwidth) {
+                    display: block;
+                }
+            }
+
+            @media (min-width: $desktop-minwidth) {
+                font-size: $global-title-1-font-size-desktop;
+                text-align: center;
+            }
+        }
+
+        .description-1 {
+            font-size: $global-description-1-font-size-mobile;
+            margin: 0;
+
+            @media (min-width: $desktop-minwidth) {
+                font-size: $global-description-1-font-size-desktop;
+            }
+        }
+    }
 }
