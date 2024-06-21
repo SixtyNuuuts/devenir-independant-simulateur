@@ -104,7 +104,7 @@ const FinancialItemsTable = ({
             {annualTotalLabel ?? "Total Année"}
           </figcaption>
           <span
-            class="btn-secondary btn-s btn-cancel"
+            className="btn-secondary btn-s btn-cancel"
             aria-labelledby={`${type}-total-annual`}
           >
             {annualTotal === 0
@@ -122,9 +122,8 @@ const FinancialItemsTable = ({
             <p
               className="asterisk-legend-text"
               aria-label="Explication de l'astérisque"
-            >
-              {asteriskLegendText}
-            </p>
+              dangerouslySetInnerHTML={{ __html: asteriskLegendText }}
+            ></p>
           )}
           {addBtn && (
             <button

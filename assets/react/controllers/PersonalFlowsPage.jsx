@@ -212,12 +212,14 @@ function PersonalFlowsPage({ simulationId }) {
 
   return (
     <>
-      <h1 className="title-1">Niveau de vie personnel</h1>
-      <p className="description-1">
-        Pour pouvoir vivre de votre future activité professionnelle il faut que
-        vous puissiez couvrir vos frais personnels en vous versant une
-        rémunération minimum
-      </p>
+      <div className="title-description-zone">
+        <h1 className="title-1">Niveau de vie personnel</h1>
+        <p className="description-1">
+          Pour pouvoir vivre de votre future activité professionnelle il faut
+          que vous puissiez couvrir vos frais personnels en vous versant une
+          rémunération minimum
+        </p>
+      </div>
       <FinancialItemsTable
         financialItems={financialData.personalExpenses}
         type="personal-expenses"
@@ -249,7 +251,7 @@ function PersonalFlowsPage({ simulationId }) {
       <BalanceSection
         id="balance-today"
         title="Équilibre niveau de vie d'aujourd'hui"
-        description="Salaire annuel - frais annuels actuels"
+        description="= Salaire annuel - frais annuels actuels"
         balanceValue={personalBalanceToday}
       />
       <FinancialItemsTable
@@ -267,7 +269,7 @@ function PersonalFlowsPage({ simulationId }) {
       <BalanceSection
         id="balance-tomorrow"
         title="Équilibre niveau de vie de demain"
-        description="Salaire annuel net envisagé - frais annuels actuels"
+        description="= Salaire annuel net envisagé - frais annuels actuels"
         balanceValue={personalBalanceTomorrow}
       />
       <AddFinancialItemModal

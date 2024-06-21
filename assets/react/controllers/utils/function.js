@@ -135,11 +135,11 @@ export default {
 
   getCssClassForValue(value) {
     if (value > 0) {
-      return 'positive';
+      return 'success';
     } else if (value < 0) {
-      return 'negative';
+      return 'danger';
     } else {
-      return 'neutral';
+      return '';
     }
   },
 

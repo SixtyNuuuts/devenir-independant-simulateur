@@ -227,7 +227,7 @@ function HomePage({ simulationId, activityData, isAdminActivityContext }) {
           </>
         )}
       </header>
-      <main>
+      <div>
         <div>
           <section>
             <SalarySection
@@ -373,7 +373,7 @@ function HomePage({ simulationId, activityData, isAdminActivityContext }) {
             confiance.
           </p>
         </section>
-      </main>
+      </div>
     </>
   );
 }

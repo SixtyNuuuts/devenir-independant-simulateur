@@ -1,9 +1,17 @@
 .table {
     font-size: $table-text-font-size-mobile;
-    margin-bottom: 3.6rem;
+    background-color: $white;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
 
     @media (min-width: $desktop-minwidth) {
         font-size: $table-text-font-size-desktop;
+        border-radius: 0.5rem;
+        border: 0.1rem solid $gray-medium;
+        padding-top: 0;
+        padding-bottom: 0;
+        padding: 2rem 1.5rem;
+        margin-bottom: 3.7rem;
     }
 
     .table-title {
@@ -41,18 +49,34 @@
         white-space: nowrap;
         color: $gray-dark;
         border-collapse: collapse;
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.4rem;
+
+        @media (min-width: $desktop-minwidth) {
+            padding-right: 0;
+            padding-bottom: 1.1rem;
+        }
+
 
         tr {
             height: 2.7rem;
 
             th,
             td {
-                padding: 0 1.2rem;
+                padding: 0 0.89rem;
                 text-transform: capitalize;
-                max-width: 13.5rem;
+                max-width: 9rem;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                min-width: 5.3rem;
+                position: relative;
+
+                >span {
+                    display: flex;
+                    width: 100%;
+                    height: 1.7rem;
+                    justify-content: flex-end;
+                    align-items: center;
+                }
 
                 &.is-editable {
                     color: $primary;
@@ -60,11 +84,23 @@
 
                 &:first-child {
                     text-align: left;
+
+                    >span {
+                        justify-content: flex-start;
+                    }
+
                     border-right: 0.1rem solid $white;
+                    padding: 0 1.2rem;
+                    max-width: 13.5rem;
+                    min-width: 11.8rem;
 
                     &.is-editable {
                         color: $black;
                     }
+                }
+
+                &:nth-child(14) {
+                    text-align: right;
                 }
 
                 h3 {
@@ -74,6 +110,23 @@
                     font-weight: normal;
                     overflow: hidden;
                     text-overflow: ellipsis;
+                }
+
+                input {
+                    width: 100%;
+                    height: 100%;
+                    border: 0.1rem solid $primary;
+                    color: $primary;
+                    border-radius: 0.3rem;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    padding-left: 0.6rem;
+
+                    &:focus,
+                    &:focus-visible {
+                        outline: 0.2rem solid $primary;
+                    }
                 }
             }
         }
@@ -107,6 +160,175 @@
         }
     }
 
+    &[aria-labelledby="products"] {
+        table {
+            padding-right: 0;
+
+            tr {
+
+                th,
+                td {
+                    max-width: 13rem;
+
+                    &:first-child {
+                        max-width: 18.5rem;
+                        min-width: 11.6rem;
+
+                        @media (min-width: 390px) {
+                            min-width: 13rem;
+                        }
+                    }
+                }
+            }
+        }
+
+        .complementary {
+            max-width: 38.9rem;
+        }
+    }
+
+    &[aria-labelledby="profits"] {
+        table {
+            text-align: center;
+
+            th,
+            td {
+
+                >span {
+                    justify-content: center;
+                }
+            }
+
+            thead {
+                text-align: center;
+            }
+        }
+    }
+
+    &[aria-labelledby="personal-expenses"],
+    &[aria-labelledby="personal-incomes"],
+    &[aria-labelledby="salary-targets"] {
+        table {
+            text-align: right;
+
+            thead {
+                text-align: right;
+            }
+        }
+
+        figure {
+            max-width: 38.83rem;
+        }
+
+        .complementary {
+            max-width: 38.9rem;
+        }
+    }
+
+    &[aria-labelledby="personal-expenses"] {
+        padding-bottom: 1rem;
+
+        table {
+            tr {
+
+                th,
+                td {
+                    &:not(:last-child) {
+                        min-width: 8rem;
+                    }
+
+                    &:first-child {
+                        max-width: 14.4rem;
+                        min-width: 14.4rem;
+
+                        @media (min-width: 390px) {
+                            min-width: 15.3rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &[aria-labelledby="personal-incomes"],
+    &[aria-labelledby="salary-targets"] {
+        table {
+            tr {
+
+                th,
+                td {
+                    min-width: 10rem;
+
+                    &:first-child {
+                        max-width: 15.5rem;
+                        min-width: 15.5rem;
+
+                        @media (min-width: 390px) {
+                            min-width: 16.6rem;
+                        }
+                    }
+
+                    &:nth-child(4) {
+                        display: none;
+                    }
+                }
+
+                &:first-child {
+                    td:first-child {
+                        color: $black;
+                    }
+                }
+            }
+        }
+
+        figure {
+            display: none;
+        }
+    }
+
+    &[aria-labelledby="personal-incomes"] {
+        padding-bottom: 2rem;
+
+        table {
+            margin-bottom: 0;
+        }
+    }
+
+    &[aria-labelledby="salary-targets"] {
+        background-color: $transparent;
+        padding-bottom: 0;
+        padding-top: 2.6rem;
+
+        table {
+
+            th,
+            td {
+                &:first-child {
+                    border-right: 0.1rem solid $transparent;
+                }
+            }
+
+            tbody {
+                tr:nth-child(1) {
+                    background-color: #ECEDF1;
+                }
+
+                tr:nth-child(2) {
+                    >td {
+                        padding-top: 0.7rem;
+                    }
+                }
+
+                tr:nth-child(2),
+                tr:nth-child(3) {
+                    background-color: $transparent;
+                    height: 2.3rem;
+                }
+            }
+        }
+    }
+
+
     figure {
         color: $gray-dark;
         display: flex;
@@ -115,6 +337,11 @@
         margin: 0;
         padding: 0 2rem;
         margin-bottom: 0.6rem;
+        padding-right: 1.4rem;
+
+        @media (min-width: $desktop-minwidth) {
+            padding-right: 0.8rem;
+        }
 
         figcaption {}
 
@@ -126,12 +353,22 @@
         display: flex;
 
         .asterisk-legend-text {
+            margin: 0;
             margin-left: 2rem;
-            max-width: 17rem;
+            margin-top: 1.1rem;
+            max-width: 12rem;
         }
 
         .btn-tertiary.btn-s {
+            padding: 0;
+            max-height: 1.9rem;
+            margin-right: 1.5rem;
+            margin-top: 0.7rem;
             margin-left: auto;
+
+            @media (min-width: $desktop-minwidth) {
+                margin-right: 0.9rem;
+            }
         }
     }
 }

@@ -50,7 +50,7 @@ export const tableSpecifications = {
     ],
     columnTotalSum: false,
     isDeletableItems: true,
-    asteriskLegendText: "* Facultatif : Précisez ici le montant HT coutant la réalisation de ce produit ou service",
+    asteriskLegendText: "* Facultatif : <br> Précisez ici le montant HT coutant la réalisation de ce produit ou service",
     addBtn: { text: "+ ajouter" },
   },
 
