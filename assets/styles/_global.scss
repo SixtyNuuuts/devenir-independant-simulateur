@@ -40,7 +40,35 @@ body {
         >[aria-labelledby="balance-tomorrow"] {
             @media (min-width: 500px) {
                 max-width: 40rem;
+                padding: 1.9rem 0.5rem;
                 margin: auto;
+                border-radius: 0.5rem;
+                border: 1px solid $gray-medium;
+            }
+
+            &:last-child {
+                @media (min-width: 500px) {
+                    margin-bottom: 0.8rem;
+                }
+            }
+
+            @media (min-width: $desktop-minwidth) {
+                max-width: initial;
+                padding: 2.3rem 1.5rem;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        >[aria-labelledby="personal-expenses"],
+        >[aria-labelledby="personal-incomes"],
+        >[aria-labelledby="salary-targets"],
+        >[aria-labelledby="balance-today"],
+        >[aria-labelledby="balance-tomorrow"] {
+            @media (min-width: 500px) {
+                margin-bottom: 1.5rem;
             }
         }
 
@@ -75,7 +103,7 @@ body {
         .description-1 {
             font-size: $global-description-1-font-size-mobile;
             margin: 0;
-            max-width: 35.5rem;
+            max-width: 35.3rem;
 
             @media (min-width: $desktop-minwidth) {
                 font-size: $global-description-1-font-size-desktop;
@@ -86,9 +114,13 @@ body {
             background-color: $white;
             padding: 1.5rem 2rem;
 
+            @media (min-width: 500px) {
+                background-color: $transparent;
+                border: none;
+            }
+
             @media (min-width: $desktop-minwidth) {
                 padding: 0;
-                background-color: $transparent;
             }
         }
     }
@@ -122,11 +154,17 @@ body {
 
         &[aria-labelledby="balance-today"],
         &[aria-labelledby="balance-tomorrow"] {
-            max-width: 38.8rem;
-
             @media (min-width: 500px) {
                 max-width: 40rem;
-                padding: 1rem 2.5rem;
+                padding: 1rem 2rem;
+            }
+        }
+
+        &[aria-labelledby="balance-tomorrow"] {
+            @media (min-width: 500px) {
+                &:last-child {
+                    margin-bottom: 3rem;
+                }
             }
         }
 
