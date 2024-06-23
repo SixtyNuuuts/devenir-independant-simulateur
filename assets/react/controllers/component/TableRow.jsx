@@ -33,13 +33,18 @@ const TableRow = ({ item, specification, onEditCell, onDelete }) => {
   }, [ItemRows, columnTotalSum]);
 
   return (
-    <tr key={item.id}>
+    <tr
+      key={item.id}
+      className={classNames({
+        loading: item.isLoading,
+        deleting: item.isDeleting,
+      })}
+    >
       {ItemRows.length &&
         ItemRows.map((itemRow, index) => (
           <td
             key={index}
             className={classNames({
-              loading: item.isLoading,
               "is-editable": itemRow.isEditable,
             })}
           >

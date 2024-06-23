@@ -1,8 +1,272 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Niveau de vie | Simulateur - Comment devenir indépendant ?{% endblock %}
+{% block title %}Krizalid | Niveau de vie{% endblock %}
 
 {% block body %}
-    <main {{ react_component('PersonalFlowsPage', { 'simulationId': simulationId }) }}>
+    <main {{ react_component('PersonalFlowsPage', { 'simulationId': simulationId }) }} class="personal-flows-page">
+        <div class="title-description-zone">
+            <h1 class="title-1">Niveau de vie personnel</h1>
+            <p class="description-1">Pour pouvoir vivre de votre future activité professionnelle il faut que vous puissiez couvrir vos frais personnels en vous versant une rémunération minimum</p>
+        </div>
+        <section aria-labelledby="personal-expenses" class="table">
+            <h2 class="table-title" id="personal-expenses">Frais personnels aujourd'hui</h2>
+            <p id="table-caption" class="table-caption">Combien je dépense par mois/an pour vivre actuellement</p>
+            <table aria-labelledby="table-caption">
+                <thead>
+                    <tr>
+                        <th>Intitulé</th>
+                        <th>Mensuel</th>
+                        <th>Annuel</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="is-editable is-loading is-l-right is-l-75">
+                            <span tabindex="0" role="button" aria-label="Edit">
+                                <h3>Frais personnel n°1</h3>
+                            </span>
+                        </td>
+                        <td class="is-editable is-loading is-l-right is-l-50">
+                            <span tabindex="0" role="button" aria-label="Edit">900,00 €</span>
+                        </td>
+                        <td class="is-loading is-l-right is-l-70">10 800,00 €</td>
+                        <td>
+                            <button type="button" aria-label="Supprimer Item" class="btn-delete"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="is-editable is-loading is-l-right is-l-70">
+                            <span tabindex="0" role="button" aria-label="Edit">
+                                <h3>Frais personnel n°2</h3>
+                            </span>
+                        </td>
+                        <td class="is-editable is-loading is-l-right is-l-50">
+                            <span tabindex="0" role="button" aria-label="Edit">400,00 €</span>
+                        </td>
+                        <td class="is-loading is-l-right is-l-70">4 800,00 €</td>
+                        <td>
+                            <button type="button" aria-label="Supprimer Item" class="btn-delete"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="is-editable is-loading is-l-right is-l-75">
+                            <span tabindex="0" role="button" aria-label="Edit">
+                                <h3>Frais personnel n°3</h3>
+                            </span>
+                        </td>
+                        <td class="is-editable is-loading is-l-right is-l-50">
+                            <span tabindex="0" role="button" aria-label="Edit">200,00 €</span>
+                        </td>
+                        <td class="is-loading is-l-right is-l-70">2 400,00 €</td>
+                        <td>
+                            <button type="button" aria-label="Supprimer Item" class="btn-delete"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="is-editable is-loading is-l-right is-l-70">
+                            <span tabindex="0" role="button" aria-label="Edit">
+                                <h3>Frais personnel n°4</h3>
+                            </span>
+                        </td>
+                        <td class="is-editable is-loading is-l-right is-l-50">
+                            <span tabindex="0" role="button" aria-label="Edit">500,00 €</span>
+                        </td>
+                        <td class="is-loading is-l-right is-l-70">6 000,00 €</td>
+                        <td>
+                            <button type="button" aria-label="Supprimer Item" class="btn-delete"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="is-editable is-loading is-l-right is-l-75">
+                            <span tabindex="0" role="button" aria-label="Edit">
+                                <h3>Frais personnel n°5</h3>
+                            </span>
+                        </td>
+                        <td class="is-editable is-loading is-l-right is-l-50">
+                            <span tabindex="0" role="button" aria-label="Edit">300,00 €</span>
+                        </td>
+                        <td class="is-loading is-l-right is-l-70">3 600,00 €</td>
+                        <td>
+                            <button type="button" aria-label="Supprimer Item" class="btn-delete"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="is-editable is-loading is-l-right is-l-75">
+                            <span tabindex="0" role="button" aria-label="Edit">
+                                <h3>Frais personnel n°6</h3>
+                            </span>
+                        </td>
+                        <td class="is-editable is-loading is-l-right is-l-50">
+                            <span tabindex="0" role="button" aria-label="Edit">900,00 €</span>
+                        </td>
+                        <td class="is-loading is-l-right is-l-70">10 800,00 €</td>
+                        <td>
+                            <button type="button" aria-label="Supprimer Item" class="btn-delete"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="is-editable is-loading is-l-right is-l-70">
+                            <span tabindex="0" role="button" aria-label="Edit">
+                                <h3>Frais personnel n°7</h3>
+                            </span>
+                        </td>
+                        <td class="is-editable is-loading is-l-right is-l-50">
+                            <span tabindex="0" role="button" aria-label="Edit">400,00 €</span>
+                        </td>
+                        <td class="is-loading is-l-right is-l-70">4 800,00 €</td>
+                        <td>
+                            <button type="button" aria-label="Supprimer Item" class="btn-delete"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="is-editable is-loading is-l-right is-l-75">
+                            <span tabindex="0" role="button" aria-label="Edit">
+                                <h3>Frais personnel n°8</h3>
+                            </span>
+                        </td>
+                        <td class="is-editable is-loading is-l-right is-l-50">
+                            <span tabindex="0" role="button" aria-label="Edit">200,00 €</span>
+                        </td>
+                        <td class="is-loading is-l-right is-l-70">2 400,00 €</td>
+                        <td>
+                            <button type="button" aria-label="Supprimer Item" class="btn-delete"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="is-editable is-loading is-l-right is-l-70">
+                            <span tabindex="0" role="button" aria-label="Edit">
+                                <h3>Frais personnel n°9</h3>
+                            </span>
+                        </td>
+                        <td class="is-editable is-loading is-l-right is-l-50">
+                            <span tabindex="0" role="button" aria-label="Edit">500,00 €</span>
+                        </td>
+                        <td class="is-loading is-l-right is-l-70">6 000,00 €</td>
+                        <td>
+                            <button type="button" aria-label="Supprimer Item" class="btn-delete"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="is-editable is-loading is-l-right is-l-75">
+                            <span tabindex="0" role="button" aria-label="Edit">
+                                <h3>Frais personnel n°10</h3>
+                            </span>
+                        </td>
+                        <td class="is-editable is-loading is-l-right is-l-50">
+                            <span tabindex="0" role="button" aria-label="Edit">300,00 €</span>
+                        </td>
+                        <td class="is-loading is-l-right is-l-70">3 600,00 €</td>
+                        <td>
+                            <button type="button" aria-label="Supprimer Item" class="btn-delete"></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <figure>
+                <figcaption id="personal-expenses-total-annual">Total Frais annuels</figcaption>
+                <span class="btn-secondary btn-s btn-cancel is-loading is-l-80" aria-labelledby="personal-expenses-total-annual">22 320,00 €</span>
+            </figure>
+            <div class="complementary" role="complementary">
+                <button aria-label="Ajouter Item" class="btn-tertiary btn-s">+ ajouter un frais</button>
+            </div>
+        </section>
+        <div class="salary-zone">
+            <section aria-labelledby="personal-incomes" class="table">
+                <h2 class="table-title" id="personal-incomes">Salaire aujourd'hui</h2>
+                <p id="table-caption" class="table-caption">Combien je gagne actuellement en salaire net par mois</p>
+                <table aria-labelledby="table-caption">
+                    <thead>
+                        <tr>
+                            <th>Intitulé</th>
+                            <th>Mensuel</th>
+                            <th>Annuel</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="">
+                                <h3>Salaire net</h3>
+                            </td>
+                            <td class="is-editable is-loading is-l-right is-l-50">
+                                <span tabindex="0" role="button" aria-label="Edit">3 000,00 €</span>
+                            </td>
+                            <td class="is-loading is-l-right is-l-70">36 000,00 €</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <figure>
+                    <figcaption id="personal-incomes-total-annual">Salaire annuel</figcaption>
+                    <span class="btn-secondary btn-s btn-cancel is-loading is-l-80" aria-labelledby="personal-incomes-total-annual">
+                        36 000,00 €</span>
+                </figure>
+                <div class="complementary" role="complementary">
+                    <button aria-label="Ajouter Item" class="btn-tertiary btn-s">+ ajouter un revenu</button>
+                </div>
+            </section>
+            <section aria-labelledby="balance-today" class="balance-section">
+                <div>
+                    <h2 class="balance-section-title" id="balance-today">Équilibre niveau de vie d'aujourd'hui</h2>
+                    <p class="balance-section-description">= Salaire annuel - frais annuels actuels</p>
+                </div>
+                <span class="btn-primary btn-s btn-success btn-cancel is-loading is-l-80 is-l-80 is-l-www">+ 13 680,00 €</span>
+            </section>
+            <section aria-labelledby="salary-targets" class="table">
+                <h2 class="table-title" id="salary-targets">Salaire demain</h2>
+                <p id="table-caption" class="table-caption">Ce que je vise comme rémunération avec ma future activité</p>
+                <table aria-labelledby="table-caption">
+                    <thead>
+                        <tr>
+                            <th>Intitulé</th>
+                            <th>Mensuel</th>
+                            <th>Annuel</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="">
+                                <h3>Salaire net envisagé</h3>
+                            </td>
+                            <td class="is-editable is-loading is-l-right is-l-45">
+                                <span tabindex="0" role="button" aria-label="Edit">600,00 €</span>
+                            </td>
+                            <td class="is-loading is-l-right is-l-70">7 200,00 €</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="">
+                                <h3>Salaire brut</h3>
+                            </td>
+                            <td class="is-loading is-l-right is-l-50">780,00 €</td>
+                            <td class="is-loading is-l-right is-l-75">9 360,00 €</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="">
+                                <h3>Cout total entreprise</h3>
+                            </td>
+                            <td class="is-loading is-l-right is-l-55">881,40 €</td>
+                            <td class="is-loading is-l-right is-l-80">10 576,80 €</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <figure>
+                    <figcaption id="salary-targets-total-annual">Salaire annuel net envisagé</figcaption>
+                    <span class="btn-secondary btn-s btn-cancel is-loading" aria-labelledby="salary-targets-total-annual">
+                        7 200,00 €</span>
+                </figure>
+            </section>
+            <section aria-labelledby="balance-tomorrow" class="balance-section">
+                <div>
+                    <h2 class="balance-section-title" id="balance-tomorrow">Équilibre niveau de vie de demain</h2>
+                    <p class="balance-section-description">= Salaire annuel net envisagé - frais annuels actuels</p>
+                </div>
+                <span class="btn-primary btn-s btn-danger btn-cancel is-loading is-l-80 is-l-www">- 15 120,00 €</span>
+            </section>
+        </div>
     </main>
 {% endblock %}

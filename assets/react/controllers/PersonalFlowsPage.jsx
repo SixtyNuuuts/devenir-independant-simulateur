@@ -6,6 +6,7 @@ import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
 import FinancialItemsTable from "./component/FinancialItemsTable";
 import AddFinancialItemModal from "./component/AddFinancialItemModal";
 import BalanceSection from "./component/BalanceSection";
+import f from "./utils/function";
 
 function PersonalFlowsPage({ simulationId }) {
   const {
@@ -43,8 +44,8 @@ function PersonalFlowsPage({ simulationId }) {
   });
 
   const [modalState, setModalState] = useState({
-    personalIncome: false,
-    personalExpense: false,
+    personalIncomes: false,
+    personalExpenses: false,
   });
 
   useEffect(() => {
@@ -73,8 +74,12 @@ function PersonalFlowsPage({ simulationId }) {
   }, []);
 
   const handleAddItemProcess = useCallback(async (type, item) => {
+    const formattedItem = {
+      name: f.formatValue(item.name, "text"),
+      value: f.formatValue(item.value, "financial-value"),
+    };
     const newItem = formatFinancialItemForCreate(
-      item,
+      formattedItem,
       simulationId,
       "personal",
       type === "personalIncomes"
@@ -171,8 +176,16 @@ function PersonalFlowsPage({ simulationId }) {
     if (result?.success) {
       setFinancialData((prevState) => ({
         ...prevState,
-        [type]: prevState[type].filter((item) => item.id !== itemId),
+        [type]: prevState[type].map((item) =>
+          item.id === itemId ? { ...item, isDeleting: true } : item
+        ),
       }));
+      setTimeout(() => {
+        setFinancialData((prevState) => ({
+          ...prevState,
+          [type]: prevState[type].filter((item) => item.id !== itemId),
+        }));
+      }, 300);
     } else {
       setFinancialData((prevState) => ({
         ...prevState,
@@ -198,90 +211,474 @@ function PersonalFlowsPage({ simulationId }) {
     return annualTotals.salaryTargets - annualTotals.personalExpenses;
   }, [annualTotals]);
 
-  if (
-    personalIncomesLoading ||
-    personalExpensesLoading ||
-    salaryTargetsLoading
-  ) {
-    return <div className="loading">Chargement...</div>;
-  }
-
-  if (personalIncomesError || personalExpensesError || salaryTargetsError) {
-    return <div>Une erreur est survenue lors du chargement des données.</div>;
-  }
-
   return (
     <>
-      <div className="title-description-zone">
-        <h1 className="title-1">Niveau de vie personnel</h1>
-        <p className="description-1">
-          Pour pouvoir vivre de votre future activité professionnelle il faut
-          que vous puissiez couvrir vos frais personnels en vous versant une
-          rémunération minimum
-        </p>
-      </div>
-      <FinancialItemsTable
-        financialItems={financialData.personalExpenses}
-        type="personal-expenses"
-        onAddFinancialItem={() => toggleModal("personalExpense", true)}
-        onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
-          handleUpdateItem("personalExpenses", itemId, fieldKey, newValue)
-        }
-        onDeleteFinancialItem={(itemId) =>
-          handleDeleteItem("personalExpenses", itemId)
-        }
-        onAnnualTotalChange={(annualTotal) =>
-          handleAnnualTotalChange("personalExpenses", annualTotal)
-        }
-      />
-      <FinancialItemsTable
-        financialItems={financialData.personalIncomes}
-        type="personal-incomes"
-        onAddFinancialItem={() => toggleModal("personalIncome", true)}
-        onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
-          handleUpdateItem("personalIncomes", itemId, fieldKey, newValue)
-        }
-        onDeleteFinancialItem={(itemId) =>
-          handleDeleteItem("personalIncomes", itemId)
-        }
-        onAnnualTotalChange={(annualTotal) =>
-          handleAnnualTotalChange("personalIncomes", annualTotal)
-        }
-      />
-      <BalanceSection
-        id="balance-today"
-        title="Équilibre niveau de vie d'aujourd'hui"
-        description="= Salaire annuel - frais annuels actuels"
-        balanceValue={personalBalanceToday}
-      />
-      <FinancialItemsTable
-        financialItems={financialData.salaryTargets}
-        type="salary-targets"
-        onAddFinancialItem={null}
-        onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
-          handleUpdateItem("salaryTargets", itemId, fieldKey, newValue)
-        }
-        onDeleteFinancialItem={null}
-        onAnnualTotalChange={(annualTotal) =>
-          handleAnnualTotalChange("salaryTargets", annualTotal)
-        }
-      />
-      <BalanceSection
-        id="balance-tomorrow"
-        title="Équilibre niveau de vie de demain"
-        description="= Salaire annuel net envisagé - frais annuels actuels"
-        balanceValue={personalBalanceTomorrow}
-      />
+      {personalExpensesLoading ? (
+        <>
+          <div className="title-description-zone">
+            <h1 className="title-1">Niveau de vie personnel</h1>
+            <p className="description-1">
+              Pour pouvoir vivre de votre future activité professionnelle il
+              faut que vous puissiez couvrir vos frais personnels en vous
+              versant une rémunération minimum
+            </p>
+          </div>
+          <section aria-labelledby="personal-expenses" className="table">
+            <h2 className="table-title" id="personal-expenses">
+              Frais personnels aujourd'hui
+            </h2>
+            <p id="table-caption" className="table-caption">
+              Combien je dépense par mois/an pour vivre actuellement
+            </p>
+            <table aria-labelledby="table-caption">
+              <thead>
+                <tr>
+                  <th>Intitulé</th>
+                  <th>Mensuel</th>
+                  <th>Annuel</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="is-editable is-loading is-l-right is-l-75">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Frais personnel n°1</h3>
+                    </span>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      900,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">10 800,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-right is-l-70">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Frais personnel n°2</h3>
+                    </span>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      400,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">4 800,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-right is-l-75">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Frais personnel n°3</h3>
+                    </span>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      200,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">2 400,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-right is-l-70">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Frais personnel n°4</h3>
+                    </span>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      500,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">6 000,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-right is-l-75">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Frais personnel n°5</h3>
+                    </span>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      300,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">3 600,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-right is-l-75">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Frais personnel n°6</h3>
+                    </span>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      900,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">10 800,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-right is-l-70">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Frais personnel n°7</h3>
+                    </span>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      400,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">4 800,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-right is-l-75">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Frais personnel n°8</h3>
+                    </span>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      200,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">2 400,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-right is-l-70">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Frais personnel n°9</h3>
+                    </span>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      500,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">6 000,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-right is-l-75">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Frais personnel n°10</h3>
+                    </span>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      300,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">3 600,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <figure>
+              <figcaption id="personal-expenses-total-annual">
+                Total Frais annuels
+              </figcaption>
+              <span
+                className="btn-secondary btn-s btn-cancel is-loading is-l-80"
+                aria-labelledby="personal-expenses-total-annual"
+              >
+                22 320,00 €
+              </span>
+            </figure>
+            <div className="complementary" role="complementary">
+              <button aria-label="Ajouter Item" className="btn-tertiary btn-s">
+                + ajouter un frais
+              </button>
+            </div>
+          </section>
+        </>
+      ) : (
+        <>
+          <div className="title-description-zone">
+            <h1 className="title-1">Niveau de vie personnel</h1>
+            <p className="description-1">
+              Pour pouvoir vivre de votre future activité professionnelle il
+              faut que vous puissiez couvrir vos frais personnels en vous
+              versant une rémunération minimum
+            </p>
+          </div>
+          <FinancialItemsTable
+            financialItems={financialData.personalExpenses}
+            type="personal-expenses"
+            onAddFinancialItem={() => toggleModal("personalExpenses", true)}
+            onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
+              handleUpdateItem("personalExpenses", itemId, fieldKey, newValue)
+            }
+            onDeleteFinancialItem={(itemId) =>
+              handleDeleteItem("personalExpenses", itemId)
+            }
+            onAnnualTotalChange={(annualTotal) =>
+              handleAnnualTotalChange("personalExpenses", annualTotal)
+            }
+          />
+        </>
+      )}
+      {personalIncomesLoading || salaryTargetsLoading ? (
+        <div className="salary-zone">
+          <section aria-labelledby="personal-incomes" className="table">
+            <h2 className="table-title" id="personal-incomes">
+              Salaire aujourd'hui
+            </h2>
+            <p id="table-caption" className="table-caption">
+              Combien je gagne actuellement en salaire net par mois
+            </p>
+            <table aria-labelledby="table-caption">
+              <thead>
+                <tr>
+                  <th>Intitulé</th>
+                  <th>Mensuel</th>
+                  <th>Annuel</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="">
+                    <h3>Salaire net</h3>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      3 000,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">36 000,00 €</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+            <figure>
+              <figcaption id="personal-incomes-total-annual">
+                Salaire annuel
+              </figcaption>
+              <span
+                className="btn-secondary btn-s btn-cancel is-loading is-l-80"
+                aria-labelledby="personal-incomes-total-annual"
+              >
+                36 000,00 €
+              </span>
+            </figure>
+            <div className="complementary" role="complementary">
+              <button aria-label="Ajouter Item" className="btn-tertiary btn-s">
+                + ajouter un revenu
+              </button>
+            </div>
+          </section>
+          <section aria-labelledby="balance-today" className="balance-section">
+            <div>
+              <h2 className="balance-section-title" id="balance-today">
+                Équilibre niveau de vie d'aujourd'hui
+              </h2>
+              <p className="balance-section-description">
+                = Salaire annuel - frais annuels actuels
+              </p>
+            </div>
+            <span className="btn-primary btn-s btn-success btn-cancel is-loading is-l-80 is-l-80 is-l-www">
+              + 13 680,00 €
+            </span>
+          </section>
+          <section aria-labelledby="salary-targets" className="table">
+            <h2 className="table-title" id="salary-targets">
+              Salaire demain
+            </h2>
+            <p id="table-caption" className="table-caption">
+              Ce que je vise comme rémunération avec ma future activité
+            </p>
+            <table aria-labelledby="table-caption">
+              <thead>
+                <tr>
+                  <th>Intitulé</th>
+                  <th>Mensuel</th>
+                  <th>Annuel</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="">
+                    <h3>Salaire net envisagé</h3>
+                  </td>
+                  <td className="is-editable is-loading is-l-right is-l-45">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      600,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">7 200,00 €</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td className="">
+                    <h3>Salaire brut</h3>
+                  </td>
+                  <td className="is-loading is-l-right is-l-50">780,00 €</td>
+                  <td className="is-loading is-l-right is-l-75">9 360,00 €</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td className="">
+                    <h3>Cout total entreprise</h3>
+                  </td>
+                  <td className="is-loading is-l-right is-l-55">881,40 €</td>
+                  <td className="is-loading is-l-right is-l-80">10 576,80 €</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+            <figure>
+              <figcaption id="salary-targets-total-annual">
+                Salaire annuel net envisagé
+              </figcaption>
+              <span
+                className="btn-secondary btn-s btn-cancel is-loading"
+                aria-labelledby="salary-targets-total-annual"
+              >
+                7 200,00 €
+              </span>
+            </figure>
+          </section>
+          <section
+            aria-labelledby="balance-tomorrow"
+            className="balance-section"
+          >
+            <div>
+              <h2 className="balance-section-title" id="balance-tomorrow">
+                Équilibre niveau de vie de demain
+              </h2>
+              <p className="balance-section-description">
+                = Salaire annuel net envisagé - frais annuels actuels
+              </p>
+            </div>
+            <span className="btn-primary btn-s btn-danger btn-cancel is-loading is-l-80 is-l-www">
+              - 15 120,00 €
+            </span>
+          </section>
+        </div>
+      ) : (
+        <>
+          <div className="salary-zone">
+            <FinancialItemsTable
+              financialItems={financialData.personalIncomes}
+              type="personal-incomes"
+              onAddFinancialItem={() => toggleModal("personalIncomes", true)}
+              onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
+                handleUpdateItem("personalIncomes", itemId, fieldKey, newValue)
+              }
+              onDeleteFinancialItem={(itemId) =>
+                handleDeleteItem("personalIncomes", itemId)
+              }
+              onAnnualTotalChange={(annualTotal) =>
+                handleAnnualTotalChange("personalIncomes", annualTotal)
+              }
+            />
+            <BalanceSection
+              id="balance-today"
+              title="Équilibre niveau de vie d'aujourd'hui"
+              description="= Salaire annuel - frais annuels actuels"
+              balanceValue={personalBalanceToday}
+            />
+            <FinancialItemsTable
+              financialItems={financialData.salaryTargets}
+              type="salary-targets"
+              onAddFinancialItem={null}
+              onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
+                handleUpdateItem("salaryTargets", itemId, fieldKey, newValue)
+              }
+              onDeleteFinancialItem={null}
+              onAnnualTotalChange={(annualTotal) =>
+                handleAnnualTotalChange("salaryTargets", annualTotal)
+              }
+            />
+            <BalanceSection
+              id="balance-tomorrow"
+              title="Équilibre niveau de vie de demain"
+              description="= Salaire annuel net envisagé - frais annuels actuels"
+              balanceValue={personalBalanceTomorrow}
+            />
+          </div>
+        </>
+      )}
       <AddFinancialItemModal
         type="personal-income"
-        isOpen={modalState.personalIncome}
-        onClose={() => toggleModal("personalIncome", false)}
+        isOpen={modalState.personalIncomes}
+        onClose={() => toggleModal("personalIncomes", false)}
         onSave={(item) => handleAddItemProcess("personalIncomes", item)}
       />
       <AddFinancialItemModal
         type="personal-expense"
-        isOpen={modalState.personalExpense}
-        onClose={() => toggleModal("personalExpense", false)}
+        isOpen={modalState.personalExpenses}
+        onClose={() => toggleModal("personalExpenses", false)}
         onSave={(item) => handleAddItemProcess("personalExpenses", item)}
       />
     </>

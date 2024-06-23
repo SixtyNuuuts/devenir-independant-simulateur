@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AddFinancialItemModalSpecifications } from "./specification/AddFinancialItemModalSpecifications";
+import f from "../utils/function";
+import classNames from "classnames";
 
 const AddProfessionalIncome = ({ type, isOpen, onClose, onSave }) => {
   const specification = AddFinancialItemModalSpecifications[type];
@@ -9,22 +11,17 @@ const AddProfessionalIncome = ({ type, isOpen, onClose, onSave }) => {
   }
   const { title, fields } = specification;
 
-  const [item, setItem] = useState(
-    fields.reduce(
-      (acc, field) => ({
-        ...acc,
-        [field.name]: "",
-      }),
-      {}
-    )
-  );
+  const initializeItemState = () => {
+    return fields.reduce((acc, field) => {
+      acc[field.name] = field.initValue || "";
+      return acc;
+    }, {});
+  };
+
+  const [item, setItem] = useState(initializeItemState);
 
   const resetForm = () => {
-    const resetItem = {};
-    fields.forEach((field) => {
-      resetItem[field.name] = "";
-    });
-    setItem(resetItem);
+    setItem(initializeItemState());
   };
 
   useEffect(() => {
@@ -33,9 +30,28 @@ const AddProfessionalIncome = ({ type, isOpen, onClose, onSave }) => {
     }
   }, [isOpen]);
 
-  const handleChange = (e) => {
+  const debounceTimeoutRef = useRef(null);
+
+  const debouncedHandleChange = (fieldName, fieldValue, fieldType) => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    if (fieldValue !== "") {
+      const formatedValue = f.formatValue(fieldValue, fieldType);
+      debounceTimeoutRef.current = setTimeout(() => {
+        setItem((prev) => ({
+          ...prev,
+          [fieldName]: formatedValue === ".00" ? "00.00" : formatedValue,
+        }));
+      }, 900);
+    }
+  };
+
+  const handleChange = (e, fieldType) => {
     const { name: fieldName, value: fieldValue } = e.target;
     setItem((prev) => ({ ...prev, [fieldName]: fieldValue }));
+    debouncedHandleChange(fieldName, fieldValue, fieldType);
   };
 
   const handleSubmit = (e) => {
@@ -43,28 +59,37 @@ const AddProfessionalIncome = ({ type, isOpen, onClose, onSave }) => {
     onSave(item);
   };
 
+  const handleBackgroundClick = (e) => {
+    if (e.target.className === "modal") {
+      onClose();
+    }
+  };
+
   return isOpen ? (
-    <div className="modal">
+    <div className="modal" onClick={handleBackgroundClick}>
       <div className="modal-content">
-        <h2>{title}</h2>
+        <span className="cross" onClick={onClose}></span>
+        <p className="modal-title">{title}</p>
         <form onSubmit={handleSubmit}>
           {fields.map((field) => (
-            <label key={field.name}>
-              {field.label}:
+            <label key={field.name} className="input">
               <input
-                type={field.type}
+                type={
+                  ["financial-value"].includes(field.type) ? "text" : field.type
+                }
                 name={field.name}
                 value={item[field.name]}
-                onChange={handleChange}
+                className={classNames({
+                  filled: item[field.name],
+                })}
+                onChange={(e) => handleChange(e, field.type)}
               />
+              <span className="label">{field.label}</span>
             </label>
           ))}
-          <div>
-            <button type="submit">Valider</button>
-            <button type="button" onClick={onClose}>
-              Annuler
-            </button>
-          </div>
+          <button className="btn-primary btn-l" type="submit">
+            Valider
+          </button>
         </form>
       </div>
     </div>

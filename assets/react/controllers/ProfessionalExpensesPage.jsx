@@ -5,6 +5,7 @@ import useGetFinancialItems from "./hook/useGetFinancialItems";
 import useCreateFinancialItem from "./hook/useCreateFinancialItem";
 import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
 import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
+import f from "./utils/function";
 
 function ProfessionalExpensesPage({ simulationId }) {
   const {
@@ -37,8 +38,12 @@ function ProfessionalExpensesPage({ simulationId }) {
   }, []);
 
   const onAddFinancialItemProcess = useCallback(async (item) => {
+    const formattedItem = {
+      name: f.formatValue(item.name, "text"),
+      value: f.formatValue(item.value, "financial-value"),
+    };
     const newItem = formatFinancialItemForCreate(
-      item,
+      formattedItem,
       simulationId,
       "professional",
       "expense"
@@ -115,8 +120,15 @@ function ProfessionalExpensesPage({ simulationId }) {
     const result = await deleteFinancialItem(itemId);
     if (result?.success) {
       setProfessionalExpenses((currentItems) =>
-        currentItems.filter((item) => item.id !== itemId)
+        currentItems.map((item) =>
+          item.id === itemId ? { ...item, isDeleting: true } : item
+        )
       );
+      setTimeout(() => {
+        setProfessionalExpenses((currentItems) =>
+          currentItems.filter((item) => item.id !== itemId)
+        );
+      }, 300);
     } else {
       // Gérer l'erreur
     }
@@ -130,9 +142,452 @@ function ProfessionalExpensesPage({ simulationId }) {
   return (
     <>
       {professionalExpensesLoading ? (
-        <div>Chargement...</div>
-      ) : professionalExpensesError ? (
-        <div>Une erreur est survenue lors du chargement des données.</div>
+        <>
+          <h1 className="title-1 hidden-mobile">Charges</h1>
+          <section aria-labelledby="charges" className="table">
+            <h2 className="table-title" id="charges">
+              Charges par mois
+            </h2>
+            <p id="table-caption" className="table-caption">
+              Combien je vais dépenser par poste et par mois pour mon activité
+            </p>
+            <table aria-labelledby="table-caption">
+              <thead>
+                <tr>
+                  <th>Intitulé</th>
+                  <th>janv.</th>
+                  <th>févr.</th>
+                  <th>mars</th>
+                  <th>avr.</th>
+                  <th>mai</th>
+                  <th>juin</th>
+                  <th>juil.</th>
+                  <th>août</th>
+                  <th>sept.</th>
+                  <th>oct.</th>
+                  <th>nov.</th>
+                  <th>déc.</th>
+                  <th>Total ANNUEL</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="is-editable is-loading is-l-70">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Charge professionnelle n°1</h3>
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      999 999,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      999 999,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      300,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">
+                    2 010 098,00 €
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-75">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Charge professionnelle n°2</h3>
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      800,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      850,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      900,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      950,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 000,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 050,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 100,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 150,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 250,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 300,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 350,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">12 950,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-70">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Charge professionnelle n°3</h3>
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      500,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      550,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      600,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      650,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      700,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      750,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      800,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      850,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      900,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      950,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 000,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      1 050,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">10 350,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-75">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Charge professionnelle n°4</h3>
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      300,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      350,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      400,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      450,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      500,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      550,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      600,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      650,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      700,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      750,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      800,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      850,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">6 600,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="is-editable is-loading is-l-70">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      <h3>Charge professionnelle n°5</h3>
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      200,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      250,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      300,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      350,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      400,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      450,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      500,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      550,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      600,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-55">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      650,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      700,00 €
+                    </span>
+                  </td>
+                  <td className="editable is-loading is-l-right is-l-50">
+                    <span tabIndex="0" role="button" aria-label="Edit">
+                      750,00 €
+                    </span>
+                  </td>
+                  <td className="is-loading is-l-right is-l-70">5 950,00 €</td>
+                  <td>
+                    <button
+                      type="button"
+                      aria-label="Supprimer Item"
+                      className="btn-delete"
+                    ></button>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Sous total HT</th>
+                  <th className="is-loading is-l-right is-l-70">1 400,00 €</th>
+                  <th className="is-loading is-l-right is-l-75">1 550,00 €</th>
+                  <th className="is-loading is-l-right is-l-70">550,00 €</th>
+                  <th className="is-loading is-l-right is-l-75">
+                    1 000 199,00 €
+                  </th>
+                  <th className="is-loading is-l-right is-l-75">
+                    1 000 399,00 €
+                  </th>
+                  <th className="is-loading is-l-right is-l-70">1 600,00 €</th>
+                  <th className="is-loading is-l-right is-l-75">1 400,00 €</th>
+                  <th className="is-loading is-l-right is-l-70">1 800,00 €</th>
+                  <th className="is-loading is-l-right is-l-70">1 900,00 €</th>
+                  <th className="is-loading is-l-right is-l-75">1 400,00 €</th>
+                  <th className="is-loading is-l-right is-l-70">2 000,00 €</th>
+                  <th className="is-loading is-l-right is-l-70">1 300,00 €</th>
+                  <th className="is-loading is-l-right is-l-80">
+                    2 015 498,00 €
+                  </th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+            <figure>
+              <figcaption id="charges-total-annual">
+                Charges totales Année 1
+              </figcaption>
+              <span
+                className="btn-secondary btn-s btn-cancel is-loading is-l-80"
+                aria-labelledby="charges-total-annual"
+              >
+                - 2 015 498,00 €
+              </span>
+            </figure>
+            <div className="complementary" role="complementary">
+              <button aria-label="Ajouter Item" className="btn-tertiary btn-s">
+                + ajouter
+              </button>
+            </div>
+          </section>
+        </>
       ) : (
         <>
           <h1 className="title-1 hidden-mobile">Charges</h1>

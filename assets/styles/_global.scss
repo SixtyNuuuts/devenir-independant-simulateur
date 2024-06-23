@@ -26,18 +26,17 @@ body {
 
     main {
         overflow: hidden;
-        max-width: 125rem;
         margin: auto;
         margin-top: 0.7rem;
         min-height: calc(100vh - 20.39rem);
 
         .title-description-zone,
-        >[aria-labelledby="personal-expenses"],
-        >[aria-labelledby="personal-incomes"],
-        >[aria-labelledby="salary-targets"],
-        >[aria-labelledby="products"],
-        >[aria-labelledby="balance-today"],
-        >[aria-labelledby="balance-tomorrow"] {
+        [aria-labelledby="personal-expenses"],
+        [aria-labelledby="personal-incomes"],
+        [aria-labelledby="salary-targets"],
+        [aria-labelledby="products"],
+        [aria-labelledby="balance-today"],
+        [aria-labelledby="balance-tomorrow"] {
             @media (min-width: 500px) {
                 max-width: 40rem;
                 padding: 1.9rem 0.5rem;
@@ -55,6 +54,7 @@ body {
             @media (min-width: $desktop-minwidth) {
                 max-width: initial;
                 padding: 2.3rem 1.5rem;
+                padding-right: 1.8rem;
 
                 &:last-child {
                     margin-bottom: 0;
@@ -62,13 +62,44 @@ body {
             }
         }
 
-        >[aria-labelledby="personal-expenses"],
-        >[aria-labelledby="personal-incomes"],
-        >[aria-labelledby="salary-targets"],
-        >[aria-labelledby="balance-today"],
-        >[aria-labelledby="balance-tomorrow"] {
+        [aria-labelledby="personal-expenses"],
+        [aria-labelledby="personal-incomes"],
+        [aria-labelledby="salary-targets"],
+        [aria-labelledby="balance-today"],
+        [aria-labelledby="balance-tomorrow"] {
             @media (min-width: 500px) {
                 margin-bottom: 1.5rem;
+            }
+        }
+
+        @media (min-width: 900px) {
+            &.personal-flows-page {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: normal;
+                align-content: space-between;
+                justify-content: center;
+
+                .title-description-zone {
+                    width: 100%;
+                    min-width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    margin-bottom: 1rem;
+
+                    .description-1 {
+                        max-width: 43rem;
+                    }
+                }
+
+                >[aria-labelledby="personal-expenses"] {
+                    margin: 0;
+                    margin-right: 3rem;
+                    margin-bottom: 3rem;
+                }
             }
         }
 
@@ -79,12 +110,22 @@ body {
             flex-direction: column;
             align-items: center;
             min-height: calc(100vh - 21.39rem);
+
+            &.personal-flows-page {
+                .title-description-zone {
+                    margin-bottom: 2.2rem;
+                }
+
+                .title-1 {
+                    margin-bottom: 1rem;
+                }
+            }
         }
 
         .title-1 {
             font-size: $global-title-1-font-size-mobile;
             margin: 0;
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem;
 
             &.hidden-mobile {
                 display: none;
@@ -97,6 +138,7 @@ body {
             @media (min-width: $desktop-minwidth) {
                 font-size: $global-title-1-font-size-desktop;
                 text-align: center;
+                margin-bottom: 2rem;
             }
         }
 
@@ -117,6 +159,7 @@ body {
             @media (min-width: 500px) {
                 background-color: $transparent;
                 border: none;
+                padding: 1.5rem 2.6rem;
             }
 
             @media (min-width: $desktop-minwidth) {
@@ -158,6 +201,10 @@ body {
                 max-width: 40rem;
                 padding: 1rem 2rem;
             }
+
+            @media (min-width: $desktop-minwidth) {
+                max-width: 41.2rem;
+            }
         }
 
         &[aria-labelledby="balance-tomorrow"] {
@@ -188,6 +235,7 @@ body {
 
                 @media (min-width: $desktop-minwidth) {
                     font-size: $global-balance-section-title-font-size-desktop;
+                    max-width: 100%;
                 }
             }
 
@@ -200,6 +248,7 @@ body {
 
                 @media (min-width: $desktop-minwidth) {
                     font-size: $global-balance-section-description-font-size-desktop;
+                    max-width: 100%;
                 }
             }
         }
@@ -241,6 +290,212 @@ body {
 
         a {
             text-decoration: underline;
+        }
+    }
+
+    .is-loading {
+        position: relative;
+        color: transparent !important;
+
+        >* {
+            opacity: 0;
+        }
+
+        &::before {
+            content: '\00a0';
+            display: block;
+            position: absolute;
+            top: 27.5%;
+            left: 10%;
+            height: 45%;
+            width: 30%;
+            border-radius: 0.5rem;
+            animation-duration: 2.2s;
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+            animation-name: shimmer;
+            animation-timing-function: linear;
+            background: linear-gradient(to right, #ebebeb 8%, #f1f1f1 18%, #ebebeb 33%);
+            background-size: 1200px 100%;
+        }
+
+        &.is-l-right::before {
+            left: auto;
+            right: 10%;
+        }
+
+        &.is-l-5::before {
+            width: 5%;
+        }
+
+        &.is-l-10::before {
+            width: 10%;
+        }
+
+        &.is-l-15::before {
+            width: 15%;
+        }
+
+        &.is-l-20::before {
+            width: 20%;
+        }
+
+        &.is-l-25::before {
+            width: 25%;
+        }
+
+        &.is-l-30::before {
+            width: 30%;
+        }
+
+        &.is-l-35::before {
+            width: 35%;
+        }
+
+        &.is-l-40::before {
+            width: 40%;
+        }
+
+        &.is-l-45::before {
+            width: 45%;
+        }
+
+        &.is-l-50::before {
+            width: 50%;
+        }
+
+        &.is-l-55::before {
+            width: 55%;
+        }
+
+        &.is-l-60::before {
+            width: 60%;
+        }
+
+        &.is-l-65::before {
+            width: 65%;
+        }
+
+        &.is-l-70::before {
+            width: 70%;
+        }
+
+        &.is-l-75::before {
+            width: 75%;
+        }
+
+        &.is-l-80::before {
+            width: 80%;
+        }
+
+        &.is-l-85::before {
+            width: 85%;
+        }
+
+        &.is-l-90::before {
+            width: 90%;
+        }
+
+        &.is-l-95::before {
+            width: 95%;
+        }
+
+        &.is-l-100::before {
+            width: 100%;
+        }
+
+        &.is-l-www {
+            &.btn-primary {
+                background-color: #C7CBD5;
+                color: #FFFFFF;
+                border-color: #C7CBD5;
+                opacity: 0.7;
+                cursor: default;
+            }
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -100% 0;
+        }
+
+        100% {
+            background-position: 100% 0;
+        }
+    }
+
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.7);
+        -webkit-backdrop-filter: blur(.3rem);
+        backdrop-filter: blur(.3rem);
+        z-index: 1000;
+        transition: opacity 0.2s ease-in-out;
+        padding: 0 2rem;
+
+        .modal-content {
+            background: $white;
+            padding: 2.6rem 1.7rem;
+            padding-bottom: 2.3rem;
+            border-radius: 0.5rem;
+            position: relative;
+            width: 100%;
+            max-width: 35.5rem;
+
+            .cross {
+                position: absolute;
+                right: 1.2rem;
+                top: -3.6rem;
+                width: 1.8rem;
+                height: 1.8rem;
+                cursor: pointer;
+
+                &::before,
+                &::after {
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    height: 0.1rem;
+                    background-color: $white;
+                    top: 50%;
+                    left: 0;
+                }
+
+                &::before {
+                    transform: rotate(135deg);
+                }
+
+                &::after {
+                    transform: rotate(-135deg);
+                }
+            }
+
+            .modal-title {
+                font-size: 1.6rem;
+                font-weight: bold;
+                margin: 0;
+                margin-bottom: 2.8rem;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .btn-primary {
+                width: 100%;
+                max-width: 25.8rem;
+                margin: auto;
+            }
         }
     }
 }

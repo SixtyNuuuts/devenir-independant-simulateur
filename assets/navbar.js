@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const accountDropdown = document.getElementById('accountDropdown');
 
     burgerMenuBtn.addEventListener('click', () => {
-        console.log('clicked');
         burgerMenuBtn.classList.toggle('open');
         burgerMenu.classList.toggle('open');
         menuOverlay.classList.toggle('open');
