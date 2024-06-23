@@ -1,12 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Krizalid | Envie de tout plaquer pour changer de job ? Change de vie et lance une activité rentable !{% endblock %}
+{% block title %}Krizalid | {{ activity.title }}{% endblock %}
+{% block description %}{{ activity.description|striptags }}{% endblock %}
+
+{% block body_attributes %}class="body-home"{% endblock %}
 
 {% block navbar %}
     {% include 'partial/_navbar.html.twig' with {'activitySlug': activity.slug, 'simulationToken': simulationToken} %}
 {% endblock %}
 
 {% block body %}
-    <div {{ react_component('HomePage', { 'simulationId': simulationId, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw, 'isAdminActivityContext': app.user and 'ROLE_ADMIN' in app.user.roles and simulationToken is same as('default') }) }}>
-    </div>
+    <main class="home" {{ react_component('HomePage', { 'simulationId': simulationId, 'simulationToken': simulationToken, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw, 'isAdminActivityContext': app.user and 'ROLE_ADMIN' in app.user.roles and simulationToken is same as('default') }) }}>
+    </main>
 {% endblock %}

@@ -1,0 +1,258 @@
+header {
+    background-color: $primary;
+    display: flex;
+    min-height: 15rem;
+
+    div:first-child {
+        display: flex;
+        flex-direction: column;
+        padding: 2.9rem 1.9rem;
+
+        .home-title {
+            color: $white;
+            margin: 0;
+            font-weight: bold;
+            font-size: 1.7rem;
+            line-height: 1.1;
+            width: 93%;
+            margin-bottom: 1rem;
+        }
+
+        .home-objectives {
+            color: $white;
+            margin: 0;
+            font-size: 1.1rem;
+            line-height: 1.2;
+            padding-left: 1.2rem;
+
+            li {
+                margin-bottom: 0.1rem;
+
+                &::before {
+                    content: url("data:image/svg+xml,%3Csvg version='1.1' id='Calque_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 28 18.4' style='enable-background:new 0 0 28 18.4;' xml:space='preserve' fill='%23C0C0C0'%3E%3Cpath d='M28,0c-7.8,5.3-12,12.8-14.3,17.6c-0.5,1-1.9,1.1-2.4,0.1C6.9,9.9,0,6.3,0,6.3c7.3,0,10.4,3.2,12.4,5.3 C15.6,5.3,23.9,1.1,28,0z'/%3E%3C/svg%3E%0A");
+                    display: inline-block;
+                    width: 1.1em;
+                    margin-left: -1em;
+                    margin-right: 0.4rem;
+                }
+            }
+        }
+
+    }
+
+    figure {
+        margin: 0;
+        width: 100%;
+        max-width: 15.9rem;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+.home-main {
+    display: flex;
+    flex-direction: column;
+
+    .home-main-header {
+        display: flex;
+        flex-direction: column;
+
+        .home-main-header-salary {
+            display: flex;
+            flex-direction: column;
+            padding: 2.5rem 2rem;
+
+            .salary-section {
+                margin-bottom: 4.4rem;
+
+                .salary-section-title {
+                    font-size: 2rem;
+                    font-weight: bold;
+                    margin: 0;
+                    margin-bottom: 0.8rem;
+                }
+
+                .salary-input {
+                    background-color: $gray-light;
+                    border-radius: 0.5rem;
+                    padding: 1.5rem;
+                    display: flex;
+                    flex-wrap: wrap;
+                    padding-right: 2.4rem;
+                    padding-bottom: 2rem;
+                    margin-bottom: 0.4rem;
+
+                    label {
+                        margin-bottom: 1rem;
+                        width: 100%;
+                        max-width: 61%;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    .mensual-salary {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-end;
+                        max-width: 15.4rem;
+                        margin-left: 1.5rem;
+
+                        .btn-primary {
+                            margin-bottom: 0.8rem;
+                            min-width: 15.4rem;
+                        }
+
+                        .salary-controls {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            position: relative;
+                            width: 100%;
+
+                            button {
+                                position: absolute;
+                                top: -1px;
+                                right: -18px;
+                                width: 0rem;
+                                height: 1rem;
+                                font-size: 1.2rem;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                border-radius: 6px;
+                                background-color: $transparent;
+                                border: 1px solid $gray-light;
+                                color: $gray-light;
+                                margin-left: 0.2rem;
+
+                                &:first-child {
+                                    font-size: 2rem;
+                                    margin-right: 0.2rem;
+                                    margin-left: 0;
+                                    right: auto;
+                                    left: -18px;
+                                }
+                            }
+
+                            input[type="range"] {
+                                -webkit-appearance: none;
+                                width: 100%;
+                                height: 8px;
+                                background: transparent;
+                            }
+
+                            input[type="range"]::-webkit-slider-runnable-track {
+                                width: 100%;
+                                height: 8px;
+                                cursor: pointer;
+                                background: #ccd9f9;
+                                border-radius: 5px;
+                            }
+
+                            input[type="range"]::-webkit-slider-thumb {
+                                -webkit-appearance: none;
+                                height: 15px;
+                                width: 15px;
+                                background: $primary;
+                                cursor: pointer;
+                                border-radius: 50%;
+                                margin-top: -4px;
+                            }
+
+                            input[type="range"]::-moz-range-track {
+                                width: 100%;
+                                height: 8px;
+                                cursor: pointer;
+                                background: #ccd9f9;
+                                border-radius: 5px;
+                            }
+
+                            input[type="range"]::-moz-range-thumb {
+                                height: 15px;
+                                width: 15px;
+                                background: $primary;
+                                border: none;
+                                cursor: pointer;
+                                border-radius: 50%;
+                            }
+
+                            input[type="range"]::-ms-track {
+                                width: 100%;
+                                height: 8px;
+                                cursor: pointer;
+                                background: transparent;
+                                border-color: transparent;
+                                color: transparent;
+                            }
+
+                            input[type="range"]::-ms-fill-lower {
+                                background: #ccd9f9;
+                                border-radius: 5px;
+                            }
+
+                            input[type="range"]::-ms-fill-upper {
+                                background: #ccd9f9;
+                                border-radius: 5px;
+                            }
+
+                            input[type="range"]::-ms-thumb {
+                                height: 14px;
+                                width: 14px;
+                                background: $primary;
+                                cursor: pointer;
+                                border-radius: 50%;
+                                margin-top: 0;
+                            }
+
+                            input[type="range"]:focus::-webkit-slider-runnable-track {
+                                background: #b9ccfb;
+                            }
+
+                            input[type="range"]:active::-webkit-slider-runnable-track {
+                                background: #b9ccfb;
+                            }
+                        }
+                    }
+
+                    .annual-salary {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-end;
+                        font-size: 1.4rem;
+                        flex-grow: 1;
+
+                        .salary-info {
+                            font-size: 1.1rem;
+                        }
+                    }
+                }
+
+                .personal-expenses {
+                    margin-bottom: 0.5rem;
+                    padding-left: 1.5rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    .btn-tertiary.btn-s {
+                        font-size: 1.4rem;
+                        color: $black;
+                    }
+                }
+
+                .personal-balance {
+                    padding-left: 1.5rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+
+            }
+        }
+    }
+}

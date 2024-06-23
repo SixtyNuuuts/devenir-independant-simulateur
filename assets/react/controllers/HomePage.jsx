@@ -17,7 +17,12 @@ import {
 } from "./component/Admin/Activity/adminActivityHandlers";
 import f from "./utils/function";
 
-function HomePage({ simulationId, activityData, isAdminActivityContext }) {
+function HomePage({
+  simulationId,
+  simulationToken,
+  activityData,
+  isAdminActivityContext,
+}) {
   const {
     financialItems: salaryCurrentData,
     isLoading: salaryCurrentLoading,
@@ -200,8 +205,8 @@ function HomePage({ simulationId, activityData, isAdminActivityContext }) {
         ) : (
           <>
             <div>
-              <h1>{activity.title}</h1>
-              <ul>
+              <h1 className="home-title">{activity.title}</h1>
+              <ul className="home-objectives">
                 {activity.objectives?.map((objective, index) => (
                   <li key={index}>{objective}</li>
                 ))}
@@ -227,9 +232,9 @@ function HomePage({ simulationId, activityData, isAdminActivityContext }) {
           </>
         )}
       </header>
-      <div>
-        <div>
-          <section>
+      <div className="home-main">
+        <div className="home-main-header">
+          <div className="home-main-header-salary">
             <SalarySection
               id="salary-current"
               title="Combien je gagne aujourd'hui ?"
@@ -239,6 +244,8 @@ function HomePage({ simulationId, activityData, isAdminActivityContext }) {
               onUpdateSalary={(newValue) =>
                 handleUpdateSalary("salaryCurrent", newValue)
               }
+              activitySlug={activity.slug}
+              simulationToken={simulationToken}
             />
             <SalarySection
               id="salary-target"
@@ -249,8 +256,10 @@ function HomePage({ simulationId, activityData, isAdminActivityContext }) {
               onUpdateSalary={(newValue) =>
                 handleUpdateSalary("salaryTarget", newValue)
               }
+              activitySlug={activity.slug}
+              simulationToken={simulationToken}
             />
-          </section>
+          </div>
           <section aria-labelledby="activity-profitability">
             <h2 id="activity-profitability">
               Rentabilité de ma future activité
@@ -259,20 +268,41 @@ function HomePage({ simulationId, activityData, isAdminActivityContext }) {
               Quels produits et combien je projette d'en vendre par mois/ans
             </p>
             <a
-              href=""
-              className={f.getCssClassForValue(
+              className={`btn-primary btn-xl btn-${f.getCssClassForValue(
                 professionalBalanceFutureActivity
-              )}
+              )} btn-cancel`}
+              href={`/${activity.slug}/profits/${simulationToken}`}
             >
-              <span>
+              <span className="btn-financial-value">
+                <span className="btn-icon">
+                  {" "}
+                  {f.getSignForValue(professionalBalanceFutureActivity) === "-"
+                    ? "👎"
+                    : "👍"}
+                </span>
+
                 {`${f.getSignForValue(
                   professionalBalanceFutureActivity
                 )} ${f.displayValue(
                   Math.abs(professionalBalanceFutureActivity),
                   "financial-value-rounded"
-                )} `}
-                <span className="balance-devise">€</span>
-                <span className="balance-info">/ an</span>
+                )}`}
+              </span>
+              <span className="btn-financial-currency">€</span>
+              <span className="btn-financial-period">/ an</span>
+              <span className="btn-arrow">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 50 50"
+                  width="50px"
+                  height="50px"
+                >
+                  <path
+                    d="M36.8,23.2l-20-20c-0.5-0.5-1.1-0.8-1.8-0.8c-1,0-1.9,0.6-2.3,1.6c-0.4,0.9-0.2,2,0.6,2.7L31.5,25L13.2,43.2
+	c-0.7,0.6-0.9,1.6-0.7,2.4c0.2,0.9,0.9,1.6,1.8,1.8c0.2,0.1,0.4,0.1,0.6,0.1c0.7,0,1.3-0.3,1.8-0.8l20-20
+	C37.7,25.8,37.7,24.2,36.8,23.2z"
+                  ></path>{" "}
+                </svg>
               </span>
             </a>
             <FinancialItemsTable
@@ -284,6 +314,8 @@ function HomePage({ simulationId, activityData, isAdminActivityContext }) {
               onAnnualTotalChange={(annualTotal) =>
                 handleAnnualTotalChange("professionalIncomes", annualTotal)
               }
+              activitySlug={activity.slug}
+              simulationToken={simulationToken}
             />
             <FinancialItemsTable
               financialItems={financialData.professionalExpenses}
@@ -294,12 +326,16 @@ function HomePage({ simulationId, activityData, isAdminActivityContext }) {
               onAnnualTotalChange={(annualTotal) =>
                 handleAnnualTotalChange("professionalExpenses", annualTotal)
               }
+              activitySlug={activity.slug}
+              simulationToken={simulationToken}
             />
             <BalanceSection
               id="balance-future-activity"
               title={null}
               description="Profits annuels - charges annuelles ="
               balanceValue={professionalBalanceFutureActivity}
+              activitySlug={activity.slug}
+              simulationToken={simulationToken}
             />
           </section>
         </div>

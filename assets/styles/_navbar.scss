@@ -13,8 +13,10 @@
     margin: auto;
     border-radius: 0 0 0.5rem 0.5rem;
     border: 1px solid $gray-medium;
+    border-bottom: none;
 
     @media (min-width: $desktop-minwidth) {
+        border-bottom: 1px solid $gray-medium;
         min-height: 9.9rem;
         background-color: $white;
         flex-wrap: nowrap;

@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>{% block title %}Krizalid | Envie de tout plaquer pour changer de job ? Change de vie et lance une activité rentable !{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <meta name="description" content="{% block description %}Le premier simulateur de rentabilité d'entreprise en ligne gratuit ! Créé ton business plan avant de lancer ton activité{% endblock %}">
         <link rel="icon" href="{{ asset('images/favicon.ico') }}"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         {% block stylesheets %}
@@ -14,7 +15,7 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
-    <body>
+    <body {% block body_attributes %}{% endblock %}>
         {% block navbar %}
             {% include 'partial/_navbar.html.twig' %}
         {% endblock %}

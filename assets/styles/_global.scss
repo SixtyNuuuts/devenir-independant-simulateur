@@ -5,6 +5,10 @@ body {
 
     background-color: $gray-light;
 
+    &.body-home {
+        background-color: $white;
+    }
+
     &.overflow-hidden {
         overflow: hidden;
     }
@@ -29,6 +33,10 @@ body {
         margin: auto;
         margin-top: 0.7rem;
         min-height: calc(100vh - 20.39rem);
+
+        &.home {
+            margin-top: 0;
+        }
 
         .title-description-zone,
         [aria-labelledby="personal-expenses"],

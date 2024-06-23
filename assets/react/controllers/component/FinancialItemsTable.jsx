@@ -10,6 +10,8 @@ const FinancialItemsTable = ({
   onUpdateFinancialItem,
   onDeleteFinancialItem,
   onAnnualTotalChange,
+  activitySlug,
+  simulationToken,
 }) => {
   const specification = tableSpecifications[type];
   if (!specification) {
@@ -103,17 +105,34 @@ const FinancialItemsTable = ({
           <figcaption id={`${type}-total-annual`}>
             {annualTotalLabel ?? "Total Année"}
           </figcaption>
-          <span
-            className="btn-secondary btn-s btn-cancel"
-            aria-labelledby={`${type}-total-annual`}
-          >
-            {annualTotal === 0
-              ? 0
-              : `${annualTotalSign} ${f.displayValue(
-                  annualTotal,
-                  "financial-value"
-                )}`}
-          </span>
+          {activitySlug && simulationToken ? (
+            <a
+              className="btn-secondary btn-s"
+              aria-labelledby={`${type}-total-annual`}
+              href={`/${activitySlug}/${
+                type === "profits-view" ? "profits" : "charges"
+              }/${simulationToken}`}
+            >
+              {annualTotal === 0
+                ? 0
+                : `${annualTotalSign} ${f.displayValue(
+                    annualTotal,
+                    "financial-value"
+                  )}`}
+            </a>
+          ) : (
+            <span
+              className="btn-secondary btn-s btn-cancel"
+              aria-labelledby={`${type}-total-annual`}
+            >
+              {annualTotal === 0
+                ? 0
+                : `${annualTotalSign} ${f.displayValue(
+                    annualTotal,
+                    "financial-value"
+                  )}`}
+            </span>
+          )}
         </figure>
       )}
       {(addBtn || asteriskLegendText) && (
