@@ -20,8 +20,9 @@ const BalanceSection = ({
       <a
         className={`btn-primary btn-s btn-${f.getCssClassForValue(
           balanceValue
-        )} btn-cancel`}
+        )}`}
         href={`/${activitySlug}/profits/${simulationToken}`}
+        aria-label={`Voir les détails de ${title}`}
       >
         {`${f.getSignForValue(balanceValue)} ${f.displayValue(
           Math.abs(balanceValue),

@@ -203,7 +203,8 @@
         }
     }
 
-    &[aria-labelledby="profits"] {
+    &[aria-labelledby="profits"],
+    &[aria-labelledby="profits-view"] {
         table {
             text-align: center;
 

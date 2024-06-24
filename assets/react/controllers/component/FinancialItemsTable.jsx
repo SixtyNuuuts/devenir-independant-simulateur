@@ -112,6 +112,7 @@ const FinancialItemsTable = ({
               href={`/${activitySlug}/${
                 type === "profits-view" ? "profits" : "charges"
               }/${simulationToken}`}
+              aria-label={`Voir les détails de ${annualTotalLabel}`}
             >
               {annualTotal === 0
                 ? 0

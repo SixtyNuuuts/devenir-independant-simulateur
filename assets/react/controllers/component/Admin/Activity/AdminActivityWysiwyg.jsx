@@ -4,10 +4,10 @@ import "react-quill/dist/quill.snow.css";
 
 const AdminActivityWysiwyg = ({ value, onChange }) => {
   const modules = {
-    toolbar: [["bold", "italic"]],
+    toolbar: [[{ header: [1, 2, 3, false] }], ["bold", "italic"]],
   };
 
-  const formats = ["bold", "italic"];
+  const formats = ["header", "bold", "italic"];
 
   return (
     <section>

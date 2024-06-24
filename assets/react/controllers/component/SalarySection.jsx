@@ -77,6 +77,9 @@ const SalarySection = ({
             href={`/${activitySlug}/niveau-de-vie/${simulationToken}#${
               id === "salary-current" ? "personal-incomes" : "salary-targets"
             }`}
+            aria-label={`Modifier le salaire mensuel ${
+              id === "salary-current" ? "actuel" : "cible"
+            }`}
           >
             <span className="btn-financial-value">
               {f.displayValue(
@@ -102,7 +105,12 @@ const SalarySection = ({
             </span>
           </a>
           <div className="salary-controls">
-            <button onClick={() => handleButtonClick(-1)}>-</button>
+            <button
+              onClick={() => handleButtonClick(-1)}
+              aria-label="Retirer 1"
+            >
+              -
+            </button>
             <input
               type="range"
               min="0"
@@ -113,7 +121,9 @@ const SalarySection = ({
               onMouseUp={handleMouseUpOrTouchEnd}
               onTouchEnd={handleMouseUpOrTouchEnd}
             />
-            <button onClick={() => handleButtonClick(1)}>+</button>
+            <button onClick={() => handleButtonClick(1)} aria-label="Ajouter 1">
+              +
+            </button>
           </div>
         </div>
         <div className="annual-salary">
@@ -126,6 +136,7 @@ const SalarySection = ({
         <a
           className="btn-tertiary btn-s"
           href={`/${activitySlug}/niveau-de-vie/${simulationToken}`}
+          aria-label="Voir les détails de mes frais personnels annuels actuels"
         >
           - {f.displayValue(annualPersonalExpenses, "financial-value")}
         </a>
@@ -135,8 +146,9 @@ const SalarySection = ({
         <a
           className={`btn-primary btn-s btn-${f.getCssClassForValue(
             balanceValue
-          )} btn-cancel`}
+          )}`}
           href={`/${activitySlug}/niveau-de-vie/${simulationToken}`}
+          aria-label="Voir les détails de mon équilibre de niveau de vie"
         >
           <span className="btn-financial-value">
             <span className="btn-icon">

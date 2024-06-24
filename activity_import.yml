@@ -8,11 +8,11 @@ activity:
     - "Lance une activité rentable"
   description: |
     <p>
-      Le premier simulateur de rentabilité d'entreprise en ligne gratuit !
+      <h2>Le premier simulateur de rentabilité d'entreprise en ligne gratuit !</h2>
     </p> 
     <p>
-      Créé ton business plan avant de <em>lancer ton activité</em> 
-      <strong>de vente de pizzas.</strong>
+      <h3>Créé ton business plan avant de <em>lancer ton activité</em> 
+      <strong>de vente de pizzas.</strong></h3>
     </p>
   detailed_description: |
     <p>
