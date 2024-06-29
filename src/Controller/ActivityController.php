@@ -102,7 +102,8 @@ class ActivityController extends AbstractController
 		$activitySlug = \is_string($data['slug'] ?? null) ? $data['slug'] : $activity->getSlug() ?? '---';
 		$activityGoal = \is_string($data['goal'] ?? null) ? $data['goal'] : $activity->getGoal() ?? '---';
 		$activityTitle = \is_string($data['title'] ?? null) ? $data['title'] : $activity->getTitle() ?? '---';
-		$activityObjectives = \is_array($data['objectives'] ?? null) ? $data['objectives'] : $activity->getObjectives() ?? [];
+		$objectives = $data['objectives'] ?? null;
+		$activityObjectives = \is_array($objectives) ? $objectives : ($activity->getObjectives() ?? []);
 		$activityDescription = \is_string($data['description'] ?? null) ? $data['description'] : $activity->getDescription() ?? '---';
 		$activityDetailedDescription = \is_string($data['detailed_description'] ?? null) ? $data['detailed_description'] : $activity->getDetailedDescription() ?? '---';
 		$activityMobileImage = \is_string($data['mobileImage'] ?? null) ? $data['mobileImage'] : $activity->getMobileImage() ?? '/';
@@ -132,7 +133,7 @@ class ActivityController extends AbstractController
 	public function delete(Activity $activity, Request $request): JsonResponse
 	{
 		try {
-			if ($this->isCsrfTokenValid('DELETE' . $activity->getId(), (string) $request->request->get('_token'))) {
+			if ($this->isCsrfTokenValid('DELETE'.$activity->getId(), (string) $request->request->get('_token'))) {
 				$this->em->remove($activity);
 				$this->em->flush();
 			}

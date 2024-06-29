@@ -2,8 +2,11 @@
 
 {% block title %}Krizalid | Admin Accueil{% endblock %}
 
+{% block body_attributes %}class="body-layout-bicolor"{% endblock %}
+
 {% block body %}
-    <h1>Admin Dashboard</h1>
+<main class="layout-bicolor">
+    <h1 class="title-1">Admin Dashboard</h1>
 
     <h2>Activités ({{totalActivities}})</h2>
     <table>
@@ -78,4 +81,5 @@
     </table>
 
     {{ knp_pagination_render(paginationSimulations) }}
+</main>
 {% endblock %}

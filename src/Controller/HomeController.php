@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Security\UserService;
-use App\Service\SimulationService;
 use App\Repository\ActivityRepository;
 use App\Repository\SimulationRepository;
-use App\Repository\FinancialItemRepository;
+use App\Security\UserService;
+use App\Service\SimulationService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
@@ -19,7 +18,6 @@ class HomeController extends AbstractController
 		private UserService $userService,
 		private ActivityRepository $activityRepository,
 		private SimulationRepository $simulationRepository,
-		private FinancialItemRepository $fidancialItemRepository,
 		private SimulationService $simulationService,
 	) {
 	}
@@ -116,7 +114,7 @@ class HomeController extends AbstractController
 	{
 		$activity = $this->activityRepository->findOneBySlug($activitySlug);
 		if (!$activity) {
-			$defaultActivity  = $this->activityRepository->findOneBy([], ['id' => 'ASC']);
+			$defaultActivity = $this->activityRepository->findOneBy([], ['id' => 'ASC']);
 			if (!$defaultActivity) {
 				return $this->redirectToRoute('app_404'); // TODO : 404 page;
 			}
@@ -125,14 +123,14 @@ class HomeController extends AbstractController
 		}
 
 		$currentUser = $this->userService->getCurrentUser();
-		$simulationData = $this->simulationRepository->findLastSimulationDataByActivity($activitySlug, $simulationToken, $currentUser);
+		$simulationData = $this->simulationRepository->findLastSimulationDataByActivity($activitySlug ?? '', $simulationToken, $currentUser);
 		if (!$simulationData || !\is_array($simulationData)) {
 			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
 
 		if ($simulationData['token'] === 'default' && !$this->isGranted('ROLE_ADMIN')) {
 			try {
-				$simulation = $this->simulationService->createSimulation($activitySlug);
+				$simulation = $this->simulationService->createSimulation($activitySlug ?? '');
 				$simulationData['id'] = $simulation->getId();
 				$simulationData['token'] = $simulation->getToken();
 			} catch (\Exception $e) {

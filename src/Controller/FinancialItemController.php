@@ -58,7 +58,7 @@ class FinancialItemController extends AbstractController
 					$salaryTarget = $this->financialItemRepository->findFinancialItemsDataByCriteria($simulation, FinancialItemNature::SALARY, FinancialItemType::TARGET);
 
 					if (isset($salaryTarget[0])) {
-						$netSalary = floatval($salaryTarget[0]['value']);
+						$netSalary = isset($salaryTarget[0]['value']) ? (float) $salaryTarget[0]['value'] : 0.0;
 						$employeeContributionRate = 0.30; // 30% to calculate brut salary
 						$employerContributionRate = 0.13; // 13% to calculate total cost
 
@@ -87,7 +87,7 @@ class FinancialItemController extends AbstractController
 					$employeeContributionRate = 0.30; // 30% to calculate brut salary
 					$employerContributionRate = 0.13; // 13% to calculate total cost
 
-					$netSalary = floatval($salaryTarget['value']);
+					$netSalary = isset($salaryTarget['value']) ? (float) $salaryTarget['value'] : 0.0;
 					$brutSalary = ($netSalary * $employeeContributionRate) + $netSalary;
 					$totalCompanyCost = ($brutSalary * $employerContributionRate) + $brutSalary;
 
@@ -133,7 +133,7 @@ class FinancialItemController extends AbstractController
 		$financialItemNature = \is_string($data['nature'] ?? null) ? FinancialItemNature::from($data['nature']) : FinancialItemNature::DEFAULT;
 		$financialItemType = \is_string($data['type'] ?? null) ? FinancialItemType::from($data['type']) : FinancialItemType::DEFAULT;
 		$financialItemAttributes = \is_array($data['attributes'] ?? null) ? $data['attributes'] : [];
-		$financialItemSimulation = \is_numeric($data['simulation_id'] ?? null) ? $this->simulationRepository->findOneBy(['id' => $data['simulation_id']]) : null;
+		$financialItemSimulation = is_numeric($data['simulation_id'] ?? null) ? $this->simulationRepository->findOneBy(['id' => $data['simulation_id']]) : null;
 
 		try {
 			$financialItem = new FinancialItem();
@@ -163,8 +163,8 @@ class FinancialItemController extends AbstractController
 
 		$financialItemName = \is_string($data['name'] ?? null) ? $data['name'] : $financialItem->getName() ?? '---';
 		$financialItemValue = is_numeric($data['value'] ?? null) ? (string) $data['value'] : $financialItem->getValue() ?? '0.00';
-		$financialItemNature = \is_string($data['nature'] ?? null) ? FinancialItemNature::from($data['nature']) : $financialItem->getNature() ?? null;
-		$financialItemType = \is_string($data['type'] ?? null) ? FinancialItemType::from($data['type']) : $financialItem->getType() ?? null;
+		$financialItemNature = \is_string($data['nature'] ?? null) ? FinancialItemNature::from($data['nature']) : ($financialItem->getNature() ?? null);
+		$financialItemType = \is_string($data['type'] ?? null) ? FinancialItemType::from($data['type']) : ($financialItem->getType() ?? null);
 		$financialItemAttributes = \is_array($data['attributes'] ?? null) ? $data['attributes'] : $financialItem->getAttributes() ?? [];
 
 		try {

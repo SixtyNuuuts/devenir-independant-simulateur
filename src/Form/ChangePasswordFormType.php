@@ -49,7 +49,8 @@ class ChangePasswordFormType extends AbstractType
 				// Au lieu d'être défini directement sur l'objet,
 				// cela est lu et encodé dans le contrôleur
 				'mapped' => false,
-			]);
+			])
+		;
 	}
 
 	public function configureOptions(OptionsResolver $resolver): void

@@ -11,9 +11,11 @@ const BalanceSection = ({
 }) => (
   <section aria-labelledby={id} className="balance-section">
     <div>
-      <h2 className="balance-section-title" id={id}>
-        {title}
-      </h2>
+      {title && (
+        <h2 className="balance-section-title" id={id}>
+          {title}
+        </h2>
+      )}
       <p className="balance-section-description">{description}</p>
     </div>
     {activitySlug && simulationToken ? (

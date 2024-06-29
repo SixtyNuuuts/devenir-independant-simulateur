@@ -22,7 +22,8 @@ class ResetPasswordRequestFormType extends AbstractType
 						'message' => 'Veuillez entrer votre email',
 					]),
 				],
-			]);
+			])
+		;
 	}
 
 	public function configureOptions(OptionsResolver $resolver): void

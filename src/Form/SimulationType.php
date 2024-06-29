@@ -30,7 +30,8 @@ class SimulationType extends AbstractType
 			->add('anonymousUser', EntityType::class, [
 				'class' => AnonymousUser::class,
 				'choice_label' => 'id',
-			]);
+			])
+		;
 	}
 
 	public function configureOptions(OptionsResolver $resolver): void

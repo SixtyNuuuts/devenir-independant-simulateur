@@ -120,6 +120,7 @@ const SalarySection = ({
               onChange={handleChange}
               onMouseUp={handleMouseUpOrTouchEnd}
               onTouchEnd={handleMouseUpOrTouchEnd}
+              aria-label="Salaire mensuel net"
             />
             <button onClick={() => handleButtonClick(1)} aria-label="Ajouter 1">
               +

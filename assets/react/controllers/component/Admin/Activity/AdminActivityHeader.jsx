@@ -45,45 +45,55 @@ const AdminActivityHeader = ({
   };
 
   return (
-    <div>
-      <textarea
-        name="title"
-        value={activity.title}
-        onChange={(e) => handleInputChange(e, setActivity)}
-        rows="1"
-      />
-      <AdminObjectiveList
-        objectives={activity.objectives}
-        handleObjectiveChange={(index, value) =>
-          handleObjectiveChange(index, value, setActivity)
-        }
-        handleAddObjective={() => handleAddObjective(setActivity)}
-        handleRemoveObjective={(index) =>
-          handleRemoveObjective(index, setActivity)
-        }
-      />
-      <input
-        type="file"
-        name="mobileImage"
-        accept="image/*"
-        onChange={(e) => handleFileChange(e, "mobileImage")}
-      />
-      <input
-        type="file"
-        name="desktopImage"
-        accept="image/*"
-        onChange={(e) => handleFileChange(e, "desktopImage")}
-      />
-      <picture>
-        <source media="(max-width: 768px)" srcSet={previewMobileImage} />
-        <source media="(min-width: 769px)" srcSet={previewDesktopImage} />
-        <img
-          src={previewDesktopImage}
-          alt={`Image de l'activité ${activity.name}`}
-          title={`Image de l'activité ${activity.name}`}
+    <>
+      <div className="admin-div">
+        <textarea
+          name="title"
+          className="home-title"
+          value={activity.title}
+          onChange={(e) => handleInputChange(e, setActivity)}
         />
-      </picture>
-    </div>
+        <AdminObjectiveList
+          objectives={activity.objectives}
+          handleObjectiveChange={(index, value) =>
+            handleObjectiveChange(index, value, setActivity)
+          }
+          handleAddObjective={() => handleAddObjective(setActivity)}
+          handleRemoveObjective={(index) =>
+            handleRemoveObjective(index, setActivity)
+          }
+        />
+      </div>
+      <figure>
+        <picture>
+          <label className="mobile-image btn-secondary btn-s">
+            Image mobile
+            <input
+              type="file"
+              name="mobileImage"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, "mobileImage")}
+            />
+          </label>
+          <label className="desktop-image btn-secondary btn-s">
+            Image desktop
+            <input
+              type="file"
+              name="desktopImage"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, "desktopImage")}
+            />
+          </label>
+          <source media="(max-width: 768px)" srcSet={previewMobileImage} />
+          <source media="(min-width: 769px)" srcSet={previewDesktopImage} />
+          <img
+            src={previewDesktopImage}
+            alt={`Image de l'activité ${activity.name}`}
+            title={`Image de l'activité ${activity.name}`}
+          />
+        </picture>
+      </figure>
+    </>
   );
 };
 

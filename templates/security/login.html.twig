@@ -1,31 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion!{% endblock %}
+{% block title %}Krizalid | Connexion{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+<main class="form-page">
+    <form method="post">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
-        </div>
-    {% endif %}
+        {% if app.user %}
+            <div class="mb-3">
+                Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
+            </div>
+        {% endif %}
+            <p class="title">Veuillez vous connecter</p>
+            <label class="input" for="inputEmail">
+                <input
+                type="email"
+                name="email"
+                id="inputEmail"
+                value="{{ last_username }}"
+                required 
+                autofocus
+                autocomplete="email"
+                oninput="checkFilled(this)"
+                />
+                <span class="label">Email</span>
+            </label>
+            <label class="input" for="inputPassword">
+                <input
+                type="password"
+                name="password"
+                id="inputPassword"
+                required 
+                autocomplete="current-password"
+                oninput="checkFilled(this)"
+                />
+                <span class="label">Mot de passe</span>
+            </label>
+            <input type="hidden" name="_csrf_token"
+                value="{{ csrf_token('authenticate') }}"
+            >
 
-    <h1 class="h3 mb-3 font-weight-normal">Veuillez vous connecter</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Mot de passe</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Connexion
-    </button>
-</form>
+            <button class="btn-primary btn-l btn-w100" type="submit">
+            Connexion
+            </button>
+            <script>
+            function checkFilled(input) {
+                if (input.value.trim() !== '') {
+                    input.classList.add('filled');
+                } else {
+                    input.classList.remove('filled');
+                }
+            }
+            </script>
+    </form>
+</main>
 {% endblock %}

@@ -16,8 +16,12 @@ const AdminActivityModeButton = ({
   };
 
   return (
-    <button type="button" onClick={() => handleClick()}>
-      {isAdminActivity ? "Enregistrer l'activité" : "Editer l'activité"}
+    <button
+      className="btn-primary btn-admin"
+      type="button"
+      onClick={() => handleClick()}
+    >
+      {isAdminActivity ? "✔️ Enregistrer l'activité" : "✏️ Editer l'activité"}
     </button>
   );
 };

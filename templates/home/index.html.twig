@@ -3,20 +3,28 @@
 {% block title %}Krizalid | {{ activity.title }}{% endblock %}
 {% block description %}{{ activity.description|striptags }}{% endblock %}
 
-{% block body_attributes %}class="body-home"{% endblock %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('home') }}
+{% endblock %}
+
+{% block body_attributes %}class="body-layout-bicolor"{% endblock %}
 
 {% block navbar %}
     {% include 'partial/_navbar.html.twig' with {'activitySlug': activity.slug, 'simulationToken': simulationToken} %}
 {% endblock %}
 
 {% block body %}
-    <main class="home" {{ react_component('HomePage', { 'simulationId': simulationId, 'simulationToken': simulationToken, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw, 'isAdminActivityContext': app.user and 'ROLE_ADMIN' in app.user.roles and simulationToken is same as('default') }) }}>
+    <main class="layout-bicolor" {{ react_component('HomePage', { 'simulationId': simulationId, 'simulationToken': simulationToken, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw, 'isAdminActivityContext': app.user and 'ROLE_ADMIN' in app.user.roles and simulationToken is same as('default') }) }}>
         <header>
             <div>
-                <h1 class="home-title">{{ activity.title }}</h1>
+                <h1 class="home-title">{{ activity.title|raw }}</h1>
                 <ul class="home-objectives">
                     {% for objective in activity.objectives %}
-                        <li>{{ objective }}</li>
+                        <li>{{ objective|raw }}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -49,7 +57,7 @@
                                     </span>
                                 </a>
                                 <div class="salary-controls">
-                                    <button aria-label="Retirer 1">-</button><input type="range" min="0" max="9999" step="1" value="2600"><button aria-label="Ajouter 1">+</button>
+                                    <button aria-label="Retirer 1">-</button><input type="range" min="0" max="9999" step="1" value="2600" aria-label="Indiquer le salaire mensuel actuel"><button aria-label="Ajouter 1">+</button>
                                 </div>
                             </div>
                             <div class="annual-salary">
@@ -87,7 +95,7 @@
                                     </span>
                                 </a>
                                 <div class="salary-controls">
-                                    <button aria-label="Retirer 1">-</button><input type="range" min="0" max="9999" step="1" value="2600"><button aria-label="Ajouter 1">+</button>
+                                    <button aria-label="Retirer 1">-</button><input type="range" min="0" max="9999" step="1" value="2600" aria-label="Indiquer le salaire mensuel souhaité"><button aria-label="Ajouter 1">+</button>
                                 </div>
                             </div>
                             <div class="annual-salary">

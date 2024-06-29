@@ -3,11 +3,11 @@
 {% block title %}Krizalid | Réinitialisez votre mot de passe{% endblock %}
 
 {% block body %}
+<main class="form-page">
     {% for flash_error in app.flashes('reset_password_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
-    <h1>Réinitialisez votre mot de passe</h1>
-
+    <p class="title">Réinitialisez votre mot de passe</p>
     {{ form_start(requestForm) }}
         {{ form_row(requestForm.email) }}
         <div>
@@ -18,4 +18,5 @@
 
         <button class="btn btn-primary">Envoyer l'email de réinitialisation</button>
     {{ form_end(requestForm) }}
+</main>
 {% endblock %}

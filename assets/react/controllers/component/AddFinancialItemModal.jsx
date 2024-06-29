@@ -44,7 +44,7 @@ const AddProfessionalIncome = ({ type, isOpen, onClose, onSave }) => {
           ...prev,
           [fieldName]: formatedValue === ".00" ? "00.00" : formatedValue,
         }));
-      }, 900);
+      }, 2500);
     }
   };
 

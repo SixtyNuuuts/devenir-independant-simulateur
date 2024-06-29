@@ -44,6 +44,9 @@ class Activity
 	#[Groups(['activity_read'])]
 	private ?string $goal = null;
 
+	/**
+	 * @var array<string>
+	 */
 	#[ORM\Column(type: Types::JSON)]
 	#[Groups(['activity_read'])]
 	private array $objectives = [];
@@ -162,11 +165,17 @@ class Activity
 		return $this;
 	}
 
+	/**
+	 * @return array<string>
+	 */
 	public function getObjectives(): array
 	{
 		return $this->objectives;
 	}
 
+	/**
+	 * @param array<string> $objectives
+	 */
 	public function setObjectives(array $objectives): static
 	{
 		$this->objectives = $objectives;
@@ -206,6 +215,7 @@ class Activity
 	public function setMobileImage(?string $mobileImage): self
 	{
 		$this->mobileImage = $mobileImage;
+
 		return $this;
 	}
 
@@ -217,6 +227,7 @@ class Activity
 	public function setDesktopImage(?string $desktopImage): self
 	{
 		$this->desktopImage = $desktopImage;
+
 		return $this;
 	}
 

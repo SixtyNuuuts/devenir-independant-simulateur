@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Entity\Simulation;
 use App\Entity\AnonymousUser;
-use App\Security\UserService;
-use App\Service\SimulationService;
+use App\Entity\Simulation;
+use App\Entity\User;
 use App\Repository\ActivityRepository;
 use App\Repository\SimulationRepository;
+use App\Security\UserService;
+use App\Service\SimulationService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/simulation')]
 class SimulationController extends AbstractController
@@ -83,7 +83,7 @@ class SimulationController extends AbstractController
 				return $this->json(['error' => 'activitySlug manquant'], JsonResponse::HTTP_BAD_REQUEST);
 			}
 
-			$simulation = $this->simulationService->createSimulation($activitySlug);
+			$simulation = $this->simulationService->createSimulation((string) $activitySlug);
 
 			return $this->json(['success' => 'Simulation créée !', 'token' => $simulation->getToken()], JsonResponse::HTTP_CREATED);
 		} catch (\Exception $exception) {
@@ -122,7 +122,7 @@ class SimulationController extends AbstractController
 		}
 
 		try {
-			if ($this->isCsrfTokenValid('DELETE' . $simulation->getId(), (string) $request->request->get('_token'))) {
+			if ($this->isCsrfTokenValid('DELETE'.$simulation->getId(), (string) $request->request->get('_token'))) {
 				$this->em->remove($simulation);
 				$this->em->flush();
 			}

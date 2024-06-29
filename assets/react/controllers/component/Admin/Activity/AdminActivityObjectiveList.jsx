@@ -7,19 +7,23 @@ const AdminActivityObjectiveList = ({
   handleRemoveObjective,
 }) => {
   return (
-    <div>
+    <div className="home-objectives">
       {objectives.map((objective, index) => (
         <div key={index}>
           <textarea
             name={`objective ${index}`}
             value={objective}
             onChange={(e) => handleObjectiveChange(index, e.target.value)}
-            rows="1"
           />
-          <button onClick={() => handleRemoveObjective(index)}>X</button>
+          <button
+            className="btn-delete"
+            onClick={() => handleRemoveObjective(index)}
+          ></button>
         </div>
       ))}
-      <button onClick={handleAddObjective}>+</button>
+      <button className="btn-secondary btn-s" onClick={handleAddObjective}>
+        +
+      </button>
     </div>
   );
 };

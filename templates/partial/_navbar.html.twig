@@ -6,7 +6,7 @@
     </div>
     <div class="navbar-site-infos">
         <a class="navbar-site-logo" href="{% if app.user and 'ROLE_ADMIN' in app.user.roles %}{{ path('app_admin_home') }}{% else %}{{ path('app_home') }}{% endif %}">
-            <img class="navbar-site-logo" src="{{ asset('images/logo-krizalid.svg') }}" alt="Logo Krizalid">
+            <img width="120" height="23" class="navbar-site-logo" src="{{ asset('images/logo-krizalid.svg') }}" alt="Logo Krizalid">
         </a>
         <p class="navbar-site-description">Envie de tout plaquer pour changer de job ? Change de vie et lance une activité rentable !</p>
     </div>
@@ -28,7 +28,7 @@
     {% endif %}
     <div class="navbar-user {% if app.user %}connected{% else %}not-connected{% endif %}" id="accountMenuBtn">
         <span class="navbar-user-icon"></span>
-        <ul class="navbar-user-dropdown" id="accountDropdown">
+        <ul class="navbar-user-dropdown {% if not app.user %}desactive{% else %}{% endif %}" id="accountDropdown">
             {% if app.user %}
                 <li>
                     <p>Connecté en tant que <span>{{ app.user.email }}</span></p>
@@ -58,12 +58,12 @@
                     <a href="{{ path('app_logout') }}">Se déconnecter</a>
                 </li>
             {% else %}
-                <li>
+                {# <li>
                     <a href="{{ path('app_register') }}">Créer un compte</a>
                 </li>
                 <li>
                     <a href="{{ path('app_login') }}">Se connecter</a>
-                </li>
+                </li> #}
             {% endif %}
         </ul>
     </div>
@@ -98,13 +98,18 @@
             </ul>
             <a class="btn-secondary btn-s" href="mailto:contact@julien-clement.com">Proposer un modèle</a>
         </li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">Questions fréquentes</a></li>
+        {# <li><a href="#">Blog</a></li> #}
+        <li><span class="incoming">Blog</span></li>
+        {# <li><a href="#">Questions fréquentes</a></li> #}
+        <li><span class="incoming">Questions fréquentes</span></li>
         <li>Nous suivre sur
             <ul>
-                <li><a href="#">Facebook</a></li>
+                {# <li><a href="#">Facebook</a></li>
                 <li><a href="#">Tiktok</a></li>
-                <li><a href="#">Instagram</a></li>
+                <li><a href="#">Instagram</a></li> #}
+                <li><span class="incoming">Facebook</span></li>
+                <li><span class="incoming">Tiktok</span></li>
+                <li><span class="incoming">Instagram</span></li>
             </ul>
         </li>
         <li class="credits">Crédits

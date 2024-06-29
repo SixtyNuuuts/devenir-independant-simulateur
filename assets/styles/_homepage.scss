@@ -4,11 +4,150 @@ header {
     min-height: 15rem;
     justify-content: center;
 
-    div:first-child {
+    @media (min-width: $desktop-minwidth) {
+        background-color: $transparent;
+        min-height: 18.8rem;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    >div:first-child {
         display: flex;
         flex-direction: column;
         padding: 2.9rem 2rem;
         max-width: 33rem;
+
+        &.admin-div {
+            flex-grow: 1;
+            padding-bottom: 2rem;
+            padding-right: 0.9rem;
+
+            @media screen and (min-width: $desktop-minwidth) {
+                padding-right: 3.9rem;
+            }
+
+            textarea,
+            div {
+                background-color: $transparent;
+                width: 100%;
+            }
+
+            textarea {
+                &.home-title {}
+
+                border: 0.1rem solid #ffffff36;
+
+                @media screen and (min-width: $desktop-minwidth) {
+                    border: 0.1rem solid #3369ff2b;
+                }
+
+                &:focus,
+                &:focus-visible {
+                    border: 0.1rem solid #ffffff36;
+                    outline: none;
+
+                    @media screen and (min-width: $desktop-minwidth) {
+                        border: 0.1rem solid #3369ff2b;
+                        outline: none;
+                    }
+                }
+            }
+
+            .home-objectives {
+                >button {
+                    padding: 0.1rem 0.6rem;
+                    margin-top: 0.4rem;
+                    margin-left: 0.6rem;
+
+                    @media screen and (min-width: $desktop-minwidth) {
+                        margin-left: 1rem;
+                    }
+                }
+
+                >div {
+                    display: flex;
+
+                    &::before {
+                        content: url("data:image/svg+xml,%3Csvg version='1.1' id='Calque_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 28 18.4' style='enable-background:new 0 0 28 18.4;' xml:space='preserve' fill='%23C0C0C0'%3E%3Cpath d='M28,0c-7.8,5.3-12,12.8-14.3,17.6c-0.5,1-1.9,1.1-2.4,0.1C6.9,9.9,0,6.3,0,6.3c7.3,0,10.4,3.2,12.4,5.3 C15.6,5.3,23.9,1.1,28,0z'/%3E%3C/svg%3E%0A");
+                        display: inline-block;
+                        width: 1.3rem;
+                        margin-left: -1rem;
+                        margin-right: 0.4rem;
+                        margin-top: 0.2rem;
+
+                        @media (min-width: $desktop-minwidth) {
+                            width: 1.4rem;
+                            margin-right: 0.7rem;
+                        }
+                    }
+
+                    textarea {
+                        color: $white;
+                        height: 1.9rem;
+
+                        @media screen and (min-width: $desktop-minwidth) {
+                            color: $black;
+                            height: 2.4rem;
+
+                        }
+                    }
+
+                    .btn-delete {
+                        margin-left: 0.3rem;
+
+                        @media screen and (max-width: $desktop-minwidth) {
+                            .btn-delete {
+                                margin-bottom: 0.5rem;
+                                margin-left: 0.3rem;
+
+                                &::before,
+                                &::after {
+                                    content: "";
+                                    position: absolute;
+                                    width: 1.1rem;
+                                    height: 0.1rem;
+                                    background-color: $white;
+                                    top: 48.5%;
+                                    left: 51.78%;
+                                }
+
+                                &:hover {
+                                    border: 0.1rem solid $white;
+
+                                    &::before,
+                                    &::after {
+                                        background-color: $white;
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        @media (min-width: $desktop-minwidth) {
+            max-width: initial;
+            flex-grow: 1;
+            padding: 0.3rem 3.3rem;
+            position: relative;
+            margin-left: 2.1rem;
+            margin-top: 3.8rem;
+
+            &::before {
+                content: '';
+                display: block;
+                width: 0.3rem;
+                height: 100%;
+                background-color: $primary;
+                border-radius: 10rem;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
 
         .home-title {
             color: $white;
@@ -18,14 +157,26 @@ header {
             line-height: 1.1;
             width: 93%;
             margin-bottom: 1rem;
+
+            @media (min-width: $desktop-minwidth) {
+                color: $primary;
+                font-size: 2.2rem;
+                margin-bottom: 1.45rem;
+            }
         }
 
         .home-objectives {
             color: $white;
             margin: 0;
             font-size: 1.1rem;
-            line-height: 1.2;
+            line-height: 1.1;
             padding-left: 1.2rem;
+
+            @media (min-width: $desktop-minwidth) {
+                color: $black;
+                font-size: 1.4rem;
+                line-height: 1.1;
+            }
 
             li {
                 margin-bottom: 0.1rem;
@@ -33,9 +184,14 @@ header {
                 &::before {
                     content: url("data:image/svg+xml,%3Csvg version='1.1' id='Calque_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 28 18.4' style='enable-background:new 0 0 28 18.4;' xml:space='preserve' fill='%23C0C0C0'%3E%3Cpath d='M28,0c-7.8,5.3-12,12.8-14.3,17.6c-0.5,1-1.9,1.1-2.4,0.1C6.9,9.9,0,6.3,0,6.3c7.3,0,10.4,3.2,12.4,5.3 C15.6,5.3,23.9,1.1,28,0z'/%3E%3C/svg%3E%0A");
                     display: inline-block;
-                    width: 1.1em;
-                    margin-left: -1em;
+                    width: 1.3rem;
+                    margin-left: -1rem;
                     margin-right: 0.4rem;
+
+                    @media (min-width: $desktop-minwidth) {
+                        width: 1.4rem;
+                        margin-right: 0.7rem;
+                    }
                 }
             }
         }
@@ -46,11 +202,51 @@ header {
         margin: 0;
         width: 100%;
         max-width: 15.9rem;
+        background-color: $gray-dark;
+        min-height: 15rem;
 
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        @media (min-width: $desktop-minwidth) {
+            max-width: 45.1rem;
+            width: 45.1rem;
+            min-height: 18.8rem;
+        }
+
+        picture {
+            position: relative;
+
+            @media (min-width: $desktop-minwidth) {
+                display: flex;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            label.mobile-image,
+            label.desktop-image {
+                height: 2.7rem;
+                position: absolute;
+                bottom: 1rem;
+                right: 1rem;
+
+                input {
+                    display: inline-block;
+                    position: absolute;
+                    z-index: -1;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    opacity: 0;
+                    cursor: pointer;
+                }
+            }
+
+            label.mobile-image {
+                bottom: 4.2rem;
+            }
         }
     }
 }
@@ -64,6 +260,22 @@ header {
         flex-direction: column;
         margin-bottom: 5.5rem;
 
+        @media (min-width: $desktop-minwidth) {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 2.5rem;
+            margin-bottom: 3rem;
+
+            >* {
+                max-width: 45.1rem !important;
+                flex: none;
+                border: .1rem solid #ECEDF1;
+                border-radius: 0.5rem;
+                background-color: $white;
+            }
+        }
+
         .home-main-header-salary {
             display: flex;
             flex-direction: column;
@@ -72,8 +284,18 @@ header {
             max-width: 49rem;
             margin: auto;
 
+            @media (min-width: $desktop-minwidth) {
+                margin: 0;
+            }
+
             .salary-section {
                 margin-bottom: 4.4rem;
+
+                @media (min-width: $desktop-minwidth) {
+                    &:last-child {
+                        margin-bottom: 2.7rem;
+                    }
+                }
 
                 .salary-section-title {
                     font-size: 2rem;
@@ -91,6 +313,11 @@ header {
                     padding-right: 2.4rem;
                     padding-bottom: 2rem;
                     margin-bottom: 0.4rem;
+
+                    @media (min-width: $desktop-minwidth) {
+                        padding-left: 2.9rem;
+                        padding-right: 3.7rem;
+                    }
 
                     label {
                         margin-bottom: 1rem;
@@ -244,6 +471,11 @@ header {
                     align-items: center;
                     justify-content: space-between;
 
+                    @media (min-width: $desktop-minwidth) {
+                        max-width: 39.2rem;
+                        padding-left: 2.9rem;
+                    }
+
                     .btn-tertiary.btn-s {
                         font-size: 1.4rem;
                         color: $black;
@@ -255,6 +487,11 @@ header {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
+
+                    @media (min-width: $desktop-minwidth) {
+                        max-width: 39.2rem;
+                        padding-left: 2.9rem;
+                    }
                 }
 
             }
@@ -265,7 +502,7 @@ header {
 
                 #activity-profitability,
                 >p,
-                .btn-primary {
+                .btn-primary.btn-xl {
                     max-width: 43.6rem;
                     margin-right: auto !important;
                     margin-left: auto !important;
@@ -274,16 +511,38 @@ header {
                 }
             }
 
+            @media (min-width: $desktop-minwidth) {
+                margin: 0;
+                padding: 3.3rem 0;
+                padding-bottom: 4rem;
+
+                .table {
+                    border: none;
+                    padding: 2.3rem 1.7rem;
+                    padding-right: 2.8rem;
+                }
+            }
+
             #activity-profitability,
             >p,
-            .btn-primary {
+            .btn-primary.btn-xl {
                 margin: 0;
                 margin-left: 2rem;
                 margin-right: 2rem;
+
+                @media (min-width: $desktop-minwidth) {
+                    max-width: 34.6rem;
+                    margin: auto;
+                    transform: none;
+                }
             }
 
             #activity-profitability {
                 margin-bottom: 0.3rem;
+
+                @media (min-width: $desktop-minwidth) {
+                    font-size: 1.9rem;
+                }
             }
 
             >p {
@@ -292,6 +551,25 @@ header {
 
             .btn-primary.btn-xl {
                 width: calc(100% - 4rem);
+
+                @media (min-width: $desktop-minwidth) {
+                    width: initial;
+                    position: relative;
+
+                    .btn-financial-value {
+                        margin-left: 1.98rem;
+                    }
+
+                    &::after {
+                        content: "";
+                        width: 116%;
+                        height: 0.1rem;
+                        background-color: $gray-medium;
+                        position: absolute;
+                        bottom: -2.4rem;
+                        left: -9.1%;
+                    }
+                }
             }
 
             .table table tr td:last-child,
@@ -316,6 +594,21 @@ header {
             section[aria-labelledby="profits-view"] {
                 figure {
                     margin-bottom: 0;
+                    padding-right: 1.6rem;
+                }
+
+                @media (min-width: $desktop-minwidth) {
+                    padding-top: 2.8rem;
+                    margin-bottom: 0;
+
+                    table {
+                        padding-bottom: 0.3rem;
+                    }
+
+                    figure {
+                        max-width: 38.9rem;
+                        padding-right: 0;
+                    }
                 }
             }
 
@@ -324,19 +617,40 @@ header {
 
                 figure {
                     margin-bottom: 1.7rem;
+                    padding-right: 1.6rem;
                 }
 
+                @media (min-width: $desktop-minwidth) {
+                    padding-top: 0.7rem;
+                    margin-bottom: 2rem;
+
+                    table {
+                        padding-bottom: 0.3rem;
+                    }
+
+                    figure {
+                        max-width: 38.9rem;
+                        padding-right: 0;
+                    }
+                }
             }
 
             section[aria-labelledby="balance-future-activity"] {
                 padding: 0;
                 margin: 0;
                 margin-left: 1.4rem;
-                margin-right: 1.4rem;
+                margin-right: 1.6rem;
+                display: flex;
+                justify-content: space-between;
 
                 @media screen and (min-width: 500px) {
-                    margin-left: 2rem;
-                    margin-right: 2rem;
+                    margin-left: 1.9rem;
+                    margin-right: 1.5rem;
+                }
+
+                @media screen and (min-width: $desktop-minwidth) {
+                    margin-left: 3.6rem;
+                    margin-right: 4.3rem;
                 }
 
                 .btn-primary {
@@ -348,6 +662,10 @@ header {
                     max-width: 100%;
                     color: $gray-dark;
                     margin-left: 0.5rem;
+
+                    @media screen and (min-width: 500px) {
+                        margin-left: 0;
+                    }
                 }
             }
 
@@ -357,21 +675,39 @@ header {
     .home-description {
         font-size: 1.4rem;
         text-align: center;
-        margin: 1.5rem;
+        margin: 1.6rem;
         padding: 1.7rem 1.6rem;
         border: 1px solid $gray-medium;
         border-radius: 0.5rem;
         line-height: 1.1;
+
+        @media screen and (min-width: 400px) {
+            padding: 1.7rem 2.6rem;
+        }
+
+        @media screen and (min-width: $desktop-minwidth) {
+            width: 100%;
+            padding: 2.6rem 8rem;
+            margin-bottom: 2.8rem;
+        }
 
         h2,
         h3 {
             font-size: 1.4rem;
             margin: 0;
             font-weight: normal;
+
+            @media screen and (min-width: $desktop-minwidth) {
+                font-size: 1.9rem;
+            }
         }
 
         h2 {
             margin-bottom: 1.5rem;
+
+            @media screen and (min-width: $desktop-minwidth) {
+                margin-bottom: 2.2rem;
+            }
         }
 
         strong,
@@ -393,6 +729,11 @@ header {
         margin: 1.6rem;
         margin-bottom: 3rem;
 
+        @media screen and (min-width: $desktop-minwidth) {
+            font-size: 1.6rem;
+            margin-bottom: 6.3rem;
+        }
+
         strong,
         strong em {
             font-weight: bold;
@@ -403,6 +744,15 @@ header {
             font-style: normal;
             font-weight: bold;
             color: $green;
+        }
+
+        p {
+            margin: 1.4rem 0;
+            font-size: 1.4rem;
+
+            @media screen and (min-width: $desktop-minwidth) {
+                font-size: 1.6rem;
+            }
         }
 
         p:first-child {
@@ -440,12 +790,18 @@ header {
                 &::before {
                     content: url("data:image/svg+xml,%3Csvg version='1.1' id='Calque_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 7.5 7.5' style='enable-background:new 0 0 7.5 7.5;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%2345B27B;%7D%0A%3C/style%3E%3Cpolygon class='st0' points='6.4,0 2.7,5.3 1,3.7 0,4.6 2.8,7.4 2.9,7.5 7.4,1 7.5,0.9 '/%3E%3C/svg%3E%0A");
                     position: absolute;
-                    top: 0.3rem;
+                    top: 0.5rem;
                     left: -1.7rem;
                     display: inline-block;
                     width: 1.3em;
                     margin-left: -1em;
                     margin-right: 0.4rem;
+                }
+
+                &:first-child {
+                    &::before {
+                        top: -0.1rem;
+                    }
                 }
             }
 
@@ -461,8 +817,85 @@ header {
     .home-description,
     .home-detailed-description,
     section[aria-labelledby="start-simulation"] {
-        max-width: 45.3rem;
-        margin-right: auto;
-        margin-left: auto;
+
+        @media screen and (min-width: 400px) {
+            max-width: 37.6rem;
+            margin-right: auto;
+            margin-left: auto;
+        }
+    }
+
+    .home-description,
+    .home-detailed-description {
+
+        @media screen and (min-width: $desktop-minwidth) {
+            max-width: initial;
+        }
+    }
+
+    section[aria-labelledby="start-simulation"] {
+
+        @media screen and (min-width: $desktop-minwidth) {
+            max-width: 38.6rem;
+            margin-bottom: 6rem;
+        }
+    }
+}
+
+.admin-home {
+    background-color: $gray-medium;
+    padding: 1.2rem 1rem;
+
+    @media screen and (min-width: $desktop-minwidth) {
+        display: flex;
+        position: absolute;
+        top: 0.4rem;
+        left: 1rem;
+        background-color: $transparent;
+    }
+
+    .input {
+        margin-bottom: 0;
+
+        &:not(:last-child) {
+            margin-bottom: 1rem;
+        }
+
+        input {
+            height: 3.4rem;
+            padding: 0.7rem 1.5rem;
+            padding-bottom: 0rem;
+            font-size: 1.1rem;
+        }
+
+        input:focus+.label,
+        input:-webkit-autofill+.label,
+        input.filled+.label {
+            top: 1rem;
+            left: 1.6rem;
+            font-size: 0.9rem;
+        }
+
+        @media screen and (min-width: $desktop-minwidth) {
+            &:first-child {
+                margin-right: 1rem;
+            }
+        }
+    }
+}
+
+.home-main .home-description.admin-wysiwyg,
+.home-main .home-detailed-description.admin-wysiwyg {
+    border: none;
+    padding: 0;
+    width: 104%;
+    transform: translateX(-2%);
+
+    .quill {
+        text-align: center;
+
+        .ql-editor {
+            text-align: center;
+        }
     }
 }

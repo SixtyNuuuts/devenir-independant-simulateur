@@ -16,6 +16,7 @@ import {
   handleAdminActivitySaveActivity,
 } from "./component/Admin/Activity/adminActivityHandlers";
 import f from "./utils/function";
+import classNames from "classnames";
 
 function HomePage({
   simulationId,
@@ -158,13 +159,48 @@ function HomePage({
   return (
     <>
       {isAdminActivityContext && (
-        <AdminActivityModeButton
-          activity={activity}
-          isAdminActivity={isAdminActivity}
-          setToggleAdminActivity={setToggleAdminActivity}
-          updateActivity={updateActivity}
-          handleSaveActivity={handleAdminActivitySaveActivity}
-        />
+        <>
+          <AdminActivityModeButton
+            activity={activity}
+            isAdminActivity={isAdminActivity}
+            setToggleAdminActivity={setToggleAdminActivity}
+            updateActivity={updateActivity}
+            handleSaveActivity={handleAdminActivitySaveActivity}
+            setActivity={setActivity}
+          />
+          {isAdminActivity && (
+            <div className="admin-home">
+              <label className="input">
+                <input
+                  type="text"
+                  name="slug"
+                  value={activity.slug}
+                  className={classNames({
+                    filled: activity.slug,
+                  })}
+                  onChange={(e) =>
+                    handleAdminActivityInputChange(e, setActivity)
+                  }
+                />
+                <span className="label">Slug</span>
+              </label>
+              <label className="input">
+                <input
+                  type="text"
+                  name="goal"
+                  value={activity.goal}
+                  className={classNames({
+                    filled: activity.goal,
+                  })}
+                  onChange={(e) =>
+                    handleAdminActivityInputChange(e, setActivity)
+                  }
+                />
+                <span className="label">Goal</span>
+              </label>
+            </div>
+          )}
+        </>
       )}
       <header>
         {isAdminActivity ? (
@@ -179,10 +215,16 @@ function HomePage({
         ) : (
           <>
             <div>
-              <h1 className="home-title">{activity.title}</h1>
+              <h1
+                className="home-title"
+                dangerouslySetInnerHTML={{ __html: activity.title }}
+              ></h1>
               <ul className="home-objectives">
                 {activity.objectives?.map((objective, index) => (
-                  <li key={index}>{objective}</li>
+                  <li
+                    key={index}
+                    dangerouslySetInnerHTML={{ __html: objective }}
+                  ></li>
                 ))}
               </ul>
             </div>
@@ -255,6 +297,7 @@ function HomePage({
                           max="9999"
                           step="1"
                           defaultValue="2600"
+                          aria-label="Indiquer le salaire mensuel actuel"
                         />
                         <button aria-label="Ajouter 1">+</button>
                       </div>
@@ -331,6 +374,7 @@ function HomePage({
                           max="9999"
                           step="1"
                           defaultValue="2600"
+                          aria-label="Indiquer le salaire mensuel souhaité"
                         />
                         <button aria-label="Ajouter 1">+</button>
                       </div>
@@ -1461,6 +1505,7 @@ function HomePage({
                 description: value,
               }))
             }
+            className="home-description admin-wysiwyg"
           />
         ) : (
           <section
@@ -1477,6 +1522,7 @@ function HomePage({
                 detailed_description: value,
               }))
             }
+            className="home-detailed-description admin-wysiwyg"
           />
         ) : (
           <section

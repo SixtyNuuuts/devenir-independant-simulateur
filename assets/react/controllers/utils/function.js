@@ -34,7 +34,7 @@ export default {
           const monthValue =
             item.attributes[monthValueType] && item.attributes[monthValueType][i]
               ? item.attributes[monthValueType][i][monthValueType === 'sale_per_month' ? 'quantity' : 'value']
-              : monthValueType === 'sale_per_month' ? 0 : 0.00;
+              : monthValueType === 'sale_per_month' ? 0 : item.value ? item.value : 0.00;
           const monthlyResult = monthValueType === 'sale_per_month' ? (parseFloat(monthValue) * parseFloat((item.value || 0.00))) : parseFloat(monthValue);
           monthlyTotals[i] += monthlyResult;
           annualTotal += monthlyResult;

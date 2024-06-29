@@ -32,6 +32,10 @@
         cursor: text;
         user-select: text;
     }
+
+    &.btn-w100 {
+        width: 100%;
+    }
 }
 
 @mixin button-state($bg-color, $text-color, $border-color, $bg-hover-color, $bg-active-color, $text-hover-color, $text-active-color, $border-hover-color, $border-active-color, $bg-disabled-color, $text-disabled-color, $border-disabled-color) {
@@ -259,5 +263,19 @@
         &::after {
             background-color: $primary;
         }
+    }
+}
+
+.btn-admin {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 999;
+    box-shadow: $box-shadow-m;
+    transition: all 0.3s ease-in-out;
+
+    @media screen and (max-width: 700px) {
+        font-size: 1.3rem;
+        padding: 0.9rem 1.7rem;
     }
 }

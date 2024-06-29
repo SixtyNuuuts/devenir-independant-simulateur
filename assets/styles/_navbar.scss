@@ -286,7 +286,7 @@
     border: 1px solid $gray-medium;
     padding: 0.4rem 0;
 
-    &.open {
+    &.open:not(.desactive) {
         opacity: 1;
         visibility: visible;
         max-height: 50rem;
@@ -403,6 +403,10 @@
         font-weight: bold;
         padding-left: 2.6rem;
         margin-bottom: 1.5rem;
+    }
+
+    .incoming {
+        opacity: 0.3;
     }
 
     >ul {

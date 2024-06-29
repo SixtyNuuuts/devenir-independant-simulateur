@@ -36,7 +36,8 @@ class SimulationRepository extends ServiceEntityRepository
 		])
 			->where('s.id = :id')
 			->setParameter('id', $id)
-			->getQuery();
+			->getQuery()
+		;
 
 		try {
 			return $query->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
@@ -55,7 +56,7 @@ class SimulationRepository extends ServiceEntityRepository
 		$fields ??= ['id', 'token'];
 		$selectFields = [];
 		foreach ($fields as $field) {
-			$selectFields[] = 's.' . $field;
+			$selectFields[] = 's.'.$field;
 		}
 		$qb->select($selectFields);
 
@@ -63,16 +64,19 @@ class SimulationRepository extends ServiceEntityRepository
 			->where('a.slug = :activitySlug')
 			->setParameter('activitySlug', $activitySlug)
 			->orderBy('s.createdAt', 'DESC')
-			->setMaxResults(1);;
+			->setMaxResults(1)
+		;
 
 		if ($simulationToken) {
 			$qb->andWhere('s.token = :simulationToken')
-				->setParameter('simulationToken', $simulationToken);
+				->setParameter('simulationToken', $simulationToken)
+			;
 		} elseif (null !== $user) {
 			$userField = $user->getType();
 
-			$qb->andWhere('s.' . $userField . ' = :user') /* @phpstan-ignore-line */
-				->setParameter('user', $user);
+			$qb->andWhere('s.'.$userField.' = :user') /* @phpstan-ignore-line */
+				->setParameter('user', $user)
+			;
 		}
 
 		$result = $qb->getQuery()->getScalarResult();
@@ -98,53 +102,50 @@ class SimulationRepository extends ServiceEntityRepository
 		$fields ??= ['id', 'token'];
 		$selectFields = [];
 		foreach ($fields as $field) {
-			$selectFields[] = 's.' . $field;
+			$selectFields[] = 's.'.$field;
 		}
 		$qb->select($selectFields);
 
 		$qb->innerJoin('s.activity', 'a')
 			->where('a.slug = :activitySlug')
 			->setParameter('activitySlug', $activitySlug)
-			->orderBy('s.createdAt', 'DESC');
+			->orderBy('s.createdAt', 'DESC')
+		;
 
 		if (null !== $user) {
 			$userField = $user->getType();
 
-			$qb->andWhere('s.' . $userField . ' = :user') /* @phpstan-ignore-line */
-				->setParameter('user', $user);
+			$qb->andWhere('s.'.$userField.' = :user') /* @phpstan-ignore-line */
+				->setParameter('user', $user)
+			;
 		}
 
-		$result = $qb->getQuery()->getScalarResult();
-
-		return $result;
+		return $qb->getQuery()->getScalarResult();
 	}
 
-	/**
-	 * @param string[]|null $fields
-	 */
 	public function findAllSimulationsModels(): mixed
 	{
 		$qb = $this->createQueryBuilder('s');
 
-		$fields ??= ['id', 'token', 'activity.goal', 'activity.slug'];
+		$fields = ['id', 'token', 'activity.goal', 'activity.slug'];
 		$selectFields = [];
 		foreach ($fields as $field) {
-			if (strpos($field, 'activity.') === 0) {
-				$selectFields[] = str_replace('activity.', 'a.', $field) . ' AS ' . str_replace('.', '_', $field);
+			if (str_starts_with($field, 'activity.')) {
+				$selectFields[] = str_replace('activity.', 'a.', $field).' AS '.str_replace('.', '_', $field);
 			} else {
-				$selectFields[] = 's.' . $field;
+				$selectFields[] = 's.'.$field;
 			}
 		}
 		$qb->select($selectFields)
-			->leftJoin('s.activity', 'a');
+			->leftJoin('s.activity', 'a')
+		;
 
 		$qb->andWhere('s.token = :simulationToken')
 			->setParameter('simulationToken', 'default')
-			->orderBy('s.createdAt', 'DESC');
+			->orderBy('s.createdAt', 'DESC')
+		;
 
-		$result = $qb->getQuery()->getScalarResult();
-
-		return $result;
+		return $qb->getQuery()->getScalarResult();
 	}
 
 	/**
@@ -168,18 +169,21 @@ class SimulationRepository extends ServiceEntityRepository
 			->leftJoin('s.activity', 'a')
 			->where('s.token != :defaultToken')
 			->setParameter('defaultToken', 'default')
-			->orderBy('s.createdAt', 'DESC');
+			->orderBy('s.createdAt', 'DESC')
+		;
 
 		if ($activitySlug) {
 			$qb->andWhere('a.slug = :activitySlug')
-				->setParameter('activitySlug', $activitySlug);
+				->setParameter('activitySlug', $activitySlug)
+			;
 		}
 
 		if ($user) {
 			$userField = \is_object($user) && is_a($user, User::class) ? 'user' : 'anonymousUser';
-			$qb->addSelect("'" . $userField . "' as userType")
-				->andWhere('s.' . $userField . ' = :user')
-				->setParameter('user', $user);
+			$qb->addSelect("'".$userField."' as userType")
+				->andWhere('s.'.$userField.' = :user')
+				->setParameter('user', $user)
+			;
 		}
 
 		$paginator = new Paginator($qb);
@@ -187,7 +191,8 @@ class SimulationRepository extends ServiceEntityRepository
 			->setUseOutputWalkers(false)
 			->getQuery()
 			->setFirstResult($pageSize * ($page - 1))
-			->setMaxResults($pageSize);
+			->setMaxResults($pageSize)
+		;
 
 		$totalItems = \count($paginator);
 		$pagesCount = (int) ceil($totalItems / $pageSize);

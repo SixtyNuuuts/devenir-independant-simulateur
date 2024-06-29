@@ -31,84 +31,84 @@ class RegistrationController extends AbstractController
 		$this->emailVerifier = $emailVerifier;
 	}
 
-	#[Route('/inscription', name: 'app_register')]
-	public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): ?Response
-	{
-		$user = new User();
-		$form = $this->createForm(RegistrationFormType::class, $user);
-		$form->handleRequest($request);
+	// #[Route('/inscription', name: 'app_register')]
+	// public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): ?Response
+	// {
+	// 	$user = new User();
+	// 	$form = $this->createForm(RegistrationFormType::class, $user);
+	// 	$form->handleRequest($request);
 
-		if ($form->isSubmitted() && $form->isValid()) {
-			$userEmail = $user->getEmail();
-			$userPlainPassword = $form->get('plainPassword')->getData();
+	// 	if ($form->isSubmitted() && $form->isValid()) {
+	// 		$userEmail = $user->getEmail();
+	// 		$userPlainPassword = $form->get('plainPassword')->getData();
 
-			if (empty($userEmail)) {
-				throw new BadRequestHttpException('Email de l\'utilisateur manquant ou invalide.');
-			}
+	// 		if (empty($userEmail)) {
+	// 			throw new BadRequestHttpException('Email de l\'utilisateur manquant ou invalide.');
+	// 		}
 
-			if (!\is_string($userPlainPassword)) {
-				throw new BadRequestHttpException('Le mot de passe doit être une chaîne de caractères.');
-			}
+	// 		if (!\is_string($userPlainPassword)) {
+	// 			throw new BadRequestHttpException('Le mot de passe doit être une chaîne de caractères.');
+	// 		}
 
-			if (empty($userPlainPassword)) {
-				throw new BadRequestHttpException('Le mot de passe ne peut pas être vide.');
-			}
+	// 		if (empty($userPlainPassword)) {
+	// 			throw new BadRequestHttpException('Le mot de passe ne peut pas être vide.');
+	// 		}
 
-			$user->setPassword(
-				$userPasswordHasher->hashPassword(
-					$user,
-					$userPlainPassword,
-				),
-			);
+	// 		$user->setPassword(
+	// 			$userPasswordHasher->hashPassword(
+	// 				$user,
+	// 				$userPlainPassword,
+	// 			),
+	// 		);
 
-			$entityManager->persist($user);
-			$entityManager->flush();
+	// 		$entityManager->persist($user);
+	// 		$entityManager->flush();
 
-			$this->emailVerifier->sendEmailConfirmation(
-				'app_verify_email',
-				$user,
-				(new TemplatedEmail())
-					->from(new Address('contact@your-domain.com', 'Contact'))
-					->to($userEmail)
-					->subject('Please Confirm your Email')
-					->htmlTemplate('registration/confirmation_email.html.twig'),
-			);
+	// 		$this->emailVerifier->sendEmailConfirmation(
+	// 			'app_verify_email',
+	// 			$user,
+	// 			(new TemplatedEmail())
+	// 				->from(new Address('contact@your-domain.com', 'Contact'))
+	// 				->to($userEmail)
+	// 				->subject('Please Confirm your Email')
+	// 				->htmlTemplate('registration/confirmation_email.html.twig'),
+	// 		);
 
-			return $security->login($user, UserLoginAuthenticator::class, 'main');
-		}
+	// 		return $security->login($user, UserLoginAuthenticator::class, 'main');
+	// 	}
 
-		return $this->render('registration/register.html.twig', [
-			'registrationForm' => $form,
-		]);
-	}
+	// 	return $this->render('registration/register.html.twig', [
+	// 		'registrationForm' => $form,
+	// 	]);
+	// }
 
-	#[Route('/verify/email', name: 'app_verify_email')]
-	public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
-	{
-		$id = $request->query->get('id');
+	// #[Route('/verify/email', name: 'app_verify_email')]
+	// public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
+	// {
+	// 	$id = $request->query->get('id');
 
-		if (null === $id) {
-			return $this->redirectToRoute('app_register');
-		}
+	// 	if (null === $id) {
+	// 		return $this->redirectToRoute('app_register');
+	// 	}
 
-		$user = $userRepository->find($id);
+	// 	$user = $userRepository->find($id);
 
-		if (null === $user) {
-			return $this->redirectToRoute('app_register');
-		}
+	// 	if (null === $user) {
+	// 		return $this->redirectToRoute('app_register');
+	// 	}
 
-		// validate email confirmation link, sets User::isVerified=true and persists
-		try {
-			$this->emailVerifier->handleEmailConfirmation($request, $user);
-		} catch (VerifyEmailExceptionInterface $exception) {
-			$this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
+	// 	// validate email confirmation link, sets User::isVerified=true and persists
+	// 	try {
+	// 		$this->emailVerifier->handleEmailConfirmation($request, $user);
+	// 	} catch (VerifyEmailExceptionInterface $exception) {
+	// 		$this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
-			return $this->redirectToRoute('app_register');
-		}
+	// 		return $this->redirectToRoute('app_register');
+	// 	}
 
-		// @TODO Change the redirect on success and handle or remove the flash message in your templates
-		$this->addFlash('success', 'Your email address has been verified.');
+	// 	// @TODO Change the redirect on success and handle or remove the flash message in your templates
+	// 	$this->addFlash('success', 'Your email address has been verified.');
 
-		return $this->redirectToRoute('app_register');
-	}
+	// 	return $this->redirectToRoute('app_register');
+	// }
 }

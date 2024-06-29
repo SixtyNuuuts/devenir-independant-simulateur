@@ -121,7 +121,7 @@ class FinancialItem
 		return $this;
 	}
 
-	public function getNature(): FinancialItemNature
+	public function getNature(): ?FinancialItemNature
 	{
 		return $this->nature;
 	}
@@ -133,7 +133,7 @@ class FinancialItem
 		return $this;
 	}
 
-	public function getType(): FinancialItemType
+	public function getType(): ?FinancialItemType
 	{
 		return $this->type;
 	}
