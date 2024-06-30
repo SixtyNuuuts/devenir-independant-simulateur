@@ -18,6 +18,10 @@ header {
         padding-right: 0.9rem;
         max-width: 33rem;
 
+        @media (max-width: 360px) {
+            padding: 2.9rem 1.8rem;
+        }
+
         &.admin-div {
             flex-grow: 1;
             padding-bottom: 2rem;
