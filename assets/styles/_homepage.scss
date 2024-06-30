@@ -19,8 +19,7 @@ header {
         max-width: 33rem;
 
         @media (max-width: 365px) {
-            padding: 2.9rem 1.7rem;
-            padding-right: 0.6rem;
+            padding: 2.9rem 1.8rem;
         }
 
         &.admin-div {
@@ -163,6 +162,10 @@ header {
             line-height: 1.1;
             width: 97%;
             margin-bottom: 1rem;
+
+            @media (max-width: 365px) {
+                width: 99%;
+            }
 
             @media (min-width: $desktop-minwidth) {
                 color: $primary;
