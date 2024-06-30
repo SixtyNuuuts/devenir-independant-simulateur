@@ -273,4 +273,79 @@ body {
             }
         }
     }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 2.5rem;
+
+        >* {
+            margin: 0 0.5rem;
+        }
+
+        .current {
+            color: $primary;
+            font-weight: bold;
+        }
+    }
+
+    td.actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 0.2rem !important;
+
+        a {
+            text-decoration: underline;
+            color: $primary;
+            margin-right: 0.5rem;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+    }
+
+    .admin-figure {
+        color: $black;
+        max-width: 47.6rem;
+
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            label.admin-import {
+                margin-right: 0.5rem;
+
+                input {
+                    display: inline-block;
+                    position: absolute;
+                    z-index: -1;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    opacity: 0;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .admin-modal {
+        display: none;
+
+        .btn-primary {
+            width: 47% !important;
+        }
+
+        .btn-secondary {
+            width: 47%;
+            margin-right: 5%;
+        }
+    }
 }

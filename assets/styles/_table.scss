@@ -150,6 +150,10 @@
                     display: none;
                 }
             }
+
+            &.loading {
+                animation: none;
+            }
         }
 
         thead {

@@ -2,84 +2,113 @@
 
 {% block title %}Krizalid | Admin Accueil{% endblock %}
 
-{% block body_attributes %}class="body-layout-bicolor"{% endblock %}
-
 {% block body %}
-<main class="layout-bicolor">
-    <h1 class="title-1">Admin Dashboard</h1>
-
-    <h2>Activités ({{totalActivities}})</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Créé le</th>
-                <th>Mis à jour le</th>
-                <th>Nom</th>
-                <th>Slug</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for activity in paginationActivities %}
+<main>
+    <h1 class="title-1 hidden-mobile">Admin Dashboard</h1>
+    <section aria-labelledby="profits" class="table">
+        <h2 class="table-title" id="profits">Activités ({{totalActivities}})</h2>
+        <table aria-labelledby="table-caption">
+            <thead>
                 <tr>
-                    <td>{{ activity.id }}</td>
-                    <td>{{ activity.createdAt|date('d-m-Y') }}</td>
-                    <td>{{ activity.updatedAt|date('d-m-Y') }}</td>
-                    <td>{{ activity.name }}</td>
-                    <td>{{ activity.slug }}</td>
-                    <td>
-                        <a href="{{ path('app_home', { activitySlug: activity.slug, simulationToken: 'default' }) }}" target="_blank">Edit</a>
-                        <form action="{{ path('app_activity_delete', { id: activity.id }) }}" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de bien vouloir supprimer l'activité "{{ activity.name }}"');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('DELETE' ~ activity.id) }}">
-                            <button type="submit">X</button>
-                        </form>
-                    </td>
+                    <th>ID</th>
+                    <th>Créé le</th>
+                    <th>Mis à jour le</th>
+                    <th>Nom</th>
+                    <th>Slug</th>
+                    <th>Actions</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    {{ knp_pagination_render(paginationActivities) }}
-
-    <h3>Importer Activité (.yml)</h3>
-    <form method="post" action="/admin/import" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <button type="submit" class="btn btn-primary">Importer</button>
-    </form>
-    
-    <h2>Simulations ({{totalSimulations}})</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Créé le</th>
-                <th>Mis à jour le</th>
-                <th>Activité</th>
-                <th>Token</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for simulation in paginationSimulations %}
+            </thead>
+            <tbody>
+                {% for activity in paginationActivities %}
+                    <tr>
+                        <td>{{ activity.id }}</td>
+                        <td>{{ activity.createdAt|date('d-m-Y') }}</td>
+                        <td>{{ activity.updatedAt|date('d-m-Y') }}</td>
+                        <td>{{ activity.name }}</td>
+                        <td>{{ activity.slug }}</td>
+                        <td class="actions">
+                            <a href="{{ path('app_home', { activitySlug: activity.slug, simulationToken: 'default' }) }}" target="_blank">Edit</a>
+                            <form class="admin-delete-item" action="{{ path('app_activity_delete', { id: activity.id }) }}" method="post" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('DELETE' ~ activity.id) }}">
+                                <button type="submit" aria-label="Supprimer Item" class="btn-delete"></button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            {{ knp_pagination_render(paginationActivities) }}
+        </table>
+        <figure class="admin-figure">
+            <figcaption id="profits-total-annual">Importer une Activité</figcaption>
+            <form class="admin-import-activity" method="post" action="{{ path('app_admin_import') }}" enctype="multipart/form-data">
+                <label class="btn-secondary btn-s admin-import">
+                    Choisir fichier (.yml)
+                    <input
+                    type="file"
+                    name="file"
+                    />
+                </label>
+                <button type="submit" class="btn-s btn-primary">Importer</button>
+            </form>
+        </figure>
+    </section>
+    <section aria-labelledby="profits" class="table">
+        <h2 class="table-title" id="profits">Simulations ({{totalSimulations}})</h2>
+        <table aria-labelledby="table-caption">
+            <thead>
                 <tr>
-                    <td>{{ simulation.id }}</td>
-                    <td>{{ simulation.createdAt|date('d-m-Y') }}</td>
-                    <td>{{ simulation.updatedAt|date('d-m-Y') }}</td>
-                    <td>{{ simulation.activity.name }}</td>
-                    <td>{{ simulation.token }}</td>
-                    <td>
-                        <a href="{{ path('app_home', { activitySlug: simulation.activity.slug, simulationToken: simulation.token }) }}" target="_blank">Voir</a>
-                        <form action="{{ path('app_simulation_delete', { id: simulation.id }) }}" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de bien vouloir supprimer la simulation "{{ simulation.token }}"');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('DELETE' ~ simulation.id) }}">
-                            <button type="submit">X</button>
-                        </form>
-                    </td>
+                    <th>ID</th>
+                    <th>Créé le</th>
+                    <th>Mis à jour le</th>
+                    <th>Activité</th>
+                    <th>Token</th>
+                    <th>Actions</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    {{ knp_pagination_render(paginationSimulations) }}
+            </thead>
+            <tbody>
+                {% for simulation in paginationSimulations %}
+                    <tr>
+                        <td>{{ simulation.id }}</td>
+                        <td>{{ simulation.createdAt|date('d-m-Y') }}</td>
+                        <td>{{ simulation.updatedAt|date('d-m-Y') }}</td>
+                        <td>{{ simulation.activity.name }}</td>
+                        <td>{{ simulation.token }}</td>
+                        <td class="actions">
+                            <a href="{{ path('app_home', { activitySlug: simulation.activity.slug, simulationToken: simulation.token }) }}" target="_blank">Voir</a>
+                            <form class="admin-delete-item" action="{{ path('app_simulation_delete', { id: simulation.id }) }}" method="post" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('DELETE' ~ simulation.id) }}">
+                                <button type="submit" aria-label="Supprimer Item" class="btn-delete"></button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {{ knp_pagination_render(paginationSimulations) }}
+    </section>
+    <div class="modal admin-modal" id="confirmDeleteModal">
+      <div class="modal-content">
+        <span class="cross"></span>
+        <p class="modal-title">Confirmer la suppression ?</p>
+        <button class="btn-secondary btn-l" type="button" id="cancelDelete">
+            Annuler
+        </button>
+         <button class="btn-primary btn-l" type="button" id="confirmDelete">
+            Valider
+        </button>
+      </div>
+    </div>
+    <div class="modal admin-modal" id="overwriteConfirmImportActivityModal">
+      <div class="modal-content">
+        <span class="cross"></span>
+        <p class="modal-title">Une activité avec ce slug existe déjà. Souhaitez-vous écraser les données existantes ?</p>
+        <button class="btn-secondary btn-l" type="button" id="cancelOverwrite">
+            Annuler
+        </button>
+         <button class="btn-primary btn-l" type="button" id="confirmOverwrite">
+            Valider
+        </button>
+      </div>
+    </div>
 </main>
 {% endblock %}
