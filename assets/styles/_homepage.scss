@@ -213,9 +213,11 @@ header {
 
         picture {
             position: relative;
+            height: 15rem;
 
             @media (min-width: $desktop-minwidth) {
                 display: flex;
+                height: 18.8rem;
             }
 
             img {
