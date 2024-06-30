@@ -11,6 +11,8 @@ vendor/bin/php-cs-fixer fix
 
 vendor/bin/phpstan analyse
 
+php bin/console security:hash-password
+
 php bin/phpunit
 
 TODO CHANGER contact@your-domain.com
