@@ -194,10 +194,15 @@
                 th,
                 td {
                     max-width: 13rem;
+                    min-width: 4rem;
+
+                    @media (min-width: 390px) {
+                        min-width: 5.3rem;
+                    }
 
                     &:first-child {
                         max-width: 18.5rem;
-                        min-width: 9.5rem;
+                        min-width: 10rem;
 
                         @media (min-width: 390px) {
                             min-width: 13rem;
@@ -382,6 +387,16 @@
         }
     }
 
+    &[aria-labelledby="admin-activities"],
+    &[aria-labelledby="admin-simulations"] {
+        table {
+
+            th,
+            td {
+                text-transform: none;
+            }
+        }
+    }
 
     figure {
         color: $gray-dark;

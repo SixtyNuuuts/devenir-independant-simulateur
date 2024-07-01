@@ -31,7 +31,7 @@ class HomeController extends AbstractController
 			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
 
-		if ($simulationData['token'] === 'default') {
+		if ($simulationData['token'] === 'default' && !$this->isGranted('ROLE_ADMIN')) {
 			try {
 				$simulation = $this->simulationService->createSimulation($activitySlug);
 				$simulationData['id'] = $simulation->getId();
@@ -41,7 +41,7 @@ class HomeController extends AbstractController
 			}
 		}
 
-		if (!$simulationToken) {
+		if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
 			return $this->redirectToRoute('app_professional_incomes', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
@@ -60,7 +60,7 @@ class HomeController extends AbstractController
 			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
 
-		if ($simulationData['token'] === 'default') {
+		if ($simulationData['token'] === 'default' && !$this->isGranted('ROLE_ADMIN')) {
 			try {
 				$simulation = $this->simulationService->createSimulation($activitySlug);
 				$simulationData['id'] = $simulation->getId();
@@ -70,7 +70,7 @@ class HomeController extends AbstractController
 			}
 		}
 
-		if (!$simulationToken) {
+		if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
 			return $this->redirectToRoute('app_professional_expenses', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
@@ -89,7 +89,7 @@ class HomeController extends AbstractController
 			return $this->redirectToRoute('app_home', ['activitySlug' => $activitySlug]);
 		}
 
-		if ($simulationData['token'] === 'default') {
+		if ($simulationData['token'] === 'default' && !$this->isGranted('ROLE_ADMIN')) {
 			try {
 				$simulation = $this->simulationService->createSimulation($activitySlug);
 				$simulationData['id'] = $simulation->getId();
@@ -99,7 +99,7 @@ class HomeController extends AbstractController
 			}
 		}
 
-		if (!$simulationToken) {
+		if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
 			return $this->redirectToRoute('app_personal_flows', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],
@@ -138,7 +138,7 @@ class HomeController extends AbstractController
 			}
 		}
 
-		if (!$simulationToken) {
+		if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
 			return $this->redirectToRoute('app_home', [
 				'activitySlug' => $activitySlug,
 				'simulationToken' => $simulationData['token'],

@@ -26,6 +26,7 @@ const SalarySection = ({
   initialMonthlySalary,
   annualPersonalExpenses,
   onUpdateSalary,
+  onUpdateSalaryWithoutDebounce,
   activitySlug,
   simulationToken,
 }) => {
@@ -47,6 +48,7 @@ const SalarySection = ({
 
   const handleChange = (e) => {
     setMonthlySalary(parseFloat(e.target.value));
+    onUpdateSalaryWithoutDebounce(parseFloat(e.target.value));
   };
 
   const handleMouseUpOrTouchEnd = useCallback(
@@ -105,12 +107,6 @@ const SalarySection = ({
             </span>
           </a>
           <div className="salary-controls">
-            <button
-              onClick={() => handleButtonClick(-1)}
-              aria-label="Retirer 1"
-            >
-              -
-            </button>
             <input
               type="range"
               min="0"
@@ -122,9 +118,6 @@ const SalarySection = ({
               onTouchEnd={handleMouseUpOrTouchEnd}
               aria-label="Salaire mensuel net"
             />
-            <button onClick={() => handleButtonClick(1)} aria-label="Ajouter 1">
-              +
-            </button>
           </div>
         </div>
         <div className="annual-salary">

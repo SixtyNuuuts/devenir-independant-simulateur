@@ -152,6 +152,33 @@ function HomePage({
     [financialData]
   );
 
+  const handleUpdateTargetSalaryForUpdateProfitability = useCallback(
+    (type, newValue) => {
+      if (type === "salaryTarget") {
+        const netSalary = parseFloat(newValue) || 0.0;
+        const employeeContributionRate = 0.3; // 30% to calculate brut salary
+        const employerContributionRate = 0.13; // 13% to calculate total cost
+
+        const brutSalary = netSalary * employeeContributionRate + netSalary;
+        const totalCompanyCost =
+          brutSalary * employerContributionRate + brutSalary;
+
+        const updatedProfessionalExpenses =
+          financialData.professionalExpenses.map((expense) =>
+            expense.id === "total-company-cost"
+              ? { ...expense, value: totalCompanyCost }
+              : expense
+          );
+
+        setFinancialData((prevState) => ({
+          ...prevState,
+          professionalExpenses: updatedProfessionalExpenses,
+        }));
+      }
+    },
+    [financialData]
+  );
+
   const professionalBalanceFutureActivity = useMemo(() => {
     return annualTotals.professionalIncomes - annualTotals.professionalExpenses;
   }, [annualTotals]);
@@ -290,7 +317,6 @@ function HomePage({
                         </span>
                       </a>
                       <div className="salary-controls">
-                        <button aria-label="Retirer 1">-</button>
                         <input
                           type="range"
                           min="0"
@@ -299,7 +325,6 @@ function HomePage({
                           defaultValue="2600"
                           aria-label="Indiquer le salaire mensuel actuel"
                         />
-                        <button aria-label="Ajouter 1">+</button>
                       </div>
                     </div>
                     <div className="annual-salary">
@@ -367,7 +392,6 @@ function HomePage({
                         </span>
                       </a>
                       <div className="salary-controls">
-                        <button aria-label="Retirer 1">-</button>
                         <input
                           type="range"
                           min="0"
@@ -376,7 +400,6 @@ function HomePage({
                           defaultValue="2600"
                           aria-label="Indiquer le salaire mensuel souhaité"
                         />
-                        <button aria-label="Ajouter 1">+</button>
                       </div>
                     </div>
                     <div className="annual-salary">
@@ -421,6 +444,12 @@ function HomePage({
                   onUpdateSalary={(newValue) =>
                     handleUpdateSalary("salaryCurrent", newValue)
                   }
+                  onUpdateSalaryWithoutDebounce={(newValue) =>
+                    handleUpdateTargetSalaryForUpdateProfitability(
+                      "salaryCurrent",
+                      newValue
+                    )
+                  }
                   activitySlug={activity.slug}
                   simulationToken={simulationToken}
                 />
@@ -432,6 +461,12 @@ function HomePage({
                   annualPersonalExpenses={annualPersonalExpenses}
                   onUpdateSalary={(newValue) =>
                     handleUpdateSalary("salaryTarget", newValue)
+                  }
+                  onUpdateSalaryWithoutDebounce={(newValue) =>
+                    handleUpdateTargetSalaryForUpdateProfitability(
+                      "salaryTarget",
+                      newValue
+                    )
                   }
                   activitySlug={activity.slug}
                   simulationToken={simulationToken}
