@@ -265,12 +265,16 @@
                 th,
                 td {
                     &:not(:last-child) {
-                        min-width: 8rem;
+                        min-width: 7.5rem;
+
+                        @media (min-width: 390px) {
+                            min-width: 8rem;
+                        }
                     }
 
                     &:first-child {
-                        max-width: 14.4rem;
-                        min-width: 14.4rem;
+                        max-width: 13.4rem;
+                        min-width: 13.4rem;
 
                         @media (min-width: 390px) {
                             min-width: 15.3rem;
@@ -291,11 +295,15 @@
 
                 th,
                 td {
-                    min-width: 10rem;
+                    min-width: 9.6rem;
+
+                    @media (min-width: 390px) {
+                        min-width: 10rem;
+                    }
 
                     &:first-child {
-                        max-width: 15.5rem;
-                        min-width: 15.5rem;
+                        max-width: 14.5rem;
+                        min-width: 14.5rem;
 
                         @media (min-width: 390px) {
                             min-width: 16.6rem;
