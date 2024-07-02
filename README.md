@@ -1,6 +1,7 @@
 docker-compose up -d
 
 symfony console doctrine:database:create
+
 symfony console doctrine:database:create --env=test
 
 symfony console make:migration | symfony console m:m
@@ -12,7 +13,7 @@ vendor/bin/php-cs-fixer fix
 vendor/bin/phpstan analyse
 
 php bin/console security:hash-password
-UPDATE
+
 php bin/phpunit
 
 TODO CHANGER contact@your-domain.com
