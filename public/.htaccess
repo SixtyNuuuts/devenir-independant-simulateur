@@ -1,9 +1,3 @@
-# Configuration des sessions
-php_value session.save_path "../var/sessions/prod"
-php_value session.gc_maxlifetime 2592000
-php_value session.cookie_lifetime 2592000
-php_value session.gc_probability 1
-
 # Use the front controller as index file. It serves as a fallback solution when
 # every other rewrite/redirect fails (e.g. in an aliased environment without
 # mod_rewrite). Additionally, this reduces the matching process for the
