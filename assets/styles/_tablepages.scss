@@ -11,7 +11,7 @@ body {
             @media (min-width: 500px) {
                 max-width: 40rem;
                 padding: 1.9rem 0.5rem;
-                margin: auto;
+                margin: 0 auto;
                 border-radius: 0.5rem;
                 border: 1px solid $gray-medium;
             }
@@ -63,7 +63,7 @@ body {
                 flex-direction: row;
                 flex-wrap: wrap;
                 align-items: normal;
-                align-content: space-between;
+                align-content: flex-start;
                 justify-content: center;
 
                 .title-description-zone {
@@ -105,6 +105,7 @@ body {
             &.personal-flows-page {
                 .title-description-zone {
                     margin-bottom: 1.2rem;
+                    padding-top: 0;
                 }
 
                 .title-1 {

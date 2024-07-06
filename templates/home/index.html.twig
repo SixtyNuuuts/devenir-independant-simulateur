@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Krizalid | {{ activity.title }}{% endblock %}
+{% block title %}Krizalid | {{ activity.title|striptags }}{% endblock %}
 {% block description %}{{ activity.description|striptags }}{% endblock %}
 
 {% block stylesheets %}

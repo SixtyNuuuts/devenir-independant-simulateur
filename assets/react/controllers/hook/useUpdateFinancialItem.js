@@ -32,7 +32,7 @@ const useUpdateFinancialItem = () => {
         case "manufacturing_cost":
           newItem.attributes["sale_per_month"] = Array.from({ length: 12 }, (_, i) => ({
             month: i + 1,
-            quantity: 100
+            quantity: i === 0 ? 1 : 0,
           }));
           newItem.attributes["manufacturing_cost"] = newItem.attributes["manufacturing_cost"] ?? "00.00";
           break;

@@ -18,7 +18,7 @@ export const tableSpecifications = {
       ...(item.attributes.sale_per_month && item.attributes.sale_per_month.length > 0
         ? item.attributes.sale_per_month.map(sale => ({ value: sale.quantity, type: "number", isEditable: true }))
         : Array.from({ length: 12 }, (_, i) => ({
-          value: 100,
+          value: i === 0 ? 1 : 0,
           type: "number",
           isEditable: true,
           month: i + 1,
@@ -172,7 +172,7 @@ export const tableSpecifications = {
       ...(item.attributes.sale_per_month && item.attributes.sale_per_month.length > 0
         ? item.attributes.sale_per_month.map(sale => ({ value: sale.quantity, type: "number", isEditable: false }))
         : Array.from({ length: 12 }, (_, i) => ({
-          value: 100,
+          value: i === 0 ? 1 : 0,
           type: "number",
           isEditable: false,
           month: i + 1,

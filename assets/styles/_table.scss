@@ -68,7 +68,6 @@
             th,
             td {
                 padding: 0 0.89rem;
-                text-transform: capitalize;
                 max-width: 9rem;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -201,11 +200,24 @@
                     }
 
                     &:first-child {
-                        max-width: 18.5rem;
+                        max-width: 32vw;
                         min-width: 10rem;
+
+                        @media (min-width: 360px) {
+                            max-width: 33vw;
+                        }
 
                         @media (min-width: 390px) {
                             min-width: 13rem;
+                            max-width: 35vw;
+                        }
+
+                        @media (min-width: 500px) {
+                            max-width: 13.3rem;
+                        }
+
+                        @media (min-width: $desktop-minwidth) {
+                            max-width: 18.5rem;
                         }
                     }
                 }

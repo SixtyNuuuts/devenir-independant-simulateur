@@ -6,22 +6,29 @@
     color: $black;
     scroll-behavior: smooth;
 
+    @-moz-document url-prefix() {
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #f3f3f3 #fafafa;
+        }
+    }
+
     * {
-        scrollbar-width: thin;
-        scrollbar-color: $gray-4;
         box-sizing: border-box;
     }
 }
 
-::-webkit-scrollbar {
-    width: 1rem;
-    height: 1rem;
-    display: block;
-    background: transparent;
-}
+@media screen and (min-width: 500px) {
+    ::-webkit-scrollbar {
+        width: 0.95rem;
+        height: 0.95rem;
+        display: block;
+        background: transparent;
+    }
 
-::-webkit-scrollbar-thumb {
-    background: $gray-4;
-    border: 0.2rem solid $white;
-    border-radius: 0.4rem;
+    ::-webkit-scrollbar-thumb {
+        background: #ebebec;
+        border: 0.2rem solid $white;
+        border-radius: 0.8rem;
+    }
 }
