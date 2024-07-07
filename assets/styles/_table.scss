@@ -226,6 +226,10 @@
 
         .complementary {
             max-width: 38.9rem;
+
+            @media (min-width: 500px) {
+                max-width: initial;
+            }
         }
     }
 
