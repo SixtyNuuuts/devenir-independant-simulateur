@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block body %}
-    <main class="layout-bicolor" {{ react_component('HomePage', { 'simulationId': simulationId, 'simulationToken': simulationToken, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw, 'isAdminActivityContext': app.user and 'ROLE_ADMIN' in app.user.roles and simulationToken is same as('default') }) }}>
+    <main class="layout-bicolor" {{ react_component('HomePage', { 'simulationId': simulationId, 'simulationToken': simulationToken, 'countActivities' : count_activities(), 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw, 'isAdminActivityContext': app.user and 'ROLE_ADMIN' in app.user.roles and simulationToken is same as('default') }) }}>
         <header>
             <div>
                 <h1 class="home-title">{{ activity.title|raw }}</h1>
@@ -718,15 +718,17 @@
             <section aria-labelledby="start-simulation">
                 <a class="btn-primary btn-l" id="start-simulation" href="/pizzeria/profits/xFJyD2kE" aria-label="Commencer la simulation pour Pizzéria">Commencer ma simulation</a>
                 <ul>
-                    <li>Données préremplies pour 5 métiers.</li>
+                    <li>Données préremplies pour {{ count_activities() }} métiers.</li>
                     <li>Saisie facile de votre rémunération actuelle et charges mensuelles.</li>
                     <li>Description détaillée des produits avec les coûts fixes associés.</li>
                     <li>Tableau de type P&amp;L (Profit and Loss) pour une vue d'ensemble de votre rentabilité potentielle.</li>
                     <li>Ajustements instantanés pour visualiser l'impact des changements dans votre modèle d'entreprise.</li>
                 </ul>
-                <p>Avec
-                    <strong>krizalid</strong>, vous avez le pouvoir de prendre des décisions éclairées. Anticipez les défis financiers, comprenez les niveaux minimum de vente nécessaires et lancez votre entreprise en toute confiance.</p>
+                <p>Avec <strong>krizalid</strong>, vous avez le pouvoir de prendre des décisions éclairées. Anticipez les défis financiers, comprenez les niveaux minimum de vente nécessaires et lancez votre entreprise en toute confiance.</p>
             </section>
         </div>
     </main>
+    <div class="share-simulation-zone">
+        {% include 'partial/_copy-link.html.twig' with {'activitySlug': activity.slug, 'simulationToken': simulationToken} %}
+    </div>
 {% endblock %}

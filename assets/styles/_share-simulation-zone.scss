@@ -1,0 +1,77 @@
+.share-simulation-zone {
+    background-color: $gray-light;
+    padding: 3.8rem 2.3rem;
+
+    @media screen and (min-width: $desktop-minwidth) {
+        background-color: $transparent;
+        padding: 0;
+    }
+
+    section[aria-labelledby="copy-link-simulation"] {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        @media screen and (min-width: $desktop-minwidth) {
+            border-radius: 0.5rem;
+            border: 1px solid $gray-medium;
+            background-color: $white;
+            max-width: 94.4rem;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 3.3rem;
+        }
+
+        #copy-link-simulation {
+            margin: 0;
+            margin-bottom: 1.8rem;
+            font-size: 1.6rem;
+            font-weight: bold;
+
+            @media screen and (min-width: $desktop-minwidth) {
+                font-size: 1.9rem;
+                margin-bottom: 2.3rem;
+            }
+        }
+
+        p {
+            margin: 0;
+            margin-bottom: 1.8rem;
+            font-size: 1.4rem;
+            color: #99A1B3;
+        }
+
+        button {
+            position: relative;
+
+            svg {
+                margin-left: 1.5rem;
+                width: 2rem;
+                fill: $primary;
+            }
+        }
+
+        .tooltip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.2rem 0.5rem;
+            background-color: $primary;
+            border-radius: 0.2rem;
+            font-size: 0.7rem;
+            color: $white;
+            position: absolute;
+            bottom: -1.8rem;
+            right: 0.7rem;
+            text-transform: uppercase;
+            transition: 0.1s;
+
+            &.hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+    }
+
+}

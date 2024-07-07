@@ -23,6 +23,14 @@ class ActivityRepository extends ServiceEntityRepository
 		parent::__construct($registry, Activity::class);
 	}
 
+	public function countAllActivities(): int
+	{
+		return (int) $this->createQueryBuilder('a')
+			->select('COUNT(a.id)')
+			->getQuery()
+			->getSingleScalarResult();
+	}
+
 	public function findActivityByIdAsArray(int $id): mixed
 	{
 		$qb = $this->createQueryBuilder('a');
@@ -41,8 +49,7 @@ class ActivityRepository extends ServiceEntityRepository
 		])
 			->where('a.id = :id')
 			->setParameter('id', $id)
-			->getQuery()
-		;
+			->getQuery();
 
 		try {
 			return $query->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
@@ -70,8 +77,7 @@ class ActivityRepository extends ServiceEntityRepository
 			'a.mobileImage',
 			'a.desktopImage',
 		])
-			->getQuery()
-		;
+			->getQuery();
 
 		return $query->getArrayResult();
 	}
@@ -89,13 +95,12 @@ class ActivityRepository extends ServiceEntityRepository
 
 		$selectFields = [];
 		foreach ($fields as $field) {
-			$selectFields[] = 'a.'.$field;
+			$selectFields[] = 'a.' . $field;
 		}
 		$qb->select($selectFields);
 
 		$qb->where('a.slug = :slug')
-			->setParameter('slug', $slug)
-		;
+			->setParameter('slug', $slug);
 
 		$result = $qb->getQuery()->getOneOrNullResult();
 

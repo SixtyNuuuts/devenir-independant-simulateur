@@ -21,6 +21,7 @@ import classNames from "classnames";
 function HomePage({
   simulationId,
   simulationToken,
+  countActivities,
   activityData,
   isAdminActivityContext,
 }) {
@@ -1575,7 +1576,7 @@ function HomePage({
             Commencer ma simulation
           </a>
           <ul>
-            <li>Données préremplies pour 5 métiers.</li>
+            <li>Données préremplies pour {countActivities} métiers.</li>
             <li>
               Saisie facile de votre rémunération actuelle et charges
               mensuelles.
