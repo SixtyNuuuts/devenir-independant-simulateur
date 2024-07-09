@@ -173,6 +173,7 @@ class FinancialItemController extends AbstractController
 			$financialItem->setNature($financialItemNature);
 			$financialItem->setType($financialItemType);
 			$financialItem->setAttributes($financialItemAttributes);
+			$financialItem->getSimulation()->setUpdatedAt(new \DateTime());
 
 			$this->em->flush();
 
