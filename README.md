@@ -15,7 +15,7 @@ vendor/bin/phpstan analyse
 php bin/console security:hash-password
 php bin/console cache:clear --env=prod
 php bin/phpunit
-
+php bin/console app:clean-simulations
 TODO CHANGER contact@your-domain.com
 TODO CHANGER Contact // nom de l'adresse au dessus
 
