@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     let tooltipTimeout;
-    const copyLinkButtons = document.querySelectorAll('.copy-link-button');
-
-    if (copyLinkButtons.length === 0) {
-        copyLinkButtons.addEventListener('click', function () {
+    const copyLinkButton = document.getElementById('copy-link-simulation-button');
+    if (copyLinkButton) {
+        copyLinkButton.addEventListener('click', function () {
             const url = this.getAttribute('data-simulationUrl');
 
             navigator.clipboard.writeText(url).then(function () {
