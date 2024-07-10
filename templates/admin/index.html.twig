@@ -22,8 +22,8 @@
                 {% for activity in paginationActivities %}
                     <tr>
                         <td>{{ activity.id }}</td>
-                        <td>{{ activity.createdAt|date('d-m-Y') }}</td>
-                        <td>{{ activity.updatedAt|date('d-m-Y') }}</td>
+                        <td>{{ activity.createdAt|date('d-m-Y H:i:s') }}</td>
+                        <td>{{ activity.updatedAt|date('d-m-Y H:i:s') }}</td>
                         <td>{{ activity.name }}</td>
                         <td>{{ activity.slug }}</td>
                         <td class="actions">
@@ -69,8 +69,8 @@
                 {% for simulation in paginationSimulations %}
                     <tr>
                         <td>{{ simulation.id }}</td>
-                        <td>{{ simulation.createdAt|date('d-m-Y') }}</td>
-                        <td>{{ simulation.updatedAt|date('d-m-Y') }}</td>
+                        <td>{{ simulation.createdAt|date('d-m-Y H:i:s') }}</td>
+                        <td>{{ simulation.updatedAt|date('d-m-Y H:i:s') }}</td>
                         <td>{{ simulation.activity.name }}</td>
                         <td>{{ simulation.token }}</td>
                         <td class="actions">

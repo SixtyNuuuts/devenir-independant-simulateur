@@ -5,6 +5,7 @@ import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
 import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
 import FinancialItemsTable from "./component/FinancialItemsTable";
 import AddFinancialItemModal from "./component/AddFinancialItemModal";
+import DeleteFinancialItemConfirmationModal from "./component/DeleteFinancialItemConfirmationModal";
 import BalanceSection from "./component/BalanceSection";
 import f from "./utils/function";
 
@@ -47,6 +48,9 @@ function PersonalFlowsPage({ simulationId }) {
     personalIncomes: false,
     personalExpenses: false,
   });
+
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
     setFinancialData((prevState) => ({
@@ -202,6 +206,19 @@ function PersonalFlowsPage({ simulationId }) {
       [type]: annualTotal,
     }));
   }, []);
+
+  const handleDeleteClick = useCallback((type, item) => {
+    setItemToDelete({ type, item });
+    setDeleteModalOpen(true);
+  }, []);
+
+  const handleDeleteConfirm = useCallback(async () => {
+    if (itemToDelete && itemToDelete.type && itemToDelete.item) {
+      await handleDeleteItem(itemToDelete.type, itemToDelete.item.id);
+      setDeleteModalOpen(false);
+      setItemToDelete(null);
+    }
+  }, [itemToDelete, handleDeleteItem]);
 
   const personalBalanceToday = useMemo(() => {
     return annualTotals.personalIncomes - annualTotals.personalExpenses;
@@ -493,8 +510,8 @@ function PersonalFlowsPage({ simulationId }) {
               onUpdateFinancialItem={(itemId, fieldKey, newValue) =>
                 handleUpdateItem("personalExpenses", itemId, fieldKey, newValue)
               }
-              onDeleteFinancialItem={(itemId) =>
-                handleDeleteItem("personalExpenses", itemId)
+              onDeleteFinancialItem={(item) =>
+                handleDeleteClick("personalExpenses", item)
               }
               onAnnualTotalChange={(annualTotal) =>
                 handleAnnualTotalChange("personalExpenses", annualTotal)
@@ -670,8 +687,8 @@ function PersonalFlowsPage({ simulationId }) {
                     newValue
                   )
                 }
-                onDeleteFinancialItem={(itemId) =>
-                  handleDeleteItem("personalIncomes", itemId)
+                onDeleteFinancialItem={(item) =>
+                  handleDeleteClick("personalIncomes", item)
                 }
                 onAnnualTotalChange={(annualTotal) =>
                   handleAnnualTotalChange("personalIncomes", annualTotal)
@@ -716,6 +733,14 @@ function PersonalFlowsPage({ simulationId }) {
         isOpen={modalState.personalExpenses}
         onClose={() => toggleModal("personalExpenses", false)}
         onSave={(item) => handleAddItemProcess("personalExpenses", item)}
+      />
+      <DeleteFinancialItemConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onDelete={handleDeleteConfirm}
+        itemName={
+          itemToDelete && itemToDelete.item ? itemToDelete.item.name : ""
+        }
       />
     </>
   );

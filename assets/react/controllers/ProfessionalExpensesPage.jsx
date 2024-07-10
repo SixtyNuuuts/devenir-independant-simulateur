@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import FinancialItemsTable from "./component/FinancialItemsTable";
 import AddFinancialItemModal from "./component/AddFinancialItemModal";
+import DeleteFinancialItemConfirmationModal from "./component/DeleteFinancialItemConfirmationModal";
 import useGetFinancialItems from "./hook/useGetFinancialItems";
 import useCreateFinancialItem from "./hook/useCreateFinancialItem";
 import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
@@ -28,6 +29,9 @@ function ProfessionalExpensesPage({ simulationId }) {
     isModalAddProfessionalExpenseOpen,
     setModalAddProfessionalExpenseOpen,
   ] = useState(false);
+
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
     setProfessionalExpenses(professionalExpensesData);
@@ -138,6 +142,19 @@ function ProfessionalExpensesPage({ simulationId }) {
       )
     );
   }, []);
+
+  const handleDeleteClick = useCallback((item) => {
+    setItemToDelete(item);
+    setDeleteModalOpen(true);
+  }, []);
+
+  const handleDeleteConfirm = useCallback(async () => {
+    if (itemToDelete) {
+      await onDeleteFinancialItem(itemToDelete.id);
+      setDeleteModalOpen(false);
+      setItemToDelete(null);
+    }
+  }, [itemToDelete, onDeleteFinancialItem]);
 
   return (
     <>
@@ -596,13 +613,19 @@ function ProfessionalExpensesPage({ simulationId }) {
             type="charges"
             onAddFinancialItem={onAddFinancialItem}
             onUpdateFinancialItem={onUpdateFinancialItem}
-            onDeleteFinancialItem={onDeleteFinancialItem}
+            onDeleteFinancialItem={handleDeleteClick}
           />
           <AddFinancialItemModal
             type="charge"
             isOpen={isModalAddProfessionalExpenseOpen}
             onClose={() => setModalAddProfessionalExpenseOpen(false)}
             onSave={onAddFinancialItemProcess}
+          />
+          <DeleteFinancialItemConfirmationModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => setDeleteModalOpen(false)}
+            onDelete={handleDeleteConfirm}
+            itemName={itemToDelete ? itemToDelete.name : ""}
           />
         </>
       )}

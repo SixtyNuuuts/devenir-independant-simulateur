@@ -70,7 +70,7 @@ const TableRow = ({ item, specification, onEditCell, onDelete }) => {
             type="button"
             aria-label="Supprimer Item"
             className="btn-delete"
-            onClick={() => onDelete(item.id)}
+            onClick={() => onDelete(item)}
           ></button>
         )}
       </td>

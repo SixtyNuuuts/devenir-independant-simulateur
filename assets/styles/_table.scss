@@ -119,6 +119,13 @@
                     font-weight: normal;
                     overflow: hidden;
                     text-overflow: ellipsis;
+                    max-height: 2.925rem;
+                    line-height: 1;
+                    overflow: hidden;
+                    white-space: initial;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
                 }
 
                 input {
@@ -406,10 +413,16 @@
     &[aria-labelledby="admin-activities"],
     &[aria-labelledby="admin-simulations"] {
         table {
+            tr {
 
-            th,
-            td {
-                text-transform: none;
+                th,
+                td {
+                    max-width: 24rem;
+
+                    &:first-child {
+                        min-width: 3rem;
+                    }
+                }
             }
         }
     }

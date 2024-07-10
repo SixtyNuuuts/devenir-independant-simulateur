@@ -114,7 +114,7 @@ class HomeController extends AbstractController
 	{
 		$activity = $this->activityRepository->findOneBySlug($activitySlug);
 		if (!$activity) {
-			$defaultActivity = $this->activityRepository->findOneBy([], ['id' => 'ASC']);
+			$defaultActivity = $this->activityRepository->findOneBy(['slug' => 'devenir-independant']);
 			if (!$defaultActivity) {
 				return $this->redirectToRoute('app_404'); // TODO : 404 page;
 			}

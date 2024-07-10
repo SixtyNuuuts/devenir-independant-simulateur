@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import FinancialItemsTable from "./component/FinancialItemsTable";
 import AddFinancialItemModal from "./component/AddFinancialItemModal";
+import DeleteFinancialItemConfirmationModal from "./component/DeleteFinancialItemConfirmationModal";
 import useGetFinancialItems from "./hook/useGetFinancialItems";
 import useCreateFinancialItem from "./hook/useCreateFinancialItem";
 import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
@@ -26,6 +27,9 @@ function ProfessionalIncomesPage({ simulationId }) {
 
   const [isModalAddProfessionalIncomeOpen, setModalAddProfessionalIncomeOpen] =
     useState(false);
+
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
     setProfessionalIncomes(professionalIncomesData);
@@ -125,6 +129,19 @@ function ProfessionalIncomesPage({ simulationId }) {
       )
     );
   }, []);
+
+  const handleDeleteClick = useCallback((item) => {
+    setItemToDelete(item);
+    setDeleteModalOpen(true);
+  }, []);
+
+  const handleDeleteConfirm = useCallback(async () => {
+    if (itemToDelete) {
+      await onDeleteFinancialItem(itemToDelete.id);
+      setDeleteModalOpen(false);
+      setItemToDelete(null);
+    }
+  }, [itemToDelete, onDeleteFinancialItem]);
 
   return (
     <>
@@ -730,20 +747,26 @@ function ProfessionalIncomesPage({ simulationId }) {
             type="profits"
             onAddFinancialItem={onAddFinancialItem}
             onUpdateFinancialItem={onUpdateFinancialItem}
-            onDeleteFinancialItem={onDeleteFinancialItem}
+            onDeleteFinancialItem={handleDeleteClick}
           />
           <FinancialItemsTable
             financialItems={professionalIncomes}
             type="products"
             onAddFinancialItem={onAddFinancialItem}
             onUpdateFinancialItem={onUpdateFinancialItem}
-            onDeleteFinancialItem={onDeleteFinancialItem}
+            onDeleteFinancialItem={handleDeleteClick}
           />
           <AddFinancialItemModal
             type="product"
             isOpen={isModalAddProfessionalIncomeOpen}
             onClose={() => setModalAddProfessionalIncomeOpen(false)}
             onSave={onAddFinancialItemProcess}
+          />
+          <DeleteFinancialItemConfirmationModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => setDeleteModalOpen(false)}
+            onDelete={handleDeleteConfirm}
+            itemName={itemToDelete ? itemToDelete.name : ""}
           />
         </>
       )}
