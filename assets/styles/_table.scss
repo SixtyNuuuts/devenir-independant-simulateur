@@ -99,6 +99,10 @@
                     min-width: 11.8rem;
                     padding-right: 0.8rem;
 
+                    @media screen and (min-width: $desktop-minwidth) {
+                        max-width: 15.9rem;
+                    }
+
                     &.is-editable {
                         color: $black;
                     }
