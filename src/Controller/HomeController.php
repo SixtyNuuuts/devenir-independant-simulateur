@@ -48,7 +48,9 @@ class HomeController extends AbstractController
 			]);
 		}
 
-		return $this->render('home/professional_incomes.html.twig', ['simulationId' => $simulationData['id'], 'simulationToken' => $simulationData['token'], 'activitySlug' => $activitySlug]);
+		$activity = $this->activityRepository->findOneBySlug($activitySlug);
+
+		return $this->render('home/professional_incomes.html.twig', ['simulationId' => $simulationData['id'], 'simulationToken' => $simulationData['token'], 'activitySlug' => $activitySlug ?? $activity->getSlug(), 'activity' => $activity]);
 	}
 
 	#[Route('/{activitySlug}/charges/{simulationToken}', name: 'app_professional_expenses', methods: ['GET'])]
@@ -77,7 +79,9 @@ class HomeController extends AbstractController
 			]);
 		}
 
-		return $this->render('home/professional_expenses.html.twig', ['simulationId' => $simulationData['id'], 'simulationToken' => $simulationData['token'], 'activitySlug' => $activitySlug]);
+		$activity = $this->activityRepository->findOneBySlug($activitySlug);
+
+		return $this->render('home/professional_expenses.html.twig', ['simulationId' => $simulationData['id'], 'simulationToken' => $simulationData['token'], 'activitySlug' => $activitySlug ?? $activity->getSlug(), 'activity' => $activity]);
 	}
 
 	#[Route('/{activitySlug}/niveau-de-vie/{simulationToken}', name: 'app_personal_flows', methods: ['GET'])]
@@ -106,7 +110,9 @@ class HomeController extends AbstractController
 			]);
 		}
 
-		return $this->render('home/personal_flows.html.twig', ['simulationId' => $simulationData['id'], 'simulationToken' => $simulationData['token'], 'activitySlug' => $activitySlug]);
+		$activity = $this->activityRepository->findOneBySlug($activitySlug);
+
+		return $this->render('home/personal_flows.html.twig', ['simulationId' => $simulationData['id'], 'simulationToken' => $simulationData['token'], 'activitySlug' => $activitySlug ?? $activity->getSlug(), 'activity' => $activity]);
 	}
 
 	#[Route('/{activitySlug}/{simulationToken}', name: 'app_home', methods: ['GET'], requirements: ['activitySlug' => '^(?!activity|admin|financial-item|inscription|verify|reset-password|connexion|deconnexion|simulation|mentions-legales|protection-des-donnees-personnelles|image)[a-z-]+$'])]

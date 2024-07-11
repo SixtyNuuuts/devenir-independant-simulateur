@@ -1,6 +1,6 @@
 .share-simulation-zone {
     background-color: $gray-light;
-    padding: 3.8rem 2.3rem;
+    padding: 3.8rem 2.7rem;
 
     @media screen and (min-width: $desktop-minwidth) {
         background-color: $transparent;
@@ -12,6 +12,8 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
+        padding-bottom: 3.5rem;
+        border-bottom: 1px solid #DFDFDF;
 
         @media screen and (min-width: $desktop-minwidth) {
             border-radius: 0.5rem;
@@ -19,7 +21,7 @@
             background-color: $white;
             max-width: 94.4rem;
             margin: 0 auto;
-            margin-bottom: 4rem;
+            margin-bottom: 4.3rem;
             padding: 3.3rem;
         }
 
@@ -44,11 +46,18 @@
 
         button {
             position: relative;
+            max-width: 105%;
+
+            span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
             svg {
                 margin-left: 1.5rem;
                 width: 2rem;
                 fill: $primary;
+                flex: none;
             }
         }
 
@@ -74,4 +83,96 @@
         }
     }
 
+    section[aria-labelledby="share-social-simulation"] {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        @media screen and (min-width: $desktop-minwidth) {
+            flex-direction: row;
+            justify-content: center;
+            margin-bottom: 4.5rem;
+        }
+
+        #share-social-simulation {
+            font-size: 1.6rem;
+            margin-top: 2.8rem;
+            margin-bottom: 2rem;
+
+            @media screen and (min-width: $desktop-minwidth) {
+                font-weight: initial;
+                margin: 0;
+                margin-right: 1.8rem;
+            }
+        }
+
+        ul {
+            display: flex;
+            align-items: center;
+            border-radius: .2rem;
+
+            li {
+                cursor: pointer;
+
+                &:not(:last-child) {
+                    margin-right: 1.2rem;
+                }
+
+                a {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 1.1rem;
+                    width: 4.5rem;
+                    height: 4.5rem;
+                    transition: 0.25s;
+                    border-radius: 50%;
+                    border: 0.5rem solid #ECEDF1;
+                    background-color: #FFFFFF;
+                    transition: 0.25s;
+
+                    &:hover {
+                        border-color: #c2d2ff;
+
+                        svg {
+                            fill: $primary;
+                        }
+                    }
+
+                    svg {
+                        width: 1.8rem;
+                        transition: 0.25s;
+
+                        &.picto-twitter {
+                            width: 1.75rem;
+                        }
+
+                        &.picto-facebook {
+                            width: 1.8rem;
+                            position: relative;
+                            left: -0.1rem;
+                            top: -0.1rem;
+                        }
+
+                        &.picto-pinterest {
+                            width: 2.1rem;
+                            position: relative;
+                            top: -0.1rem;
+                        }
+
+                        &.picto-linkedin {
+                            width: 1.65rem;
+                        }
+
+                        &.picto-email {
+                            width: 1.65rem;
+                            position: relative;
+                            left: -0.1rem;
+                            top: -0.1rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

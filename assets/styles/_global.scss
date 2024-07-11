@@ -50,7 +50,7 @@ body {
         overflow: hidden;
         margin: auto;
         margin-top: 0.7rem;
-        min-height: calc(100vh - 20.39rem);
+        // min-height: calc(100vh - 20.39rem);
 
         @media (min-width: $desktop-minwidth) {
             overflow: visible;

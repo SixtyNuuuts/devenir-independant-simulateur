@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Krizalid | {{ activity.title|striptags }}{% endblock %}
-{% block description %}{{ activity.description|striptags }}{% endblock %}
+{% set krizalid_page_title = activity.title|striptags %}
+{% set krizalid_page_description = activity.description|striptags %}
+{% set krizalid_page_url = absolute_url(path('app_home', { activitySlug: activitySlug, simulationToken: simulationToken })) %}
+{% set krizalid_page_url_short = '/' ~ activitySlug ~ '/' ~ simulationToken %}
+{% set krizalid_image_activity = absolute_url(activity.desktopImage) %}
+{% block title %}Krizalid | {{ krizalid_page_title }}{% endblock %}
+{% block description %}{{ krizalid_page_description }}{% endblock %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('home') }}
@@ -729,6 +734,7 @@
         </div>
     </main>
     <div class="share-simulation-zone">
-        {% include 'partial/_copy-link.html.twig' with {'activitySlug': activity.slug, 'simulationToken': simulationToken} %}
+        {% include 'partial/_copy-link.html.twig' with {'krizalid_page_url': krizalid_page_url, 'krizalid_page_url_short': krizalid_page_url_short} %}
+        {% include 'partial/_share-social.html.twig' with {'krizalid_page_url': krizalid_page_url, 'krizalid_page_title': krizalid_page_title, 'krizalid_page_description': krizalid_page_description, 'krizalid_image_activity':  krizalid_image_activity } %}
     </div>
 {% endblock %}

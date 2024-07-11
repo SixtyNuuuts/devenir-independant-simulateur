@@ -17,6 +17,10 @@
         padding: 2.3rem 1.5rem;
         padding-right: 1.8rem;
         margin-bottom: 3.7rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 
     .table-title {
@@ -63,7 +67,7 @@
 
 
         tr {
-            height: 2.8rem;
+            height: 2.9rem;
 
             th,
             td {

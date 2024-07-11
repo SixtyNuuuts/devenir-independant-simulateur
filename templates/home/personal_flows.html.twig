@@ -1,6 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Krizalid | Niveau de vie{% endblock %}
+{% set pageName = 'Niveau de vie' %}
+{% set krizalid_page_title = pageName ~ ' - ' ~ activity.title|striptags %}
+{% set krizalid_page_description = pageName ~ ' : ' ~ activity.description|striptags %}
+{% set krizalid_page_url = absolute_url(path('app_personal_flows', {'activitySlug': activitySlug, 'simulationToken': simulationToken})) %}
+{% set krizalid_page_url_short = '/' ~ activitySlug ~ '/niveau-de-vie/' ~ simulationToken %}
+{% set krizalid_image_activity = absolute_url(activity.desktopImage) %}
+{% block title %}Krizalid | {{ krizalid_page_title }}{% endblock %}
+{% block description %}{{ krizalid_page_description }}{% endblock %}
 
 {% block body %}
     <main {{ react_component('PersonalFlowsPage', { 'simulationId': simulationId }) }} class="personal-flows-page">
@@ -271,4 +278,8 @@
             </div>
         </div>
     </main>
+    <div class="share-simulation-zone">
+        {% include 'partial/_copy-link.html.twig' with {'krizalid_page_url': krizalid_page_url, 'krizalid_page_url_short': krizalid_page_url_short} %}
+        {% include 'partial/_share-social.html.twig' with {'krizalid_page_url': krizalid_page_url, 'krizalid_page_title': krizalid_page_title, 'krizalid_page_description': krizalid_page_description, 'krizalid_image_activity':  krizalid_image_activity } %}
+    </div>
 {% endblock %}
