@@ -29,5 +29,12 @@ services:
         tags:
             - { name: twig.extension }
 
+    App\Command\CleanAnonymousUsersCommand:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $anonymousUserRepository: '@App\Repository\AnonymousUserRepository'
+            $sessionSavePath: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        tags: ['console.command']
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
