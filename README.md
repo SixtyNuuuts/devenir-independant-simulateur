@@ -16,6 +16,7 @@ php bin/console security:hash-password
 php bin/console cache:clear --env=prod
 php bin/phpunit
 php bin/console app:clean-simulations
+php bin/console app:clean-anonymous-users
 TODO CHANGER contact@your-domain.com
 TODO CHANGER Contact // nom de l'adresse au dessus
 
