@@ -24,6 +24,10 @@ const EditableCell = ({ itemValue: initialValue, itemType, onSave }) => {
     }
   };
 
+  const handleFocus = () => {
+    setEditing(true);
+  };
+
   return (
     <>
       {editing ? (
@@ -45,6 +49,7 @@ const EditableCell = ({ itemValue: initialValue, itemType, onSave }) => {
           tabIndex={0}
           role="button"
           aria-label="Edit"
+          onFocus={handleFocus}
         >
           {itemType === "product-name" ? (
             <h3>{f.displayValue(value, itemType)}</h3>

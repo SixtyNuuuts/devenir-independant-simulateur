@@ -22,10 +22,10 @@ const DeleteFinancialItemConfirmationModal = ({
           <span className="item-name">{itemName}</span> ?
         </p>
         <div className="modal-buttons-group">
-          <button onClick={onClose} className="btn-secondary btn-l">
+          <button onClick={onClose} className="btn-secondary btn-m">
             Annuler
           </button>
-          <button onClick={onDelete} className="btn-primary btn-l">
+          <button onClick={onDelete} className="btn-primary btn-m">
             Supprimer
           </button>
         </div>
