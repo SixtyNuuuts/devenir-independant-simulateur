@@ -4,12 +4,13 @@
 
 namespace App\Command;
 
-use App\Repository\AnonymousUserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Console\Attribute\AsCommand;
+use App\Repository\AnonymousUserRepository;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
 #[AsCommand(
 	name: 'app:clean-anonymous-users',
@@ -19,13 +20,16 @@ class CleanAnonymousUsersCommand extends Command
 {
 	private EntityManagerInterface $entityManager;
 	private AnonymousUserRepository $anonymousUserRepository;
-	private string $sessionSavePath;
+	private PdoSessionHandler $sessionHandler;
 
-	public function __construct(EntityManagerInterface $entityManager, AnonymousUserRepository $anonymousUserRepository, string $sessionSavePath)
-	{
+	public function __construct(
+		EntityManagerInterface $entityManager,
+		AnonymousUserRepository $anonymousUserRepository,
+		PdoSessionHandler $sessionHandler
+	) {
 		$this->entityManager = $entityManager;
 		$this->anonymousUserRepository = $anonymousUserRepository;
-		$this->sessionSavePath = $sessionSavePath;
+		$this->sessionHandler = $sessionHandler;
 
 		parent::__construct();
 	}
@@ -46,10 +50,7 @@ class CleanAnonymousUsersCommand extends Command
 
 			// Supprimer la session si elle existe
 			if ($sessionId) {
-				$sessionFile = $this->sessionSavePath . '/sess_' . $sessionId;
-				if (file_exists($sessionFile)) {
-					unlink($sessionFile);
-				}
+				$this->sessionHandler->destroy($sessionId);
 			}
 
 			// Supprimer l'utilisateur anonyme

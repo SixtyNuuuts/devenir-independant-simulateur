@@ -28,13 +28,11 @@ services:
     App\Twig\AppExtension:
         tags:
             - { name: twig.extension }
-
-    App\Command\CleanAnonymousUsersCommand:
+        
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
-            $anonymousUserRepository: '@App\Repository\AnonymousUserRepository'
-            $sessionSavePath: '%kernel.project_dir%/var/sessions/%kernel.environment%'
-        tags: ['console.command']
+            - '%env(DATABASE_URL)%'
+            - { db_table: 'sessions', db_id_col: 'sess_id', db_data_col: 'sess_data', db_lifetime_col: 'sess_lifetime', db_time_col: 'sess_time' }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
