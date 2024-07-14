@@ -125,5 +125,58 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(error => console.error('Fetch error:', error));
         }
+
+        const modalClean = document.getElementById('confirmCleanModal');
+        const closeCleanModal = modalClean.querySelector('.modal .cross');
+        const confirmClean = document.getElementById('confirmClean');
+        const cancelClean = document.getElementById('cancelClean');
+        let formToClean;
+
+        document.querySelectorAll('.admin-clean').forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                formToClean = form;
+                modalClean.style.display = 'flex';
+            });
+        });
+
+        closeCleanModal.addEventListener('click', () => {
+            modalClean.style.display = 'none';
+        });
+
+        cancelClean.addEventListener('click', () => {
+            modalClean.style.display = 'none';
+            formToClean = null;
+        });
+
+        confirmClean.addEventListener('click', () => {
+            if (formToClean) {
+                const formData = new FormData(formToClean);
+
+                fetch(formToClean.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            return response.json().then(data => {
+                                console.error('Error:', data);
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Fetch error:', error));
+            }
+            modalClean.style.display = 'none';
+            formToClean = null;
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == modalClean) {
+                modalClean.style.display = 'none';
+                formToClean = null;
+            }
+        });
     }
 });
