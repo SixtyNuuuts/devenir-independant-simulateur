@@ -20,6 +20,8 @@ commandes dans l'ordre :
 php bin/console app:clean-simulations
 php bin/console app:clean-anonymous-users
 
+./run_clean_commands.sh
+
 TODO CHANGER contact@your-domain.com
 TODO CHANGER Contact // nom de l'adresse au dessus
 
