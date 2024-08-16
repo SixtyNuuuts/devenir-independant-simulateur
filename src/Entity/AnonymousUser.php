@@ -23,6 +23,9 @@ class AnonymousUser
 	#[ORM\Column(length: 255, nullable: true)]
 	private ?string $sessionId = null;
 
+	#[ORM\Column(length: 45, nullable: true)] // Longueur 45 pour supporter IPv6
+	private ?string $ipAddress = null;
+
 	#[ORM\OneToMany(targetEntity: Simulation::class, mappedBy: 'anonymousUser')]
 	private Collection $simulations;
 
@@ -67,6 +70,18 @@ class AnonymousUser
 	public function setSessionId(?string $sessionId): static
 	{
 		$this->sessionId = $sessionId;
+
+		return $this;
+	}
+
+	public function getIpAddress(): ?string
+	{
+		return $this->ipAddress;
+	}
+
+	public function setIpAddress(?string $ipAddress): static
+	{
+		$this->ipAddress = $ipAddress;
 
 		return $this;
 	}
