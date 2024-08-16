@@ -34,6 +34,9 @@ class CleanSimulationsCommand extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
+		// Augmente la limite de mémoire pour ce script à 1 Go
+		ini_set('memory_limit', '1024M');
+
 		$now = new \DateTime();
 		$now->modify('-4 hours');
 

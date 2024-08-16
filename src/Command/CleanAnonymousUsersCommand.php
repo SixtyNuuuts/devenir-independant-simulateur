@@ -32,6 +32,9 @@ class CleanAnonymousUsersCommand extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
+		// Augmente la limite de mémoire pour ce script à 1 Go
+		ini_set('memory_limit', '1024M');
+
 		$output->writeln('Nettoyage des utilisateurs anonymes sans simulations et de leurs sessions...');
 
 		// Critère pour identifier les utilisateurs anonymes à supprimer
