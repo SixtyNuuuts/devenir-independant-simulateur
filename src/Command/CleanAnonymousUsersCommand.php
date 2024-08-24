@@ -10,7 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
+use Doctrine\DBAL\Connection;
 
 #[AsCommand(
 	name: 'app:clean-anonymous-users',
@@ -20,16 +20,16 @@ class CleanAnonymousUsersCommand extends Command
 {
 	private EntityManagerInterface $entityManager;
 	private AnonymousUserRepository $anonymousUserRepository;
-	private PdoSessionHandler $sessionHandler;
+	private Connection $connection;
 
 	public function __construct(
 		EntityManagerInterface $entityManager,
 		AnonymousUserRepository $anonymousUserRepository,
-		PdoSessionHandler $sessionHandler
+		Connection $connection
 	) {
 		$this->entityManager = $entityManager;
 		$this->anonymousUserRepository = $anonymousUserRepository;
-		$this->sessionHandler = $sessionHandler;
+		$this->connection = $connection;
 
 		parent::__construct();
 	}
@@ -37,11 +37,6 @@ class CleanAnonymousUsersCommand extends Command
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$output->writeln('Nettoyage des utilisateurs anonymes sans simulations et de leurs sessions...');
-
-		// Ouvre la session avant de la manipuler
-		if (session_status() === PHP_SESSION_NONE) {
-			$this->sessionHandler->open(session_save_path(), session_name());
-		}
 
 		// Critère pour identifier les utilisateurs anonymes à supprimer
 		$anonymousUsers = $this->anonymousUserRepository->createQueryBuilder('u')
@@ -53,9 +48,13 @@ class CleanAnonymousUsersCommand extends Command
 		foreach ($anonymousUsers as $anonymousUser) {
 			$sessionId = $anonymousUser->getSessionId();
 
-			// Supprimer la session si elle existe
+			// Supprimer la session dans la table `sessions`
 			if ($sessionId) {
-				$this->sessionHandler->destroy($sessionId);
+				$this->connection->createQueryBuilder()
+					->delete('sessions')
+					->where('sess_id = :sessId')
+					->setParameter('sessId', $sessionId)
+					->executeStatement();
 			}
 
 			// Supprimer l'utilisateur anonyme
