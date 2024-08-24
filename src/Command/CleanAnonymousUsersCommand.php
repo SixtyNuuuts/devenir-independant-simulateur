@@ -38,6 +38,11 @@ class CleanAnonymousUsersCommand extends Command
 	{
 		$output->writeln('Nettoyage des utilisateurs anonymes sans simulations et de leurs sessions...');
 
+		// Ouvre la session avant de la manipuler
+		if (session_status() === PHP_SESSION_NONE) {
+			$this->sessionHandler->open(session_save_path(), session_name());
+		}
+
 		// Critère pour identifier les utilisateurs anonymes à supprimer
 		$anonymousUsers = $this->anonymousUserRepository->createQueryBuilder('u')
 			->leftJoin('u.simulations', 's')
