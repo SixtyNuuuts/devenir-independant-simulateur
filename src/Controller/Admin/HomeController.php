@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Entity\User;
 use App\Entity\Activity;
+use App\Entity\Simulation;
 use App\Entity\AnonymousUser;
 use App\Entity\FinancialItem;
-use App\Entity\Simulation;
-use App\Entity\User;
-use App\Enum\FinancialItemNature;
-use App\Enum\FinancialItemType;
 use App\Security\UserService;
+use App\Enum\FinancialItemType;
+use Symfony\Component\Yaml\Yaml;
+use App\Enum\FinancialItemNature;
+use App\Repository\SimulationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AnonymousUserRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/admin')]
 #[IsGranted('ROLE_ADMIN')]
@@ -46,8 +48,7 @@ class HomeController extends AbstractController
 			->where('s.token != :defaultToken')
 			->setParameter('defaultToken', 'default')
 			->orderBy('s.createdAt', 'DESC')
-			->getQuery()
-		;
+			->getQuery();
 
 		$pageActivities = $request->query->getInt('page_activities', 1);
 		$pageSimulations = $request->query->getInt('page_simulations', 1);
@@ -63,16 +64,14 @@ class HomeController extends AbstractController
 		$totalActivities = $activityRepo->createQueryBuilder('a')
 			->select('count(a.id)')
 			->getQuery()
-			->getSingleScalarResult()
-		;
+			->getSingleScalarResult();
 
 		$totalSimulations = $simulationRepo->createQueryBuilder('s')
 			->select('count(s.id)')
 			->where('s.token != :defaultToken')
 			->setParameter('defaultToken', 'default')
 			->getQuery()
-			->getSingleScalarResult()
-		;
+			->getSingleScalarResult();
 
 		return $this->render('admin/index.html.twig', [
 			'paginationActivities' => $paginationActivities,
@@ -145,15 +144,13 @@ class HomeController extends AbstractController
 					->setDescription($activityDescription)
 					->setDetailedDescription($activityDetailedDescription)
 					->setMobileImage($activity->getMobileImage() ?? '/')
-					->setDesktopImage($activity->getDesktopImage() ?? '/')
-				;
+					->setDesktopImage($activity->getDesktopImage() ?? '/');
 
 				$entityManager->persist($activity);
 
 				$simulation ??= new Simulation();
 				$simulation->setActivity($activity)
-					->setToken('default')
-				;
+					->setToken('default');
 				$entityManager->persist($simulation);
 
 				$this->processFinancialItems($data, $simulation, $entityManager);
@@ -170,6 +167,43 @@ class HomeController extends AbstractController
 		}
 
 		return $this->render('admin/import.html.twig');
+	}
+
+	#[Route('/clean', name: 'app_admin_clean', methods: ['POST'])]
+	public function clean(EntityManagerInterface $entityManager, SimulationRepository $simulationRepository, AnonymousUserRepository $anonymousUserRepository): Response
+	{
+		$simulations = $simulationRepository->createQueryBuilder('s')
+			->andWhere('s.token != :defaultToken')
+			->setParameter('defaultToken', 'default')
+			->getQuery()
+			->getResult();
+
+		$countDeletedSimulations = 0;
+		foreach ($simulations as $simulation) {
+			if ($simulation->getUpdatedAt() == $simulation->getCreatedAt()) {
+				$entityManager->remove($simulation);
+				$countDeletedSimulations++;
+			}
+		}
+
+		$entityManager->flush();
+
+		$anonymousUsers = $anonymousUserRepository->createQueryBuilder('u')
+			->leftJoin('u.simulations', 's')
+			->where('s.id IS NULL')
+			->getQuery()
+			->getResult();
+
+		$countDeletedAnonymousUser = 0;
+		foreach ($anonymousUsers as $anonymousUser) {
+			$entityManager->remove($anonymousUser);
+			$countDeletedAnonymousUser++;
+		}
+
+		$entityManager->flush();
+
+		// Afficher les résultats dans la réponse
+		return $this->json(['success' => 'Nettoyage terminé, Résultats: ' . $countDeletedSimulations . ' simulations supprimées et ' . $countDeletedAnonymousUser . ' utilisateurs anonymes supprimés'], Response::HTTP_OK);
 	}
 
 	/**
@@ -208,8 +242,7 @@ class HomeController extends AbstractController
 			->setValue($financialItemValue)
 			->setAttributes($financialItemAttributes)
 			->setNature(FinancialItemNature::from($nature))
-			->setType(FinancialItemType::from($type))
-		;
+			->setType(FinancialItemType::from($type));
 
 		return $financialItem;
 	}

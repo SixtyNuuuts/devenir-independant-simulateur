@@ -23,6 +23,21 @@ class AnonymousUserRepository extends ServiceEntityRepository
 		parent::__construct($registry, AnonymousUser::class);
 	}
 
+	/**
+	 * Compte le nombre d'AnonymousUser créés par une IP dans un intervalle de temps donné.
+	 */
+	public function countByIp(string $ipAddress, \DateTime $since): int
+	{
+		return $this->createQueryBuilder('a')
+			->select('COUNT(a.id)')
+			->andWhere('a.ipAddress = :ipAddress')
+			->andWhere('a.createdAt >= :since')
+			->setParameter('ipAddress', $ipAddress)
+			->setParameter('since', $since)
+			->getQuery()
+			->getSingleScalarResult();
+	}
+
 	//    /**
 	//     * @return AnonymousUser[] Returns an array of AnonymousUser objects
 	//     */

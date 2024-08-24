@@ -347,13 +347,21 @@ body {
     .admin-figure {
         color: $black;
         max-width: 47.6rem;
+        justify-content: flex-end;
+
+        figcaption {
+            margin-right: 1rem;
+            max-width: 23rem;
+            text-align: right;
+        }
 
         form {
             display: flex;
             justify-content: center;
             align-items: center;
 
-            label.admin-import {
+            label.admin-import,
+            label.admin-clean {
                 margin-right: 0.5rem;
 
                 input {

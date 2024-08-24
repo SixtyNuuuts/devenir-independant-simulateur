@@ -16,22 +16,28 @@ class UserService
 		private Security $security,
 		private EntityManagerInterface $entityManager,
 		private RequestStack $requestStack,
-	) {
-	}
+	) {}
 
 	public function getCurrentUser(): User|AnonymousUser
 	{
 		$user = $this->security->getUser();
 
-		// user is authenticated
 		if ($user instanceof User) {
 			return $user;
 		}
 
-		// else use the session to create or retrieve an anonymousUser
 		$session = $this->requestStack->getSession();
-
 		$sessionId = $session->getId();
+		$clientIp = $this->requestStack->getCurrentRequest()->getClientIp();
+
+		// Récupérer le nombre d'anonymousUser créés par cette IP dans un intervalle de temps
+		$anonymousUserCount = $this->entityManager->getRepository(AnonymousUser::class)->countByIp($clientIp, new \DateTime('-24 hours'));
+
+		// Limiter le nombre de créations par IP
+		if ($anonymousUserCount > 5) { // Limite à ajuster selon votre besoin
+			throw new \Exception('Trop de simulations créées, veuillez réessayer plus tard.');
+		}
+
 		if (!$sessionId) {
 			$session->set('anonymous_user_id', 'init');
 			$sessionId = $session->getId();
@@ -42,6 +48,7 @@ class UserService
 		if (!$anonymousUser) {
 			$anonymousUser = new AnonymousUser();
 			$anonymousUser->setSessionId($sessionId);
+			$anonymousUser->setIpAddress($clientIp); // Enregistrer l'adresse IP
 
 			$this->entityManager->persist($anonymousUser);
 			$this->entityManager->flush();

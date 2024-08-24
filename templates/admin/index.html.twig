@@ -84,16 +84,22 @@
                 {% endfor %}
             </tbody>
         </table>
+        <figure class="admin-figure">
+            <figcaption id="profits-total-annual">Nettoyage des simulations non modifiées et des utilisateurs anonymes sans simulations</figcaption>
+            <form class="admin-clean" method="post" action="{{ path('app_admin_clean') }}">
+                <button type="submit" class="btn-s btn-primary">Nettoyer</button>
+            </form>
+        </figure>
         {{ knp_pagination_render(paginationSimulations) }}
     </section>
     <div class="modal admin-modal" id="confirmDeleteModal">
       <div class="modal-content">
         <span class="cross"></span>
         <p class="modal-title">Confirmer la suppression ?</p>
-        <button class="btn-secondary btn-l" type="button" id="cancelDelete">
+        <button class="btn-secondary btn-m" type="button" id="cancelDelete">
             Annuler
         </button>
-         <button class="btn-primary btn-l" type="button" id="confirmDelete">
+         <button class="btn-primary btn-m" type="button" id="confirmDelete">
             Valider
         </button>
       </div>
@@ -102,10 +108,22 @@
       <div class="modal-content">
         <span class="cross"></span>
         <p class="modal-title">Une activité avec ce slug existe déjà. Souhaitez-vous écraser les données existantes ?</p>
-        <button class="btn-secondary btn-l" type="button" id="cancelOverwrite">
+        <button class="btn-secondary btn-m" type="button" id="cancelOverwrite">
             Annuler
         </button>
-         <button class="btn-primary btn-l" type="button" id="confirmOverwrite">
+         <button class="btn-primary btn-m" type="button" id="confirmOverwrite">
+            Valider
+        </button>
+      </div>
+    </div>
+    <div class="modal admin-modal" id="confirmCleanModal">
+      <div class="modal-content">
+        <span class="cross"></span>
+        <p class="modal-title">Confirmer le nettoyage ?</p>
+        <button class="btn-secondary btn-m" type="button" id="cancelClean">
+            Annuler
+        </button>
+         <button class="btn-primary btn-m" type="button" id="confirmClean">
             Valider
         </button>
       </div>
