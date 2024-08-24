@@ -24,6 +24,20 @@ DirectoryIndex index.php
 
     RewriteEngine On
 
+    # Rediriger http://krizalid.fr/ vers https://www.krizalid.fr/
+    RewriteCond %{HTTP_HOST} ^krizalid\.fr [NC]
+    RewriteRule ^(.*)$ https://www.krizalid.fr/$1 [L,R=301]
+
+    # Rediriger http://www.krizalid.fr/ vers https://www.krizalid.fr/
+    RewriteCond %{HTTP_HOST} ^www\.krizalid\.fr [NC]
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://www.krizalid.fr/$1 [L,R=301]
+
+    # Rediriger https://krizalid.fr vers https://www.krizalid.fr/
+    RewriteCond %{HTTP_HOST} ^krizalid\.fr [NC]
+    RewriteCond %{HTTPS} on
+    RewriteRule ^(.*)$ https://www.krizalid.fr/$1 [L,R=301]
+    
     # Determine the RewriteBase automatically and set it as environment variable.
     # If you are using Apache aliases to do mass virtual hosting or installed the
     # project in a subdirectory, the base path will be prepended to allow proper

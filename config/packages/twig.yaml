@@ -1,6 +1,14 @@
 twig:
     file_name_pattern: '*.twig'
 
+    # Ajout de la configuration pour les templates d'erreur
+    paths:
+        '%kernel.project_dir%/templates/bundles/TwigBundle/Exception': TwigBundle
+    # Configure un template par défaut pour les pages d'erreur
+    globals:
+        # On peut définir le template global pour toutes les erreurs ici
+        error_template: 'error.html.twig'
+
 when@test:
     twig:
         strict_variables: true

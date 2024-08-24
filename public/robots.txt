@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /junk/
+
+# Autoriser tous les autres robots à explorer le site
+User-agent: *
+Allow: /
+
+# Indiquer l'emplacement du sitemap
+Sitemap: https://www.krizalid.fr/sitemap.xml

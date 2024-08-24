@@ -9,7 +9,7 @@ import DeleteFinancialItemConfirmationModal from "./component/DeleteFinancialIte
 import BalanceSection from "./component/BalanceSection";
 import f from "./utils/function";
 
-function PersonalFlowsPage({ simulationId }) {
+function PersonalFlowsPage({ simulationId, simulationToken, activityData }) {
   const {
     financialItems: personalIncomesData,
     isLoading: personalIncomesLoading,
@@ -51,6 +51,18 @@ function PersonalFlowsPage({ simulationId }) {
 
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+
+  useEffect(() => {
+    const newPath = `/${
+      JSON.parse(activityData).slug
+    }/niveau-de-vie/${simulationToken}`;
+
+    // Check if the current URL is different from the new one
+    if (window.location.pathname !== newPath) {
+      // Update the URL without reloading the page
+      window.history.pushState(null, "", newPath);
+    }
+  }, [activityData, simulationToken]);
 
   useEffect(() => {
     setFinancialData((prevState) => ({

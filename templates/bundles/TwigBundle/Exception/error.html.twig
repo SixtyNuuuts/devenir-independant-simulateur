@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur {{ status_code }} - {{ status_text }} - Krizalid{% endblock %}
+
+{% block body_attributes %}class="body-layout-bicolor"{% endblock %}
+
+{% block body %}
+<main class="layout-bicolor">
+    <div class="title-description-zone n-pb">
+        <h1 class="title-1">Erreur {{ status_code }}</h1>
+    </div>
+    <div class="bloc-zone error-bloc">
+        <p>
+            {% if status_code == 404 %}
+                Oups ! La page que vous recherchez n'a pas été trouvée.
+            {% elseif status_code == 500 %}
+                Une erreur serveur est survenue. Nous travaillons pour résoudre ce problème.
+            {% else %}
+                Une erreur inattendue est survenue.
+            {% endif %}
+        </p>
+        <p>
+            <a href="{{ path('app_home') }}">Retour à l'accueil</a>
+            ou <a href="javascript:history.back()">Revenir à la page précédente</a>
+        </p>
+    </div>
+</main>
+{% endblock %}

@@ -76,6 +76,16 @@ function HomePage({
   const [activity, setActivity] = useState(JSON.parse(activityData));
 
   useEffect(() => {
+    const newPath = `/${activity.slug}/${simulationToken}`;
+
+    // Check if the current URL is different from the new one
+    if (window.location.pathname !== newPath) {
+      // Update the URL without reloading the page
+      window.history.pushState(null, "", newPath);
+    }
+  }, [activity.slug, simulationToken]);
+
+  useEffect(() => {
     setFinancialData((prevState) => ({
       ...prevState,
       salaryCurrent: salaryCurrentData,

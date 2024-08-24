@@ -4,13 +4,18 @@
 {% set krizalid_page_title = pageName ~ ' - ' ~ activity.title|striptags %}
 {% set krizalid_page_description = pageName ~ ' : ' ~ activity.description|striptags %}
 {% set krizalid_page_url = absolute_url(path('app_personal_flows', {'activitySlug': activitySlug, 'simulationToken': simulationToken})) %}
+{% set krizalid_canonical_url = absolute_url(path('app_personal_flows', { activitySlug: activitySlug })) %}
 {% set krizalid_page_url_short = '/' ~ activitySlug ~ '/niveau-de-vie/' ~ simulationToken %}
 {% set krizalid_image_activity = absolute_url(activity.desktopImage) %}
-{% block title %}Krizalid | {{ krizalid_page_title }}{% endblock %}
+{% block title %}{{ krizalid_page_title }} - Krizalid{% endblock %}
 {% block description %}{{ krizalid_page_description }}{% endblock %}
 
+{% block canonical %}
+    <link rel="canonical" href="{{ krizalid_canonical_url }}">
+{% endblock %}
+
 {% block body %}
-    <main {{ react_component('PersonalFlowsPage', { 'simulationId': simulationId }) }} class="personal-flows-page">
+    <main {{ react_component('PersonalFlowsPage', { 'simulationId': simulationId, 'simulationToken': simulationToken, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw }) }} class="personal-flows-page">
         <div class="title-description-zone">
             <h1 class="title-1">Niveau de vie personnel</h1>
             <p class="description-1">Pour pouvoir vivre de votre future activité professionnelle il faut que vous puissiez couvrir vos frais personnels en vous versant une rémunération minimum</p>

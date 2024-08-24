@@ -8,7 +8,11 @@ import useUpdateFinancialItem from "./hook/useUpdateFinancialItem";
 import useDeleteFinancialItem from "./hook/useDeleteFinancialItem";
 import f from "./utils/function";
 
-function ProfessionalExpensesPage({ simulationId }) {
+function ProfessionalExpensesPage({
+  simulationId,
+  simulationToken,
+  activityData,
+}) {
   const {
     financialItems: professionalExpensesData,
     isLoading: professionalExpensesLoading,
@@ -32,6 +36,18 @@ function ProfessionalExpensesPage({ simulationId }) {
 
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+
+  useEffect(() => {
+    const newPath = `/${
+      JSON.parse(activityData).slug
+    }/charges/${simulationToken}`;
+
+    // Check if the current URL is different from the new one
+    if (window.location.pathname !== newPath) {
+      // Update the URL without reloading the page
+      window.history.pushState(null, "", newPath);
+    }
+  }, [activityData, simulationToken]);
 
   useEffect(() => {
     setProfessionalExpenses(professionalExpensesData);

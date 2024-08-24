@@ -4,13 +4,18 @@
 {% set krizalid_page_title = pageName ~ ' - ' ~ activity.title|striptags %}
 {% set krizalid_page_description = pageName ~ ' : ' ~ activity.description|striptags %}
 {% set krizalid_page_url = absolute_url(path('app_professional_expenses', {'activitySlug': activitySlug, 'simulationToken': simulationToken})) %}
+{% set krizalid_canonical_url = absolute_url(path('app_professional_expenses', { activitySlug: activitySlug })) %}
 {% set krizalid_page_url_short = '/' ~ activitySlug ~ '/charges/' ~ simulationToken %}
 {% set krizalid_image_activity = absolute_url(activity.desktopImage) %}
-{% block title %}Krizalid | {{ krizalid_page_title }}{% endblock %}
+{% block title %}{{ krizalid_page_title }} - Krizalid{% endblock %}
 {% block description %}{{ krizalid_page_description }}{% endblock %}
 
+{% block canonical %}
+    <link rel="canonical" href="{{ krizalid_canonical_url }}">
+{% endblock %}
+
 {% block body %}
-	<main {{ react_component('ProfessionalExpensesPage', { 'simulationId': simulationId } ) }}>
+	<main {{ react_component('ProfessionalExpensesPage', { 'simulationId': simulationId, 'simulationToken': simulationToken, 'activityData': activity|serialize('json', {'groups': 'activity_read'})|raw } ) }}>
         <h1 class="title-1 hidden-mobile">Charges</h1>
         <section aria-labelledby="charges" class="table">
             <h2 class="table-title" id="charges">Charges par mois</h2>

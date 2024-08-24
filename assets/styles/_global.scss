@@ -329,7 +329,7 @@ body {
         }
     }
 
-    .title-description-zone+.bloc-zone {
+    .title-description-zone+.bloc-zone:not(.error-bloc) {
         padding-top: 0;
     }
 
@@ -359,9 +359,23 @@ body {
             margin-bottom: 0.5rem;
         }
 
+        p:last-child {
+            margin-bottom: 0;
+        }
+
         ul {
             list-style: disc;
             padding-left: 2.5rem;
+        }
+
+        a {
+            color: $primary;
+            text-decoration: underline;
+        }
+
+        &.error-bloc {
+            padding: 2.5rem 3rem;
+            text-align: center;
         }
     }
 }

@@ -3,10 +3,15 @@
 {% set krizalid_page_title = activity.title|striptags %}
 {% set krizalid_page_description = activity.description|striptags %}
 {% set krizalid_page_url = absolute_url(path('app_home', { activitySlug: activitySlug, simulationToken: simulationToken })) %}
+{% set krizalid_canonical_url = absolute_url(path('app_home', { activitySlug: activitySlug })) %}
 {% set krizalid_page_url_short = '/' ~ activitySlug ~ '/' ~ simulationToken %}
 {% set krizalid_image_activity = absolute_url(activity.desktopImage) %}
-{% block title %}Krizalid | {{ krizalid_page_title }}{% endblock %}
+{% block title %}{{ krizalid_page_title }} - Krizalid{% endblock %}
 {% block description %}{{ krizalid_page_description }}{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{{ krizalid_canonical_url }}">
+{% endblock %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('home') }}

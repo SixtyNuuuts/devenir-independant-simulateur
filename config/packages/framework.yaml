@@ -8,6 +8,8 @@ framework:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
         cookie_lifetime: 2592000 # 30 jours Durée de vie du cookie en secondes
         gc_maxlifetime: 2592000  # 30 jours Durée avant que les données de session soient considérées comme 'périmées'
+        
+    error_controller: App\Controller\ErrorController::show
 
     #esi: true
     #fragments: true

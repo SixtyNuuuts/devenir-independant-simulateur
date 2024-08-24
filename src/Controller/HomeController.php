@@ -11,6 +11,7 @@ use App\Service\SimulationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class HomeController extends AbstractController
 {
@@ -19,8 +20,7 @@ class HomeController extends AbstractController
 		private ActivityRepository $activityRepository,
 		private SimulationRepository $simulationRepository,
 		private SimulationService $simulationService,
-	) {
-	}
+	) {}
 
 	#[Route('/{activitySlug}/profits/{simulationToken}', name: 'app_professional_incomes', methods: ['GET'])]
 	public function professionalIncomes(string $activitySlug, ?string $simulationToken = null): Response
@@ -41,12 +41,12 @@ class HomeController extends AbstractController
 			}
 		}
 
-		if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
-			return $this->redirectToRoute('app_professional_incomes', [
-				'activitySlug' => $activitySlug,
-				'simulationToken' => $simulationData['token'],
-			]);
-		}
+		// if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
+		// 	return $this->redirectToRoute('app_professional_incomes', [
+		// 		'activitySlug' => $activitySlug,
+		// 		'simulationToken' => $simulationData['token'],
+		// 	]);
+		// }
 
 		$activity = $this->activityRepository->findOneBySlug($activitySlug);
 
@@ -72,12 +72,12 @@ class HomeController extends AbstractController
 			}
 		}
 
-		if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
-			return $this->redirectToRoute('app_professional_expenses', [
-				'activitySlug' => $activitySlug,
-				'simulationToken' => $simulationData['token'],
-			]);
-		}
+		// if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
+		// 	return $this->redirectToRoute('app_professional_expenses', [
+		// 		'activitySlug' => $activitySlug,
+		// 		'simulationToken' => $simulationData['token'],
+		// 	]);
+		// }
 
 		$activity = $this->activityRepository->findOneBySlug($activitySlug);
 
@@ -103,12 +103,12 @@ class HomeController extends AbstractController
 			}
 		}
 
-		if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
-			return $this->redirectToRoute('app_personal_flows', [
-				'activitySlug' => $activitySlug,
-				'simulationToken' => $simulationData['token'],
-			]);
-		}
+		// if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
+		// 	return $this->redirectToRoute('app_personal_flows', [
+		// 		'activitySlug' => $activitySlug,
+		// 		'simulationToken' => $simulationData['token'],
+		// 	]);
+		// }
 
 		$activity = $this->activityRepository->findOneBySlug($activitySlug);
 
@@ -122,7 +122,7 @@ class HomeController extends AbstractController
 		if (!$activity) {
 			$defaultActivity = $this->activityRepository->findOneBy(['slug' => 'devenir-independant']);
 			if (!$defaultActivity) {
-				return $this->redirectToRoute('app_404'); // TODO : 404 page;
+				throw new NotFoundHttpException('Activity not found');
 			}
 			$activitySlug = $defaultActivity->getSlug();
 			$activity = $defaultActivity;
@@ -144,12 +144,12 @@ class HomeController extends AbstractController
 			}
 		}
 
-		if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
-			return $this->redirectToRoute('app_home', [
-				'activitySlug' => $activitySlug,
-				'simulationToken' => $simulationData['token'],
-			]);
-		}
+		// if (!$simulationToken || ($simulationToken === 'default' && !$this->isGranted('ROLE_ADMIN'))) {
+		// 	return $this->redirectToRoute('app_home', [
+		// 		'activitySlug' => $activitySlug,
+		// 		'simulationToken' => $simulationData['token'],
+		// 	]);
+		// }
 
 		return $this->render('home/index.html.twig', ['simulationId' => $simulationData['id'], 'simulationToken' => $simulationData['token'], 'activitySlug' => $activitySlug ?? $activity->getSlug(), 'activity' => $activity]);
 	}

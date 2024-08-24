@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page non trouvée - Krizalid{% endblock %}
+
+{% block body_attributes %}class="body-layout-bicolor"{% endblock %}
+
+{% block body %}
+<main class="layout-bicolor">
+    <div class="title-description-zone n-pb">
+        <h1 class="title-1">Page non trouvée (404)</h1>
+    </div>
+    <div class="bloc-zone error-bloc">
+        <p>La page que vous recherchez n'existe pas ou a été déplacée.</p>
+        <a href="{{ path('app_home') }}">Retour à l'accueil</a>
+    </div>
+</main>
+{% endblock %}
