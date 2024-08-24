@@ -9,3 +9,4 @@ PHP_BIN="/usr/local/php8.2/bin/php"
 # Exécuter les commandes Symfony avec les options nécessaires
 $PHP_BIN -d memory_limit=2048M -d display_errors=on $PROJECT_DIR/bin/console app:clean-simulations
 $PHP_BIN -d memory_limit=2048M -d display_errors=on $PROJECT_DIR/bin/console app:clean-anonymous-users
+$PHP_BIN -d memory_limit=2048M -d display_errors=on $PROJECT_DIR/bin/console app:clean-orphaned-sessions
