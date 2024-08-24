@@ -31,10 +31,10 @@ class UserService
 		$clientIp = $this->requestStack->getCurrentRequest()->getClientIp();
 
 		// Récupérer le nombre d'anonymousUser créés par cette IP dans un intervalle de temps
-		$anonymousUserCount = $this->entityManager->getRepository(AnonymousUser::class)->countByIp($clientIp, new \DateTime('-1 hour'));
+		$anonymousUserCount = $this->entityManager->getRepository(AnonymousUser::class)->countByIp($clientIp, new \DateTime('-24 hours'));
 
 		// Limiter le nombre de créations par IP
-		if ($anonymousUserCount > 10) { // Limite à ajuster selon votre besoin
+		if ($anonymousUserCount > 5) { // Limite à ajuster selon votre besoin
 			throw new \Exception('Trop de simulations créées, veuillez réessayer plus tard.');
 		}
 
