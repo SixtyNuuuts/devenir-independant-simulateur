@@ -1,7 +1,5 @@
 <?php
 
-// src/Command/CleanAnonymousUsersCommand.php
-
 namespace App\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,7 +8,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\DBAL\Connection;
 
 #[AsCommand(
 	name: 'app:clean-anonymous-users',
@@ -20,16 +17,13 @@ class CleanAnonymousUsersCommand extends Command
 {
 	private EntityManagerInterface $entityManager;
 	private AnonymousUserRepository $anonymousUserRepository;
-	private Connection $connection;
 
 	public function __construct(
 		EntityManagerInterface $entityManager,
-		AnonymousUserRepository $anonymousUserRepository,
-		Connection $connection
+		AnonymousUserRepository $anonymousUserRepository
 	) {
 		$this->entityManager = $entityManager;
 		$this->anonymousUserRepository = $anonymousUserRepository;
-		$this->connection = $connection;
 
 		parent::__construct();
 	}
@@ -46,17 +40,6 @@ class CleanAnonymousUsersCommand extends Command
 			->getResult();
 
 		foreach ($anonymousUsers as $anonymousUser) {
-			$sessionId = $anonymousUser->getSessionId();
-
-			// Supprimer la session dans la table `sessions`
-			if ($sessionId) {
-				$this->connection->createQueryBuilder()
-					->delete('sessions')
-					->where('sess_id = :sessId')
-					->setParameter('sessId', $sessionId)
-					->executeStatement();
-			}
-
 			// Supprimer l'utilisateur anonyme
 			$this->entityManager->remove($anonymousUser);
 		}
