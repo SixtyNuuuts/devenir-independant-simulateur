@@ -115,7 +115,7 @@ class HomeController extends AbstractController
 		return $this->render('home/personal_flows.html.twig', ['simulationId' => $simulationData['id'], 'simulationToken' => $simulationData['token'], 'activitySlug' => $activitySlug ?? $activity->getSlug(), 'activity' => $activity]);
 	}
 
-	#[Route('/{activitySlug}/{simulationToken}', name: 'app_home', methods: ['GET'], requirements: ['activitySlug' => '^(?!activity|admin|financial-item|inscription|verify|reset-password|connexion|deconnexion|simulation|mentions-legales|protection-des-donnees-personnelles|image)[a-z-]+$'])]
+	#[Route('/{activitySlug}/{simulationToken}', name: 'app_home', methods: ['GET'], requirements: ['activitySlug' => '^(?!activity|blog|admin|financial-item|inscription|verify|reset-password|connexion|deconnexion|simulation|mentions-legales|protection-des-donnees-personnelles|image)[a-z-]+$'])]
 	public function profitability(string $activitySlug = '', ?string $simulationToken = null): Response
 	{
 		$activity = $this->activityRepository->findOneBySlug($activitySlug);
