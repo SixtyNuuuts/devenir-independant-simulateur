@@ -38,9 +38,8 @@ DirectoryIndex index.php
     RewriteCond %{HTTPS} on
     RewriteRule ^(.*)$ https://www.krizalid.fr/$1 [L,R=301]
     
-    # Exclure le répertoire blog du routage Symfony
-    RewriteCond %{REQUEST_URI} ^/blog
-    RewriteRule ^ - [L]
+    # Rediriger http://www.krizalid.fr/blog vers /blog
+    RewriteRule ^blog/(.*)$ blog/$1 [PT]
 
     # Determine the RewriteBase automatically and set it as environment variable.
     # If you are using Apache aliases to do mass virtual hosting or installed the
